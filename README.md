@@ -9,6 +9,7 @@ How to configure git (using bash)
 4. Copy the contents of the 'GamesAI6' folder to the project directory using the command: `cp -R GamesAI6/ project_directory/` obviously replacing `project_directory withe name of the Unity project directory.
 5. The repository is now set up, commit files using `git add FILENAME1 FILENAME2` followed by `git commit -m "Commit description"`. To add all changed and new files, use `git add .`
 6. Push changes to github using `git push origin BRANCHNAME` all stable code should be pushed to the `master` branch.
+7. Before you start a programming session, call `git checkout` first. This ensures that the codebase you are working with is the latest version.
 
 Managing branches
 -----------------

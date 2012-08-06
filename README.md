@@ -1,3 +1,8 @@
+GamesAI6
+========
+
+Notices
+-------
 Kieren, please add zchaoz to the repo ASAP so he can start coding.
 
 How to configure git (using bash)
@@ -17,3 +22,8 @@ Managing branches
 One of the best thing about git is the ability for a programmer to create a new branch and edit that, without the danger of ruining perfectly stable code for everyone else. To learn more about branching, visit: http://learn.github.com/p/branching.html
 
 Please make sure when writing new code you do it in a new branch :)
+
+Links
+-----
+
+* [To-do list](https://github.com/Syclamoth/GamesAI6/blob/master/TODO.md)

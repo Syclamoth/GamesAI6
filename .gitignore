@@ -8,3 +8,6 @@ ProjectSettings/*
 *.userprefs
 .svn/**/*
 .svn
+Temp/
+OldAssets/
+test-results/

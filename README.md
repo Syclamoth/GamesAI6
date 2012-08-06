@@ -3,7 +3,7 @@ GamesAI6
 
 Notices
 -------
-Kieren, please add zchaoz to the repo ASAP so he can start coding.
+Kieren, please add zchaoz to the repo ASAP so he can start coding
 
 How to configure git (using bash)
 ---------------------------------

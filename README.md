@@ -3,7 +3,7 @@ GamesAI6
 
 Notices
 -------
-Kieren, please add zchaoz to the repo ASAP so he can start coding
+None as of 08 Aug 2012.
 
 How to configure git (using bash)
 ---------------------------------

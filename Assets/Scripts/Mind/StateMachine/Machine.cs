@@ -5,6 +5,7 @@ using System.Collections.Generic;
 // The state machine is itself a state, to enable easy nested state machines!
 public class Machine : State {
 	
+	
 	// Will implement an override queue of some kind, probably using Andrew's PriorityQueue<T> class,
 	// as soon as I can work out an elegant way of integrating them with the normal state transitions.
 	
@@ -52,6 +53,11 @@ public class Machine : State {
 	// Schedules a state transition at the next available time
 	public void RequestStateTransition(State goToThis) {
 		nextState = goToThis;
+	}
+	
+	override public List<LinkedStateReference> GetStateTransitions() {
+		List<LinkedStateReference> retV = new List<LinkedStateReference>();
+		return retV;
 	}
 	
 }

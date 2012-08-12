@@ -13,8 +13,9 @@ For Sheep's Finite State Machine code. The sheep has 3 states:
 + Sheep_run: when it sees a wolf, it will run away from the wolf towards the sheperd or any nearest sheep. It runs faster than normal. Panic level will continuously increase
 + Sheep_gonenuts: It's in its panic state. It will run wildly or just stay at the same spot. Panic level at max. If it doesn't see the wolf anymore, panic level will decrease and return to its idle state (roaming)
 
-panicLevel variable: the panic level of a sheep, range from 0 - 10
-courageLevel variable: each sheep has different courageLevel, range from 0 - 10. The higher it is, the lower chance the sheep will change to its panic state.
+Variables:
++ panicLevel variable: the panic level of a sheep, range from 0 - 10.
++ courageLevel variable: each sheep has different courageLevel, range from 0 - 10. The higher it is, the lower chance the sheep will change to its panic state.
 
 The code: I don't understand much about the code used in Machine.cs, FuzzyTransition.cs, Brain.cs, etc, so I took a liberty to change it to something easier to understand for me:
 + Sheep.cs: contains info regarding sheep behaviour (i.e. sheep finite state machine Machine<Sheep> and its characteristics.

@@ -84,5 +84,9 @@ public abstract class State : MonoBehaviour {
 		}
 	}
 	
+	public abstract void DrawInspector();
+	
+	public abstract string GetNiceName();
+	
 	public Vector2 inspectorCorner;
 }

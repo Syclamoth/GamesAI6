@@ -64,4 +64,12 @@ public static class Extensions {
 	}
 	
 	//public static Vector2 LineIntersection(
+	public static Rect OffsetBy(this Rect rectangle, Vector2 offset) {
+		Rect retV = new Rect(rectangle);
+		retV.x += offset.x;
+		retV.y += offset.y;
+		
+		return retV;
+	}
+
 }

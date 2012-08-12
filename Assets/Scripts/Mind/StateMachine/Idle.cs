@@ -1,14 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+public class Idle : State {
 
-public class FuzzyTransition : State {
-	public float fuzzyChance;
-
-	public ExplicitStateReference optionOneRef = new ExplicitStateReference(null);
-	public ExplicitStateReference optionTwoRef = new ExplicitStateReference(null);
+	public ExplicitStateReference alarm = new ExplicitStateReference(null);
 	public override IEnumerator Enter(Machine owner) {
-		owner.RequestStateTransition(fuzzyChance > Random.value ? optionOneRef.GetTarget() : optionTwoRef.GetTarget());
 		yield return null;
 	}
 	public override IEnumerator Exit() {
@@ -25,17 +21,13 @@ public class FuzzyTransition : State {
 	override public List<LinkedStateReference> GetStateTransitions() {
 		List<LinkedStateReference> retV = new List<LinkedStateReference>();
 		
-		retV.Add(new LinkedStateReference(optionOneRef, "Option 1"));
-		retV.Add(new LinkedStateReference(optionTwoRef, "Option 2"));
+		retV.Add(new LinkedStateReference(alarm, "Alarm"));
 		return retV;
 	}
-	
 	override public string GetNiceName() {
-		return "Fuzzy Transition";
+		return "Idle";
 	}
-	
 	override public void DrawInspector() {
-		GUILayout.Label("1 <----------> 2");
-		fuzzyChance = GUILayout.HorizontalSlider(fuzzyChance * 100, 0, 100) / 100;
+		
 	}
 }

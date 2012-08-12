@@ -59,5 +59,10 @@ public class Machine : State {
 		List<LinkedStateReference> retV = new List<LinkedStateReference>();
 		return retV;
 	}
-	
+	override public string GetNiceName() {
+		return "State Machine";
+	}
+	override public void DrawInspector() {
+		
+	}
 }

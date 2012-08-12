@@ -4,6 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+public enum Direction {
+	Forwards,
+	Backwards,
+	None
+}
+
 public struct StateMenuItem{
 	public string name;
 	public Type curType;
@@ -22,10 +28,18 @@ public struct Line {
 	public Vector2 start;
 	public Vector2 end;
 	public Color drawColour;
+	public Direction myDir;
 	public Line(Vector2 newStart, Vector2 newEnd, Color colour) {
 		start = newStart;
 		end = newEnd;
 		drawColour = colour;
+		myDir = Direction.Forwards;
+	}
+	public Line(Vector2 newStart, Vector2 newEnd, Color colour, Direction newDir) {
+		start = newStart;
+		end = newEnd;
+		drawColour = colour;
+		myDir = newDir;
 	}
 }
 
@@ -34,7 +48,8 @@ public class StateMachineEditor : EditorWindow {
 	////--- REGISTER NEW STATES HERE!
 	
 	StateMenuItem[] menuItems = new StateMenuItem[] {
-		new StateMenuItem("Fuzzy Transition", typeof(FuzzyTransition))
+		new StateMenuItem("Fuzzy Transition", typeof(FuzzyTransition)),
+		new StateMenuItem("Idle", typeof(Idle))
 	};
 	
 	////---- END
@@ -43,6 +58,8 @@ public class StateMachineEditor : EditorWindow {
 	
 	List<Line> linesToDraw = new List<Line>();
 	List<State> statesToRemove = new List<State>();
+	
+	Vector2 globalViewOffset = Vector2.one * 10;
 	
 	
 	Machine stMachine;
@@ -76,6 +93,7 @@ public class StateMachineEditor : EditorWindow {
 		State newState = newObj.AddComponent<Machine>();
 		newState.inspectorCorner = curMousePos;
 		stMachine.controlledStates.Add(newState);
+		newObj.transform.parent = stMachine.transform;
 	}
 	
 	void Update() {
@@ -87,7 +105,21 @@ public class StateMachineEditor : EditorWindow {
 		foreach(State curState in statesToRemove) {
 			stMachine.controlledStates.Remove(curState);
 			stateInspectorPositions.Remove(curState);
-			DestroyImmediate (curState);
+			if(curState.GetType() == typeof(Machine))
+			{
+				DestroyImmediate(curState.gameObject);
+			} else {
+				DestroyImmediate (curState);
+			}
+		}
+		bool shouldRebuildStates = false;
+		foreach(State state in stateInspectorPositions.Keys) {
+			if(!stMachine.controlledStates.Contains(state)) {
+				shouldRebuildStates = true;
+			}
+		}
+		if(shouldRebuildStates) {
+			stateInspectorPositions = new Dictionary<State, Rect>();
 		}
 		statesToRemove = new List<State>();
 	}
@@ -106,12 +138,36 @@ public class StateMachineEditor : EditorWindow {
 			GUILayout.Label("Please select a valid state machine to edit!");
 			return;
 		}
+		if(stMachine.transform.parent.GetComponent<Machine>() != null) {
+			if(GUILayout.Button ("Pop")) {
+				Selection.activeGameObject = stMachine.transform.parent.gameObject;
+				stMachine = null;
+				stateInspectorPositions = new Dictionary<State, Rect>();
+				return;
+			}
+		}
 		curMousePos = Event.current.mousePosition;
 		foreach(State state in stMachine.controlledStates) {
 			if(!stateInspectorPositions.ContainsKey(state)) {
 				stateInspectorPositions.Add(state, new Rect(state.inspectorCorner.x, state.inspectorCorner.y, 50, 50));
 			}
 		}
+		if(Event.current.type == EventType.MouseDrag && GUIUtility.hotControl == 0) {
+			globalViewOffset += Event.current.delta;
+			EditorGUIUtility.AddCursorRect(new Rect(Event.current.mousePosition.x - 10, Event.current.mousePosition.y - 10, 20, 20), MouseCursor.MoveArrow);
+			Event.current.Use();
+		}
+		
+		/*GUI.matrix = curViewMatrix;
+		if(Event.current.type == EventType.ScrollWheel) {
+			currentScale -= Event.current.delta.y;
+			currentScale = Mathf.Clamp(currentScale, 0.8f, 1.5f);
+			curViewMatrix = Matrix4x4.TRS(Event.current.mousePosition * (currentScale - 1), Quaternion.identity, Vector3.one * currentScale);
+			Event.current.Use();
+		}*/
+		
+		//Debug.Log(curViewMatrix);
+		//Debug.Log (currentScale);
 		//Debug.Log(GUI.GetNameOfFocusedControl());
 		
 		State[] tempKeys = new State[stateInspectorPositions.Count];
@@ -120,16 +176,19 @@ public class StateMachineEditor : EditorWindow {
 		stateInspectorPositions.Values.CopyTo(tempValues, 0);
 		currentScrollPos = GUILayout.BeginScrollView(currentScrollPos);
 		BeginWindows();
+		Vector2 bottomCorner = Vector2.zero;
 		for(int i = 0; i < tempKeys.Length; ++i) {
-			stateInspectorPositions[tempKeys[i]] = GUILayout.Window(i, tempValues[i], DrawStateInspector, tempKeys[i].ToString());
+			stateInspectorPositions[tempKeys[i]] = GUILayout.Window(i, tempValues[i].OffsetBy(globalViewOffset), DrawStateInspector, tempKeys[i].GetNiceName()).OffsetBy(-globalViewOffset);
+			bottomCorner.x = Mathf.Max(bottomCorner.x, tempValues[i].OffsetBy(globalViewOffset).x);
+			bottomCorner.y = Mathf.Max(bottomCorner.y, tempValues[i].OffsetBy(globalViewOffset).y);
 		}
-		
+		GUILayoutUtility.GetRect(bottomCorner.x, bottomCorner.y);
 		EndWindows();
-		
+		//GUI.Box(GUILayoutUtility.GetLastRect(), "BABABHAHHA");
 		foreach(Line curLine in linesToDraw) {
 			Handles.color = curLine.drawColour;
-			Handles.DrawLine (curLine.start, curLine.end);
-			Handles.ArrowCap(0, (Vector3)curLine.start - new Vector3(0, 0, 10), Quaternion.LookRotation(curLine.end - curLine.start), 70);
+			Handles.DrawLine (curLine.start + globalViewOffset, curLine.end + globalViewOffset);
+			Handles.ArrowCap(0, (Vector3)(curLine.start + globalViewOffset) - new Vector3(0, 0, 10), Quaternion.LookRotation(curLine.end - curLine.start), 70);
 		}
 		
 		
@@ -139,6 +198,7 @@ public class StateMachineEditor : EditorWindow {
 			DrawContextMenu();
 			Event.current.Use();
 		}
+		//GUI.matrix = Matrix4x4.identity;
 		GUILayout.EndScrollView();
 	}
 	
@@ -227,7 +287,18 @@ public class StateMachineEditor : EditorWindow {
 			GUILayout.EndHorizontal();
 		}
 		
-		GUILayout.Label(curState.ToString());
+		if(curState.GetType() == typeof(Machine)) {
+			if(GUILayout.Button("Push"))
+			{
+				Selection.activeGameObject = curState.gameObject;
+				stMachine = (Machine)curState;
+				stateInspectorPositions = new Dictionary<State, Rect>();
+				return;
+			}
+		}
+		
+		curState.DrawInspector();
+		
 		GUI.DragWindow();
 		curState.inspectorCorner = new Vector2(stateInspectorPositions[curState].x, stateInspectorPositions[curState].y);
 	}

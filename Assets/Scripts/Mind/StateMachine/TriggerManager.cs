@@ -7,8 +7,10 @@ using System.Collections;
 public class TriggerManager {
 	public int observedIndex;
 	public State owner;
-	
+	public State watched;
 	public State target;
+	
+	public Vector2 inspectorCorner;
 	
 	public int intTarget;
 	public float floatTarget;
@@ -18,8 +20,14 @@ public class TriggerManager {
 	
 	private State.ObservedVariable observed;
 	
-	private ObservedType obsType {
+	public ObservedType obsType {
 		get {
+			if(observed == null) {
+				if(watched == null || watched.GetExposedVariables().Length <= observedIndex) {
+					return ObservedType.other;
+				}
+				observed = watched.GetExposedVariables()[observedIndex];
+			}
 			if(observed().GetType() == typeof(int)) {
 				return ObservedType.integer;
 			}
@@ -34,7 +42,14 @@ public class TriggerManager {
 	}
 	
 	public void BuildTrigger() {
-		observed = owner.GetExposedVariables()[observedIndex];
+		if(owner != null)
+		{
+			owner.AddTrigger(this);
+		}
+		if(watched != null)
+		{
+			observed = watched.GetExposedVariables()[observedIndex];
+		}
 	}
 	
 	public bool ShouldTrigger() {

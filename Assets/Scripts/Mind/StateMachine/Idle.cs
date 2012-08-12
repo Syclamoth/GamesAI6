@@ -15,7 +15,9 @@ public class Idle : State {
 	}
 	public override ObservedVariable[] GetExposedVariables ()
 	{
-		return new ObservedVariable[0];
+		return new ObservedVariable[] {
+			GetPanicLevel
+		};
 	}
 	
 	override public List<LinkedStateReference> GetStateTransitions() {
@@ -29,5 +31,15 @@ public class Idle : State {
 	}
 	override public void DrawInspector() {
 		
+	}
+	override public int DrawObservableSelector(int currentlySelected) {
+		string[] gridLabels = new string[] {
+			"Panic Level"
+		};
+		return GUILayout.SelectionGrid(currentlySelected, gridLabels,1);
+	}
+	
+	public System.IComparable GetPanicLevel() {
+		return 0;
 	}
 }

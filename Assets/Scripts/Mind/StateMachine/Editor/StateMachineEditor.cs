@@ -55,9 +55,11 @@ public class StateMachineEditor : EditorWindow {
 	////---- END
 	
 	Dictionary<State, Rect> stateInspectorPositions = new Dictionary<State, Rect>();
+	Dictionary<TriggerManager, Rect> triggerInspectorPositions = new Dictionary<TriggerManager, Rect>();
 	
 	List<Line> linesToDraw = new List<Line>();
 	List<State> statesToRemove = new List<State>();
+	List<TriggerManager> triggersToRemove = new List<TriggerManager>();
 	
 	Vector2 globalViewOffset = Vector2.one * 10;
 	
@@ -84,14 +86,14 @@ public class StateMachineEditor : EditorWindow {
 	void AddStateToMachine(object data) {
 		StateMenuItem controlItem = (StateMenuItem)data;
 		State newState = (State)controlItem.AddComponentToGameObject(stMachine.gameObject);
-		newState.inspectorCorner = curMousePos;
+		newState.inspectorCorner = curMousePos - globalViewOffset;
 		stMachine.controlledStates.Add (newState);
 		
 	}
 	void AddSubMachine() {
 		GameObject newObj = new GameObject("Machine");
 		State newState = newObj.AddComponent<Machine>();
-		newState.inspectorCorner = curMousePos;
+		newState.inspectorCorner = curMousePos - globalViewOffset;
 		stMachine.controlledStates.Add(newState);
 		newObj.transform.parent = stMachine.transform;
 	}
@@ -112,6 +114,10 @@ public class StateMachineEditor : EditorWindow {
 				DestroyImmediate (curState);
 			}
 		}
+		foreach(TriggerManager trig in triggersToRemove) {
+			stMachine.controlledTriggers.Remove(trig);
+			triggerInspectorPositions.Remove(trig);
+		}
 		bool shouldRebuildStates = false;
 		foreach(State state in stateInspectorPositions.Keys) {
 			if(!stMachine.controlledStates.Contains(state)) {
@@ -120,8 +126,15 @@ public class StateMachineEditor : EditorWindow {
 		}
 		if(shouldRebuildStates) {
 			stateInspectorPositions = new Dictionary<State, Rect>();
+			triggerInspectorPositions = new Dictionary<TriggerManager, Rect>();
 		}
 		statesToRemove = new List<State>();
+	}
+	
+	void AddTrigger() {
+		TriggerManager newTrig = new TriggerManager();
+		stMachine.controlledTriggers.Add(newTrig);
+		newTrig.inspectorCorner = curMousePos - globalViewOffset;
 	}
 	
 	void DrawContextMenu() {
@@ -130,6 +143,7 @@ public class StateMachineEditor : EditorWindow {
 			menu.AddItem(new GUIContent("Add State/" + it.name), false, AddStateToMachine, it);
 		}
 		menu.AddItem(new GUIContent("Add State/Sub Machine"), false, AddSubMachine);
+		menu.AddItem(new GUIContent("Add Trigger"), false, AddTrigger);
 		menu.ShowAsContext ();
 	}
 	
@@ -152,43 +166,55 @@ public class StateMachineEditor : EditorWindow {
 				stateInspectorPositions.Add(state, new Rect(state.inspectorCorner.x, state.inspectorCorner.y, 50, 50));
 			}
 		}
+		foreach(TriggerManager manager in stMachine.controlledTriggers) {
+			if(!triggerInspectorPositions.ContainsKey(manager)) {
+				triggerInspectorPositions.Add(manager, new Rect(manager.inspectorCorner.x, manager.inspectorCorner.y, 50, 50));
+			}
+		}
 		if(Event.current.type == EventType.MouseDrag && GUIUtility.hotControl == 0) {
 			globalViewOffset += Event.current.delta;
 			EditorGUIUtility.AddCursorRect(new Rect(Event.current.mousePosition.x - 10, Event.current.mousePosition.y - 10, 20, 20), MouseCursor.MoveArrow);
 			Event.current.Use();
 		}
 		
-		/*GUI.matrix = curViewMatrix;
-		if(Event.current.type == EventType.ScrollWheel) {
-			currentScale -= Event.current.delta.y;
-			currentScale = Mathf.Clamp(currentScale, 0.8f, 1.5f);
-			curViewMatrix = Matrix4x4.TRS(Event.current.mousePosition * (currentScale - 1), Quaternion.identity, Vector3.one * currentScale);
-			Event.current.Use();
-		}*/
-		
-		//Debug.Log(curViewMatrix);
-		//Debug.Log (currentScale);
-		//Debug.Log(GUI.GetNameOfFocusedControl());
-		
-		State[] tempKeys = new State[stateInspectorPositions.Count];
-		stateInspectorPositions.Keys.CopyTo(tempKeys, 0);
-		Rect[] tempValues = new Rect[stateInspectorPositions.Count];
-		stateInspectorPositions.Values.CopyTo(tempValues, 0);
+		State[] tempStates = new State[stateInspectorPositions.Count];
+		stateInspectorPositions.Keys.CopyTo(tempStates, 0);
+		Rect[] tempRects = new Rect[stateInspectorPositions.Count];
+		stateInspectorPositions.Values.CopyTo(tempRects, 0);
 		currentScrollPos = GUILayout.BeginScrollView(currentScrollPos);
 		BeginWindows();
 		Vector2 bottomCorner = Vector2.zero;
-		for(int i = 0; i < tempKeys.Length; ++i) {
-			stateInspectorPositions[tempKeys[i]] = GUILayout.Window(i, tempValues[i].OffsetBy(globalViewOffset), DrawStateInspector, tempKeys[i].GetNiceName()).OffsetBy(-globalViewOffset);
-			bottomCorner.x = Mathf.Max(bottomCorner.x, tempValues[i].OffsetBy(globalViewOffset).x);
-			bottomCorner.y = Mathf.Max(bottomCorner.y, tempValues[i].OffsetBy(globalViewOffset).y);
+		for(int i = 0; i < tempStates.Length; ++i) {
+			stateInspectorPositions[tempStates[i]] = GUILayout.Window(i, tempRects[i].OffsetBy(globalViewOffset), DrawStateInspector, tempStates[i].GetNiceName()).OffsetBy(-globalViewOffset);
+			bottomCorner.x = Mathf.Max(bottomCorner.x, tempRects[i].OffsetBy(globalViewOffset).x);
+			bottomCorner.y = Mathf.Max(bottomCorner.y, tempRects[i].OffsetBy(globalViewOffset).y);
 		}
+		TriggerManager[] tempTriggers = new TriggerManager[triggerInspectorPositions.Count];
+		triggerInspectorPositions.Keys.CopyTo(tempTriggers, 0);
+		tempRects = new Rect[triggerInspectorPositions.Count];
+		triggerInspectorPositions.Values.CopyTo(tempRects, 0);
+		for(int i = 0; i < tempTriggers.Length; ++i) {
+			triggerInspectorPositions[tempTriggers[i]] = GUILayout.Window(i + tempStates.Length, tempRects[i].OffsetBy(globalViewOffset), DrawTriggerInspector, "Trigger").OffsetBy(-globalViewOffset);
+			bottomCorner.x = Mathf.Max(bottomCorner.x, tempRects[i].OffsetBy(globalViewOffset).x);
+			bottomCorner.y = Mathf.Max(bottomCorner.y, tempRects[i].OffsetBy(globalViewOffset).y);
+		}
+		
 		GUILayoutUtility.GetRect(bottomCorner.x, bottomCorner.y);
 		EndWindows();
 		//GUI.Box(GUILayoutUtility.GetLastRect(), "BABABHAHHA");
 		foreach(Line curLine in linesToDraw) {
 			Handles.color = curLine.drawColour;
 			Handles.DrawLine (curLine.start + globalViewOffset, curLine.end + globalViewOffset);
-			Handles.ArrowCap(0, (Vector3)(curLine.start + globalViewOffset) - new Vector3(0, 0, 10), Quaternion.LookRotation(curLine.end - curLine.start), 70);
+			switch(curLine.myDir)
+			{
+			case Direction.Forwards:
+				Handles.ArrowCap(0, (Vector3)(curLine.start + globalViewOffset) - new Vector3(0, 0, 10), Quaternion.LookRotation(curLine.end - curLine.start), 70);
+				break;
+			case Direction.Backwards:
+				Handles.ArrowCap(0, (Vector3)(curLine.end + globalViewOffset) - new Vector3(0, 0, 10), Quaternion.LookRotation(curLine.start - curLine.end), 70);
+				break;
+			}
+			
 		}
 		
 		
@@ -207,6 +233,57 @@ public class StateMachineEditor : EditorWindow {
 		statesToRemove.Add((State)objToDelete);
 	}
 	
+	void DeleteTrigger(object objToDelete)
+	{
+		triggersToRemove.Add((TriggerManager)objToDelete);
+	}
+	
+	void DrawTriggerInspector(int windowID) {
+		TriggerManager[] tempKeys = new TriggerManager[triggerInspectorPositions.Count];
+		triggerInspectorPositions.Keys.CopyTo(tempKeys, 0);
+		TriggerManager curTrigger = tempKeys[windowID - stateInspectorPositions.Count];
+		
+		if(Event.current.type == EventType.MouseDown && Event.current.button == 1) {
+			GenericMenu menu = new GenericMenu();
+			menu.AddItem(new GUIContent("Delete"), false, DeleteTrigger, curTrigger);
+			menu.ShowAsContext ();
+			Event.current.Use();
+		}
+		
+		GUILayout.Label("From --> Obs --> To");
+		GUILayout.BeginHorizontal();
+		curTrigger.owner = LineStateSelector(curTrigger.owner, Color.cyan, windowID, curTrigger.inspectorCorner, null, Direction.Backwards);
+		GUILayout.FlexibleSpace();
+		curTrigger.watched = LineStateSelector(curTrigger.watched, Color.green, windowID, curTrigger.inspectorCorner, null, Direction.None);
+		GUILayout.FlexibleSpace();
+		curTrigger.target = LineStateSelector(curTrigger.target, Color.blue, windowID, curTrigger.inspectorCorner, null, Direction.Forwards);
+		GUILayout.EndHorizontal();
+		if(curTrigger.watched != null && curTrigger.watched.GetExposedVariables().Length > 0)
+		{
+			curTrigger.observedIndex = curTrigger.watched.DrawObservableSelector(curTrigger.observedIndex);
+			GUI.contentColor = Color.black;
+			EditorGUIUtility.LookLikeControls();
+			
+			curTrigger.mode = (TriggerMode)EditorGUILayout.EnumPopup(curTrigger.mode);
+			switch(curTrigger.obsType) {
+			case ObservedType.integer:
+				curTrigger.intTarget = EditorGUILayout.IntField(curTrigger.intTarget, GUILayout.MaxWidth(triggerInspectorPositions[curTrigger].width));
+				break;
+			case ObservedType.floatingPoint:
+				curTrigger.floatTarget = EditorGUILayout.FloatField(curTrigger.floatTarget, GUILayout.MaxWidth(triggerInspectorPositions[curTrigger].width));
+				break;
+				case ObservedType.boolean:
+				curTrigger.boolTarget = EditorGUILayout.Toggle(curTrigger.boolTarget, GUILayout.MaxWidth(triggerInspectorPositions[curTrigger].width));
+				break;
+			}
+			GUI.contentColor = Color.white;
+			EditorGUIUtility.LookLikeInspector();
+		}
+		
+		GUI.DragWindow();
+		curTrigger.inspectorCorner = new Vector2(triggerInspectorPositions[curTrigger].x, triggerInspectorPositions[curTrigger].y);
+	}
+	
 	void DrawStateInspector(int windowID) {
 		State[] tempKeys = new State[stateInspectorPositions.Count];
 		stateInspectorPositions.Keys.CopyTo(tempKeys, 0);
@@ -222,67 +299,8 @@ public class StateMachineEditor : EditorWindow {
 		foreach(LinkedStateReference stRef in curState.GetStateTransitions()) {
 			GUILayout.BeginHorizontal();
 			GUILayout.Label(stRef.GetLabel());
-			int linkID = GUIUtility.GetControlID (windowID, FocusType.Native);
-			Rect circleRect = GUILayoutUtility.GetRect(18, 18);
 			
-			EditorGUIUtility.AddCursorRect(circleRect, MouseCursor.Link);
-			switch (Event.current.GetTypeForControl(linkID))
-	        {
-	            case EventType.MouseDown:
-				if (circleRect.Contains (Event.current.mousePosition) && GUIUtility.hotControl == 0)
-				{
-					GUIUtility.hotControl = linkID;
-                    Event.current.Use ();
-				}
-				break;
-				case EventType.MouseUp:
-	            if (GUIUtility.hotControl == linkID)
-	            {
-					// Check for having dragged over a different state here!
-					bool newStatePicked = false;
-					foreach(State curst in tempKeys) {
-						if(stateInspectorPositions[curst].Contains(Event.current.mousePosition + curState.inspectorCorner)) {
-							if(curst == curState) {
-								continue;
-							}
-							stRef.SetState(curst);
-							newStatePicked = true;
-							break;
-						}
-					}
-					if(!newStatePicked) {
-						stRef.SetState(null);	
-					}
-					GUIUtility.hotControl = 0;
-					Event.current.Use ();
-	            }
-	            break;
-				case EventType.MouseDrag:
-				if(GUIUtility.hotControl == linkID)
-				{
-					Event.current.Use ();
-				}
-				break;
-		        case EventType.Repaint:
-		            Handles.color = GUIUtility.hotControl == linkID ? Color.red : Color.blue;
-					Vector2 circlePos = new Vector2(circleRect.xMax - 5, circleRect.yMin + (circleRect.height / 2));
-					Handles.DrawSolidDisc(circlePos, Vector3.forward, 5);
-					if(GUIUtility.hotControl == linkID) {
-						linesToDraw.Add(new Line(circlePos + curState.inspectorCorner, Event.current.mousePosition + curState.inspectorCorner, Handles.color));
-						//Vector2 outPos;	
-						//stateInspectorPositions[curState].IntersectLine(circlePos + curState.inspectorCorner, Event.current.mousePosition + curState.inspectorCorner, out outPos);
-					} else if (stRef.GetState() != null) {
-						Vector2 outPos;
-						if(!stateInspectorPositions.ContainsKey(stRef.GetState())) {
-							stRef.SetState(null);
-							break;
-						}
-						stateInspectorPositions[stRef.GetState()].IntersectLine(circlePos + curState.inspectorCorner, stateInspectorPositions[stRef.GetState()].center, out outPos);
-						linesToDraw.Add(new Line(circlePos + curState.inspectorCorner, outPos, Handles.color));
-					}
-		        break;
-	        }
-			
+			stRef.SetState(LineStateSelector (stRef.GetState(), Color.blue, windowID, curState.inspectorCorner, curState, Direction.Forwards));
 			
 			GUILayout.EndHorizontal();
 		}
@@ -301,5 +319,67 @@ public class StateMachineEditor : EditorWindow {
 		
 		GUI.DragWindow();
 		curState.inspectorCorner = new Vector2(stateInspectorPositions[curState].x, stateInspectorPositions[curState].y);
+	}
+	
+	State LineStateSelector(State currentlySelected, Color defaultColour, int idHint, Vector2 mouseOffset, State ignoreThis, Direction lineDirection, params GUILayoutOption[] options) {
+		Rect circleRect = GUILayoutUtility.GetRect(18, 18, options);
+		int linkID = GUIUtility.GetControlID (idHint, FocusType.Native);
+		EditorGUIUtility.AddCursorRect(circleRect, MouseCursor.Link);
+		State retV = currentlySelected;
+		switch (Event.current.GetTypeForControl(linkID))
+        {
+            case EventType.MouseDown:
+			if (circleRect.Contains (Event.current.mousePosition) && GUIUtility.hotControl == 0)
+			{
+				Undo.RegisterUndo(stMachine, "Modify state transition");
+				GUIUtility.hotControl = linkID;
+                Event.current.Use ();
+			}
+			break;
+			case EventType.MouseUp:
+            if (GUIUtility.hotControl == linkID)
+            {
+				// Check for having dragged over a different state here!
+				retV = null;
+				foreach(State curst in stateInspectorPositions.Keys) {
+					if(stateInspectorPositions[curst].Contains(Event.current.mousePosition + mouseOffset)) {
+						if(curst == ignoreThis) {
+							continue;
+						}
+						//Event.current.Use();
+						retV = curst;
+						break;
+					}
+				}
+				GUIUtility.hotControl = 0;
+				Event.current.Use ();
+				return retV;
+            }
+            break;
+			case EventType.MouseDrag:
+			if(GUIUtility.hotControl == linkID)
+			{
+				Event.current.Use ();
+			}
+			break;
+	        case EventType.Repaint:
+	            Handles.color = GUIUtility.hotControl == linkID ? Color.red : defaultColour;
+				Vector2 circlePos = new Vector2(circleRect.xMax - 5, circleRect.yMin + (circleRect.height / 2));
+				Handles.DrawSolidDisc(circlePos, Vector3.forward, 5);
+				if(GUIUtility.hotControl == linkID) {
+					linesToDraw.Add(new Line(circlePos + mouseOffset, Event.current.mousePosition + mouseOffset, Handles.color, lineDirection));
+					//Vector2 outPos;	
+					//stateInspectorPositions[curState].IntersectLine(circlePos + curState.inspectorCorner, Event.current.mousePosition + curState.inspectorCorner, out outPos);
+				} else if (currentlySelected != null) {
+					Vector2 outPos;
+					if(!stateInspectorPositions.ContainsKey(currentlySelected)) {
+						return retV;
+					}
+					stateInspectorPositions[currentlySelected].IntersectLine(circlePos + mouseOffset, stateInspectorPositions[currentlySelected].center, out outPos);
+					linesToDraw.Add(new Line(circlePos + mouseOffset, outPos, Handles.color, lineDirection));
+				}
+	        break;
+        }
+		return retV;
 	}
 }

@@ -16,9 +16,9 @@ public class Machine : State {
 	private State nextState = null;
 	
 	public List<State> controlledStates;
+	public List<TriggerManager> controlledTriggers;
 	
-	new void Awake() {
-		base.Awake();
+	void Awake() {
 		currentState = startingState;
 		if(currentState == null)
 		{
@@ -37,6 +37,11 @@ public class Machine : State {
 	public override IEnumerator Run(Brain controller) {
 		yield return StartCoroutine(currentState.Run(controller));
 		
+		foreach(TriggerManager manager in currentState.GetTriggers()) {
+			if(manager.ShouldTrigger()) {
+				nextState = manager.target;
+			}
+		}
 		if(nextState != null) {
 			yield return currentState.Exit();
 			currentState = nextState;
@@ -64,5 +69,10 @@ public class Machine : State {
 	}
 	override public void DrawInspector() {
 		
+	}
+	override public int DrawObservableSelector(int currentlySelected) {
+		//string[] gridLabels = new string[] {};
+		//return GUILayout.SelectionGrid(currentlySelected, gridLabels,1);
+		return 0;
 	}
 }

@@ -75,16 +75,22 @@ public abstract class State : MonoBehaviour {
 	
 	public abstract List<LinkedStateReference> GetStateTransitions();
 	
-	public List<TriggerManager> triggers;
 	
-	public void Awake() {
-		foreach(TriggerManager trig in triggers) {
-			trig.owner = this;
-			trig.BuildTrigger();
-		}
+	private List<TriggerManager> triggers = new List<TriggerManager>();
+	
+	public void AddTrigger(TriggerManager newTrig)
+	{
+		triggers.Add(newTrig);
 	}
 	
+	public List<TriggerManager> GetTriggers() {
+		return triggers;
+	}
+	
+	// Add inspector GUI code here- will show up inside the box in the editor.
 	public abstract void DrawInspector();
+	// A simple abstract selector, to allow a trigger to intelligently pick 
+	public abstract int DrawObservableSelector(int currentlySelected);
 	
 	public abstract string GetNiceName();
 	

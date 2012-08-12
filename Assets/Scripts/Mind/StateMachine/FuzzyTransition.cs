@@ -38,4 +38,10 @@ public class FuzzyTransition : State {
 		GUILayout.Label("1 <----------> 2");
 		fuzzyChance = GUILayout.HorizontalSlider(fuzzyChance * 100, 0, 100) / 100;
 	}
+	
+	override public int DrawObservableSelector(int currentlySelected) {
+		//string[] gridLabels = new string[] {};
+		//return GUILayout.SelectionGrid(currentlySelected, gridLabels,1);
+		return 0;
+	}
 }

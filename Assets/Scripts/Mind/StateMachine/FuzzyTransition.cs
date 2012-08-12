@@ -1,24 +1,21 @@
 using UnityEngine;
 using System.Collections;
-
-public class FuzzyTransition : State {
+/*
+public class FuzzyTransition<T> : MonoBehaviour {
 	public float fuzzyChance;
 	
 	public State optionOne;
 	public State optionTwo;
 	
-	public override IEnumerator Enter(Machine owner) {
-		owner.RequestStateTransition(fuzzyChance > Random.value ? optionOne : optionTwo);
+	public override IEnumerator Enter(T owner) {
+		//owner.RequestStateTransition(fuzzyChance > Random.value ? optionOne : optionTwo);
 		yield return null;
 	}
-	public override IEnumerator Exit() {
+	public override IEnumerator Exit(T owner) {
 		yield return null;
 	}
-	public override IEnumerator Run(Brain controller) {
+	public override IEnumerator Run(T owner) {
 		yield return null;
-	}
-	public override ObservedVariable[] GetExposedVariables ()
-	{
-		return new ObservedVariable[0];
 	}
 }
+*/

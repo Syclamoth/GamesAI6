@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+/*
 // A serialisable type that can keep track of the connection between observed variables and actual triggers.
 // At 'runtime', generates the type-safe trigger to be used.
 [System.Serializable]
@@ -73,3 +73,4 @@ public enum ObservedType {
 	boolean,
 	other
 }
+*/

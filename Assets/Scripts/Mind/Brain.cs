@@ -2,19 +2,20 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Brain : MonoBehaviour {
-
+public class Brain<T> : MonoBehaviour {
+    public T owner;
 	public SensoryCortex senses;
 	public Legs legs;
-	public State behaviour;
-	
+	public Machine<T> behaviour;
+
 	void Start() {
-		StartCoroutine(RunStateMachine());
+		//StartCoroutine(RunStateMachine());
+        RunStateMachine();
 	}
 	
-	IEnumerator RunStateMachine() {
+	void RunStateMachine() {
 		while(true) {
-			yield return behaviour.Run (this);
+			behaviour.Awake();
 		}
 	}
 	

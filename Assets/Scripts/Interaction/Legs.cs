@@ -62,4 +62,8 @@ public class Legs : MonoBehaviour {
 			//movement.Translate (velocity * Time.deltaTime);
 		}
 	}
+	
+	public Vector2 getVelocity() {
+		return velocity;
+	}
 }

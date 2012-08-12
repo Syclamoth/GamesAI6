@@ -9,14 +9,14 @@ public class Arrive : TargetableSteeringBehaviour {
 		Vector2 target = this.getTarget ();
 		if (target == default(Vector2))
 		{
-			return SteeringBehaviour.ZERO_VECTOR;
+			return this.getLegs ().getVelocity();
 		}
 		
 		Vector2 target_offset = target - position;
-		if (target_offset.sqrMagnitude < 9.0f)
-			return SteeringBehaviour.ZERO_VECTOR;
+		//if (target_offset.sqrMagnitude < 9.0f)
+		//	return SteeringBehaviour.ZERO_VECTOR;
     	float distance = target_offset.magnitude;
-    	float ramped_speed = this.getLegs().equilibrium * (distance / 5.0f);
+    	float ramped_speed = this.getLegs().equilibrium * (distance / 2.0f);
     	float clipped_speed = System.Math.Min(ramped_speed,this.getLegs().equilibrium);
     	return (clipped_speed / distance) * target_offset;
 	}

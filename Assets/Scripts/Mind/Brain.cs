@@ -8,6 +8,8 @@ public class Brain : MonoBehaviour {
 	public Legs legs;
 	public State behaviour;
 	
+	public Memory memory = new Memory();
+	
 	void Start() {
 		StartCoroutine(RunStateMachine());
 	}

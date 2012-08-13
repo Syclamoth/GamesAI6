@@ -36,7 +36,14 @@ public class Eyes : Sense {
 					float totalAggregate = GetTotalAggregate(obj);
 					debugStrings.Add(new StringAtPoint(totalAggregate.ToString(), obj.transform.position));
 					if(totalAggregate > attentiveness) {
-						retV.Add(new SensedObject(obj));
+						AgentClassification myType = AgentClassification.Unknown;
+						if(obj.tag == "Wolf") {
+							myType = AgentClassification.Wolf;
+						}
+						if(obj.tag == "Sheep") {
+							myType = AgentClassification.Sheep;
+						}
+						retV.Add(new SensedObject(obj, myType));
 					}
 				}
 			}

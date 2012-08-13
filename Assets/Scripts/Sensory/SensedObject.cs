@@ -4,13 +4,22 @@ using System.Collections;
 public class SensedObject {
 
 	private GameObject sensedObject;
-	//add AgentClassification class
+	private AgentClassification type;
     public SensedObject(GameObject obj)
     {
         sensedObject = obj;
+		type = AgentClassification.Unknown;
+    }
+	public SensedObject(GameObject obj, AgentClassification newType)
+    {
+        sensedObject = obj;
+		type = newType;
     }
     public GameObject getObject()
     {
         return sensedObject;
     }
+	public AgentClassification getAgentType() {
+		return type;
+	}
 }

@@ -49,7 +49,8 @@ public class StateMachineEditor : EditorWindow {
 	
 	StateMenuItem[] menuItems = new StateMenuItem[] {
 		new StateMenuItem("Fuzzy Transition", typeof(FuzzyTransition)),
-		new StateMenuItem("Idle", typeof(Idle))
+		new StateMenuItem("Idle", typeof(Idle)),
+		new StateMenuItem("Sheep Idle", typeof(SheepIdle))
 	};
 	
 	////---- END

@@ -2,10 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 public class GroupMemberSteeringBehaviour : SteeringBehaviour {
+	
 	public List<GameObject> getNearbyTaggedObjects(string tagName,float radius) {
 		List<GameObject> objects = new List<GameObject>();
 		GameObject[] allObjs = GameObject.FindGameObjectsWithTag(tagName);
-		Vector3 myPos = this.getLegs().transform.position;
+		Vector3 myPos = this.getLegs().myTrans.position;
 		for (int i=0;i < allObjs.Length;++i)
 		{
 			if (allObjs[i] == this.getLegs ().gameObject)

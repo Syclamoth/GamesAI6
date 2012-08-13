@@ -21,7 +21,7 @@ public class SheepLegs : Legs {
 		seekBehaviour.setTarget (go);
 		this.addSteeringBehaviour(seekBehaviour);
 		this.addSteeringBehaviour(separation);
-		this.addSteeringBehaviour(separation);
+		this.addSteeringBehaviour(cohesion);
 		this.addSteeringBehaviour(alignment);
 	}
     public void translate(Vector2 offset)

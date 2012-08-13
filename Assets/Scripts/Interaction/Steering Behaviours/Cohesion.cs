@@ -14,8 +14,7 @@ public class Cohesion : GroupMemberSteeringBehaviour {
 	}
 	public override Vector2 _getDesiredVelocity ()
 	{
-		
-		List<GameObject> nearby = this.getNearbyTaggedObjects("Sheep",20.0f);
+		List<GameObject> nearby = this.getNearbyTaggedObjects("Sheep",5.0f);
 		
 		if (nearby == null)
 			return this.getLegs ().getVelocity();
@@ -32,7 +31,6 @@ public class Cohesion : GroupMemberSteeringBehaviour {
 		avg /= nearby.Count;
 		
 		this.getSeekBehaviour().setTarget (avg);
-		
 		return this.getSeekBehaviour().getDesiredVelocity();
 	}
 }

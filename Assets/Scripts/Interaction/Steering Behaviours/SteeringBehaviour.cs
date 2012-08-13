@@ -5,13 +5,12 @@ public class SteeringBehaviour  {
 	private Legs legs;
 	private float weight;
 	private float internal_weight;
-	public static Vector2 ZERO_VECTOR = new Vector2(0,0);
 	public Vector2 getDesiredVelocity() {
 		internal_weight = 1.0f;
 		return _getDesiredVelocity();
 	}
 	public virtual Vector2 _getDesiredVelocity() {
-		return SteeringBehaviour.ZERO_VECTOR;
+		return Vector2.zero;
 	}
 	public void Init(Legs legs)
 	{

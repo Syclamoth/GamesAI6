@@ -19,6 +19,6 @@ public class Arrive : TargetableSteeringBehaviour {
     	float distance = target_offset.magnitude;
     	float ramped_speed = this.getLegs().equilibrium * (distance / 2.0f);
     	float clipped_speed = System.Math.Min(ramped_speed,this.getLegs().equilibrium);
-    	return (clipped_speed / distance) * target_offset;
+    	return (clipped_speed / distance) * target_offset * 10;
 	}
 }

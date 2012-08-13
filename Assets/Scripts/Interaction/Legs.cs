@@ -25,6 +25,17 @@ public class Legs : MonoBehaviour {
 	protected MoveManager movement;
 	
 	
+	private Transform _myTrans = null;
+	
+	public Transform myTrans {
+		get {
+			if(_myTrans == null) {
+				_myTrans = transform;
+			}
+			return _myTrans;
+		}
+	}
+	
 	// Initialisation functions
 	public void Start()
 	{
@@ -60,9 +71,9 @@ public class Legs : MonoBehaviour {
 			if (sum == 0)
 				return;
 			acceleration /= sum;
-			
-			velocity = Vector2.ClampMagnitude(velocity + acceleration,maxSpeed);
-			this.transform.position += new Vector3(velocity.x,0,velocity.y);
+			velocity = Vector2.ClampMagnitude(velocity + (acceleration * Time.deltaTime), maxSpeed);
+			this.transform.position += new Vector3(velocity.x,0,velocity.y) * Time.deltaTime;
+			Debug.DrawRay(myTrans.position, new Vector3(velocity.x,0,velocity.y), Color.yellow);
 			//movement.Translate (velocity * Time.deltaTime);
 		}
 	}

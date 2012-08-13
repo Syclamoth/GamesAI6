@@ -12,13 +12,11 @@ public class Separation : GroupMemberSteeringBehaviour {
 		if (objectsToAvoid == null)
 			return this.getLegs ().getVelocity();
 		
-		IEnumerator<GameObject> it = objectsToAvoid.GetEnumerator();
-		
 		Vector2 sum = new Vector2(0,0);
 		
-		while (it.MoveNext ())
+		foreach(GameObject obj in objectsToAvoid)
 		{
-			Vector2 target = new Vector2(it.Current.transform.position.x,it.Current.transform.position.z);
+			Vector2 target = new Vector2(obj.transform.position.x, obj.transform.position.z);
 			Vector2 change = position - target;
 			//sum += change.normalized * (change.magnitude / 1.5f);
 			sum += change * Mathf.Lerp (500, 0, change.magnitude / avoidanceDistance);

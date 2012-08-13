@@ -54,19 +54,26 @@ public class Legs : MonoBehaviour {
 		steeringBehaviours.Add (behaviour);
 	}
 	
+	public void removeSteeringBehaviour(SteeringBehaviour behaviour)
+	{
+		steeringBehaviours.Remove(behaviour);
+	}
+	
 	public void Update()
 	{
 		if (steeringBehaviours.Count > 0)
 		{
 			acceleration = new Vector2(0,0);
-			IEnumerator<SteeringBehaviour> it = steeringBehaviours.GetEnumerator ();
 			float sum = 0;
-			for (it.Reset();it.MoveNext();)
+			/* The foreach statement in C# is internally identical to using a for loop over the iterator returned by 'GetEnumerator',
+			 * only with clearer syntax. Don't be afraid of them!
+			 * */
+			foreach (SteeringBehaviour behaviour in steeringBehaviours)
 			{
 				//I have no idea why ClampMagnitude is static...
-				Vector2 steering_force = Vector2.ClampMagnitude(it.Current.getDesiredVelocity() - velocity,maxForce);
-				sum += it.Current.getWeight ();
-				acceleration += it.Current.getWeight()*(steering_force/mass);
+				Vector2 steering_force = Vector2.ClampMagnitude(behaviour.getDesiredVelocity() - velocity,maxForce);
+				sum += behaviour.getWeight ();
+				acceleration += behaviour.getWeight()*(steering_force/mass);
 			}
 			if (sum == 0)
 				return;

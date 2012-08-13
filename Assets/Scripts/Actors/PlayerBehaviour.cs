@@ -15,5 +15,13 @@ public class PlayerBehaviour : MonoBehaviour {
 	void Update () {
 	    Vector2 direction = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"));
         legs.translate(direction * Time.deltaTime * speed);
+		
+		if(Input.GetMouseButtonDown(0)){
+			//Failed mouse input
+		    Vector3 mousePositionInWorld = Camera.mainCamera.ScreenToWorldPoint(Input.mousePosition);
+			mousePositionInWorld.y = 0;
+			GameObject.Find("SheepTarget").transform.position = mousePositionInWorld;
+		}
+		
 	}
 }

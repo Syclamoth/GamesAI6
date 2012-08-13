@@ -14,6 +14,8 @@ public class Brain : MonoBehaviour {
 	
 	IEnumerator RunStateMachine() {
 		while(true) {
+			if (behaviour == null)
+				break;
 			yield return behaviour.Run (this);
 		}
 	}

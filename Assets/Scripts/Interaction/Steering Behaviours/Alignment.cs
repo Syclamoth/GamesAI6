@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Alignment : GroupMemberSteeringBehaviour {
-	public override Vector2 getDesiredVelocity ()
+	public override Vector2 _getDesiredVelocity ()
 	{
 		
-		List<GameObject> nearby = this.getNearbyTaggedObjects("Sheep",1.5f);
+		List<GameObject> nearby = this.getNearbyTaggedObjects("Sheep",10.0f);
 		
 		if (nearby == null)
 			return this.getLegs ().getVelocity();

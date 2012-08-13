@@ -49,17 +49,13 @@ public class Legs : MonoBehaviour {
 		{
 			acceleration = new Vector2(0,0);
 			IEnumerator<SteeringBehaviour> it = steeringBehaviours.GetEnumerator ();
-			float sum = 0;
 			for (it.Reset();it.MoveNext();)
 			{
 				//I have no idea why ClampMagnitude is static...
 				Vector2 steering_force = Vector2.ClampMagnitude(it.Current.getDesiredVelocity() - velocity,maxForce);
-				sum += it.Current.getWeight ();
-				acceleration += it.Current.getWeight()*(steering_force/mass);
+				acceleration += steering_force/mass;
 			}
-			if (sum == 0)
-				return;
-			acceleration /= sum;
+			acceleration /= steeringBehaviours.Count;
 			
 			velocity = Vector2.ClampMagnitude(velocity + acceleration,maxSpeed);
 			this.transform.position += new Vector3(velocity.x,0,velocity.y);

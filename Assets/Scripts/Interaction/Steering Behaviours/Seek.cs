@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class Seek : TargetableSteeringBehaviour {
-	public override Vector2 _getDesiredVelocity() {
+	public override Vector2 getDesiredVelocity() {
 		Vector2 target = this.getTarget ();
 		if (target == default(Vector2))
 			return SteeringBehaviour.ZERO_VECTOR;

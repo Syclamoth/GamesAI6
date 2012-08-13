@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 public class Separation : GroupMemberSteeringBehaviour {
 
-	public override Vector2 _getDesiredVelocity ()
+	public override Vector2 getDesiredVelocity ()
 	{
 		Vector2 position = new Vector2(this.getLegs().transform.position.x,this.getLegs().transform.position.z);
 		

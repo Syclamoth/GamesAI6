@@ -18,6 +18,8 @@ public class Machine : State {
 	public List<State> controlledStates;
 	public List<TriggerManager> controlledTriggers;
 	
+	private bool triggersBuilt = false;
+	
 	void Awake() {
 		currentState = startingState;
 		if(currentState == null)
@@ -35,6 +37,12 @@ public class Machine : State {
 	}
 	
 	public override IEnumerator Run(Brain controller) {
+		if(!triggersBuilt) {
+			foreach(TriggerManager manager in controlledTriggers) {
+				manager.BuildTrigger(controller);
+			}
+			triggersBuilt = true;
+		}
 		yield return StartCoroutine(currentState.Run(controller));
 		
 		foreach(TriggerManager manager in currentState.GetTriggers()) {

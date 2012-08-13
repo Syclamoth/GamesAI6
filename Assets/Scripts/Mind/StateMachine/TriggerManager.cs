@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-// A serialisable type that can keep track of the connection between observed variables and actual triggers.
-// At 'runtime', generates the type-safe trigger to be used.
+
 [System.Serializable]
 public class TriggerManager {
 	public int observedIndex;
@@ -16,7 +15,11 @@ public class TriggerManager {
 	public float floatTarget;
 	public bool boolTarget;
 	
+	public string memoryKey;
+	
 	public TriggerMode mode;
+	
+	private Brain watchedBrain = null;
 	
 	private State.ObservedVariable observed;
 	
@@ -41,7 +44,7 @@ public class TriggerManager {
 		}
 	}
 	
-	public void BuildTrigger() {
+	public void BuildTrigger(Brain cortex) {
 		if(owner != null)
 		{
 			owner.AddTrigger(this);
@@ -49,7 +52,21 @@ public class TriggerManager {
 		if(watched != null)
 		{
 			observed = watched.GetExposedVariables()[observedIndex];
+		} else {
+			watchedBrain = cortex;
+			observed = GetMemoryData;
 		}
+	}
+	
+	System.IComparable GetMemoryData() {
+		System.IComparable retV = 0;
+		try {
+			retV = (System.IComparable)watchedBrain.memory.GetValue(memoryKey);
+		} catch (System.InvalidCastException e) {
+			Debug.LogWarning("The data stored in " + memoryKey + " is not compatible with triggers! Make sure you are using the correct key.");
+			retV = 0;
+		}
+		return retV;
 	}
 	
 	public bool ShouldTrigger() {
@@ -63,6 +80,9 @@ public class TriggerManager {
 			break;
 		case ObservedType.boolean:
 			targetValue = boolTarget;
+			break;
+		case ObservedType.other:
+			targetValue = floatTarget;
 			break;
 		}
 		switch (mode) {

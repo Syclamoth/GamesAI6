@@ -69,6 +69,8 @@ public class StateMachineEditor : EditorWindow {
 	
 	Vector2 currentScrollPos;
 	Vector2 curMousePos;
+	
+	bool pickingStartState = false;
 	State GetStateFromPosition(Vector2 guiPos) {
 		foreach(KeyValuePair<State, Rect> pair in stateInspectorPositions) {
 			if(pair.Value.Contains(guiPos)) {
@@ -130,6 +132,10 @@ public class StateMachineEditor : EditorWindow {
 			triggerInspectorPositions = new Dictionary<TriggerManager, Rect>();
 		}
 		statesToRemove = new List<State>();
+		
+		if(stMachine.startingState == null && stMachine.controlledStates.Count > 0) {
+			stMachine.startingState = stMachine.controlledStates[0];
+		}
 	}
 	
 	void AddTrigger() {
@@ -158,8 +164,26 @@ public class StateMachineEditor : EditorWindow {
 				Selection.activeGameObject = stMachine.transform.parent.gameObject;
 				stMachine = null;
 				stateInspectorPositions = new Dictionary<State, Rect>();
+				triggerInspectorPositions = new Dictionary<TriggerManager, Rect>();
 				return;
 			}
+		}
+		pickingStartState = GUILayout.Toggle(pickingStartState, "Pick Initial State", GUI.skin.button);
+		if(pickingStartState) {
+			if(Event.current.type == EventType.MouseDown) {
+				foreach(State state in stateInspectorPositions.Keys) {
+					if(stateInspectorPositions[state].Contains(Event.current.mousePosition - globalViewOffset)) {
+						Debug.Log (state);
+						stMachine.startingState = state;
+						break;
+					}
+				}
+				pickingStartState = false;
+				Event.current.Use();
+			}
+		}
+		if(stMachine.controlledStates.Count == 0) {
+			GUILayout.Label("You must add at least one state to this machine!");
 		}
 		curMousePos = Event.current.mousePosition;
 		foreach(State state in stMachine.controlledStates) {
@@ -217,8 +241,12 @@ public class StateMachineEditor : EditorWindow {
 			}
 			
 		}
+		if(stMachine.startingState != null && stateInspectorPositions.ContainsKey(stMachine.startingState)) {
+			Handles.color = Color.white;
+			Handles.DrawSolidRectangleWithOutline(stateInspectorPositions[stMachine.startingState].OffsetBy(globalViewOffset).GetCorners(), Color.clear, Color.green);
+		}
 		
-		
+		//foreach(
 		//GUILayout.Label ("BLUH BLAH");
 		
 		if(Event.current.type == EventType.ContextClick) {
@@ -255,7 +283,7 @@ public class StateMachineEditor : EditorWindow {
 		GUILayout.BeginHorizontal();
 		curTrigger.owner = LineStateSelector(curTrigger.owner, Color.cyan, windowID, curTrigger.inspectorCorner, null, Direction.Backwards);
 		GUILayout.FlexibleSpace();
-		curTrigger.watched = LineStateSelector(curTrigger.watched, Color.green, windowID, curTrigger.inspectorCorner, null, Direction.None);
+		curTrigger.watched = LineStateSelector((State)curTrigger.watched, Color.green, windowID, curTrigger.inspectorCorner, null, Direction.None);
 		GUILayout.FlexibleSpace();
 		curTrigger.target = LineStateSelector(curTrigger.target, Color.blue, windowID, curTrigger.inspectorCorner, null, Direction.Forwards);
 		GUILayout.EndHorizontal();
@@ -273,14 +301,21 @@ public class StateMachineEditor : EditorWindow {
 			case ObservedType.floatingPoint:
 				curTrigger.floatTarget = EditorGUILayout.FloatField(curTrigger.floatTarget, GUILayout.MaxWidth(triggerInspectorPositions[curTrigger].width));
 				break;
-				case ObservedType.boolean:
+			case ObservedType.boolean:
 				curTrigger.boolTarget = EditorGUILayout.Toggle(curTrigger.boolTarget, GUILayout.MaxWidth(triggerInspectorPositions[curTrigger].width));
 				break;
 			}
 			GUI.contentColor = Color.white;
 			EditorGUIUtility.LookLikeInspector();
 		}
-		
+		if(curTrigger.watched == null) {
+			GUILayout.Label("Observing Memory");
+			EditorGUIUtility.LookLikeControls();
+			curTrigger.memoryKey = EditorGUILayout.TextField(curTrigger.memoryKey);
+			curTrigger.mode = (TriggerMode)EditorGUILayout.EnumPopup(curTrigger.mode);
+			curTrigger.floatTarget = EditorGUILayout.FloatField(curTrigger.floatTarget, GUILayout.MaxWidth(triggerInspectorPositions[curTrigger].width));
+			EditorGUIUtility.LookLikeInspector();
+		}
 		GUI.DragWindow();
 		curTrigger.inspectorCorner = new Vector2(triggerInspectorPositions[curTrigger].x, triggerInspectorPositions[curTrigger].y);
 	}
@@ -312,6 +347,7 @@ public class StateMachineEditor : EditorWindow {
 				Selection.activeGameObject = curState.gameObject;
 				stMachine = (Machine)curState;
 				stateInspectorPositions = new Dictionary<State, Rect>();
+				triggerInspectorPositions = new Dictionary<TriggerManager, Rect>();
 				return;
 			}
 		}

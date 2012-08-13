@@ -71,5 +71,14 @@ public static class Extensions {
 		
 		return retV;
 	}
+	
+	public static Vector3[] GetCorners(this Rect rectangle) {
+		return new Vector3[] {
+			new Vector3(rectangle.xMin, rectangle.yMin, 0),
+			new Vector3(rectangle.xMax, rectangle.yMin, 0),
+			new Vector3(rectangle.xMax, rectangle.yMax, 0),
+			new Vector3(rectangle.xMin, rectangle.yMax, 0)
+		};
+	}
 
 }

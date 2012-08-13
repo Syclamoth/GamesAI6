@@ -3,12 +3,13 @@ using System.Collections;
 
 public class Arrive : TargetableSteeringBehaviour {
 
-	public override Vector2 getDesiredVelocity ()
+	public override Vector2 _getDesiredVelocity ()
 	{
 		Vector2 position = new Vector2(this.getLegs().transform.position.x,this.getLegs().transform.position.z);
 		Vector2 target = this.getTarget ();
 		if (target == default(Vector2))
 		{
+			this.setInternalWeight(0.0f);
 			return this.getLegs ().getVelocity();
 		}
 		

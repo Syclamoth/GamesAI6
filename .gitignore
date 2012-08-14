@@ -1,9 +1,7 @@
 *.csproj
 *.pidb
 Library/**/*
-ProjectSettings/**/*
 Library/*
-ProjectSettings/*
 *.sln
 *.userprefs
 .svn/**/*

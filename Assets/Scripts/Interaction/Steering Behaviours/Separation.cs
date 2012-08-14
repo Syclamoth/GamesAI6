@@ -21,6 +21,7 @@ public class Separation : GroupMemberSteeringBehaviour {
 			//sum += change.normalized * (change.magnitude / 1.5f);
 			sum += change * Mathf.Lerp (500, 0, change.magnitude / avoidanceDistance);
 		}
+		
 		return sum/objectsToAvoid.Count;
 	}
 }

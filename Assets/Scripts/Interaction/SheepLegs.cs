@@ -6,6 +6,7 @@ public class SheepLegs : Legs {
 	private Separation separation;
 	private Cohesion cohesion;
 	private Alignment alignment;
+	private RandomWalk random;
 	public override void init ()
 	{
 		seekBehaviour = new Arrive();
@@ -16,6 +17,8 @@ public class SheepLegs : Legs {
 		cohesion.Init (this);
 		alignment = new Alignment();
 		alignment.Init (this);
+		random = new RandomWalk(0.6f, 1);
+		random.Init (this);
 		// By name
     	var go = GameObject.Find("SheepTarget");
 		seekBehaviour.setTarget (go);
@@ -23,6 +26,7 @@ public class SheepLegs : Legs {
 		this.addSteeringBehaviour(separation);
 		this.addSteeringBehaviour(cohesion);
 		this.addSteeringBehaviour(alignment);
+		this.addSteeringBehaviour(random);
 	}
     public void translate(Vector2 offset)
     {

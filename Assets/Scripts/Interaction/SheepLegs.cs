@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class SheepLegs : Legs {
+	
+	public SensableObjects objectRegistry;
+	
 	private Arrive seekBehaviour;
 	private Separation separation;
 	private Cohesion cohesion;
@@ -9,6 +12,9 @@ public class SheepLegs : Legs {
 	private RandomWalk random;
 	public override void init ()
 	{
+		if(objectRegistry) {
+			objectRegistry.RegisterObject(gameObject);
+		}
 		seekBehaviour = new Arrive();
 		seekBehaviour.Init (this);
 		separation = new Separation();

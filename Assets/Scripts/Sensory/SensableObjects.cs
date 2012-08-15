@@ -3,8 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SensableObjects : MonoBehaviour {
-
+	
+	public bool usingQuadtree = false;
 	private HashSet<GameObject> objects = new HashSet<GameObject>();
+	
+	private QuadTree objectTree;
+	
+	void Update() {
+		if(usingQuadtree) {
+			objectTree = RebuildQuadTree(20, 8);
+			//usingQuadtree = false;
+			objectTree.DrawTree(Color.green);
+		}
+	}
+	
+	private QuadTree RebuildQuadTree(float treeScale, int maxDepth) {
+		QuadTree tree = new QuadTree(treeScale, maxDepth);
+		
+		foreach(GameObject obj in objects) {
+			tree.AddElement(new QuadtreeEntry(obj, new Vector2(obj.transform.position.x, obj.transform.position.z)));
+		}
+		return tree;
+	}
 	
 	public List<GameObject> GetObjectsInRadius(Vector3 position, float radius)
 	{
@@ -27,6 +47,13 @@ public class SensableObjects : MonoBehaviour {
 		if(!objects.Add (obj))
 		{
 			Debug.Log ("Object " + obj.name + " already registered!");
+		}
+	}
+	
+	public void OnGUI() {
+		for(int i = -5; i < 8; ++i) {
+			GUI.color = QuadTree.GetSpectrum(i);
+			GUILayout.Label("Depth: " + i);
 		}
 	}
 }

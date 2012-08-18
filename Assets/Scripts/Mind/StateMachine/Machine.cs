@@ -29,8 +29,8 @@ public class Machine : State {
 		}
 	}
 	
-	public override IEnumerator Enter(Machine owner) {
-		yield return StartCoroutine(currentState.Enter(this));
+	public override IEnumerator Enter(Machine owner, Brain controller) {
+		yield return StartCoroutine(currentState.Enter(this, controller));
 	}
 	public override IEnumerator Exit() {
 		yield return StartCoroutine(currentState.Exit());
@@ -54,7 +54,7 @@ public class Machine : State {
 			yield return currentState.Exit();
 			currentState = nextState;
 			nextState = null;
-			yield return currentState.Enter(this);
+			yield return currentState.Enter(this, controller);
 		}
 	}
 	

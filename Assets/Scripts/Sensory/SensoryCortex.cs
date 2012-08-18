@@ -5,7 +5,9 @@ using System.Collections.Generic;
 public class SensoryCortex : MonoBehaviour {
 
 	public Sense[] senses;
-
+	
+	//HashSet<SensedObject> lastSensedObjects
+	
     public HashSet<SensedObject> GetSensedObjects()
     {
         HashSet<SensedObject> seenObjects = new HashSet<SensedObject>();

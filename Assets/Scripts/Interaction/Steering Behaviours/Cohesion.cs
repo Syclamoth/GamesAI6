@@ -19,6 +19,8 @@ public class Cohesion : GroupMemberSteeringBehaviour {
 		if (nearby == null)
 			return this.getLegs ().getVelocity();
 		
+		this.setInternalWeight(Mathf.Clamp(nearby.Count / 2, 0, 3));
+		
 		IEnumerator<GameObject> it = nearby.GetEnumerator();
 		
 		Vector2 avg = new Vector2(0,0);

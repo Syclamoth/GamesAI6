@@ -80,5 +80,20 @@ public static class Extensions {
 			new Vector3(rectangle.xMin, rectangle.yMax, 0)
 		};
 	}
+	
+	public static Vector3 ToWorldCoords(this Vector2 vector) {
+		return new Vector3(vector.x, 0, vector.y);
+	}
 
+}
+
+public static class ColourUtility {
+	
+	public static Color GetSpectrum(float point)
+	{
+		float r = Mathf.Clamp01(Mathf.Sin(point));
+		float g = Mathf.Clamp01(Mathf.Cos(point + (0.66f * Mathf.PI)));
+		float b = Mathf.Clamp01(Mathf.Sin(point + (1.33f * Mathf.PI)));
+		return new Color(r, g, b, 1f);
+	}
 }

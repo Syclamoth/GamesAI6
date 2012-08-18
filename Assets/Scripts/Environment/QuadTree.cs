@@ -2,11 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class QuadtreeEntry {
-	private GameObject obj;
+public class QuadtreeEntry<T> {
+	private T obj;
 	private Vector2 positionInTree;
 	
-	public QuadtreeEntry(GameObject newObj, Vector2 newPosition) {
+	public QuadtreeEntry(T newObj, Vector2 newPosition) {
 		obj = newObj;
 		positionInTree = newPosition;
 	}
@@ -14,12 +14,12 @@ public class QuadtreeEntry {
 	public Vector2 GetPosition() {
 		return positionInTree;
 	}
-	public GameObject GetObject() {
+	public T GetObject() {
 		return obj;
 	}
 }
 
-public class QuadTree {
+public class QuadTree<T> {
 	
 	public int bucketSize = 4;
 	
@@ -35,7 +35,7 @@ public class QuadTree {
 		baseNode = new Node(this, 0, Vector2.zero);
 	}
 	
-	public void AddElement(QuadtreeEntry entry) {
+	public void AddElement(QuadtreeEntry<T> entry) {
 		//Debug.Log (baseNode.CanContainElement(entry));
 		
 		
@@ -79,24 +79,24 @@ public class QuadTree {
 	}
 	
 	public void DrawTree(Color drawColour) {
-		Debug.Log(baseNode.GetDepth() + " " + baseNode.GetCentre());
+		//Debug.Log(baseNode.GetDepth() + " " + baseNode.GetCentre());
 		baseNode.DrawNode(drawColour);
 	}
 	
 	
 	interface TreeElement {
-		TreeElement AddEntry(QuadtreeEntry entry);
+		TreeElement AddEntry(QuadtreeEntry<T> entry);
 		void DrawNode(Color drawColour);
 	}
 	
 	class Leaf : TreeElement{
-		private List<QuadtreeEntry> entries;
+		private List<QuadtreeEntry<T>> entries;
 		private int bucketSize;
 		private int leafIndex;
 		
 		private Node parent;
 		
-		public TreeElement AddEntry(QuadtreeEntry entry) {
+		public TreeElement AddEntry(QuadtreeEntry<T> entry) {
 			entries.Add (entry);
 			if(entries.Count > bucketSize && parent.GetDepth() < parent.GetBaseTree().maxDepth) {
 				return new Node(this);
@@ -108,7 +108,7 @@ public class QuadTree {
 		public Leaf(int bucketSize, Node parent, int index) {
 			this.parent = parent;
 			this.bucketSize = bucketSize;
-			entries = new List<QuadtreeEntry>();
+			entries = new List<QuadtreeEntry<T>>();
 			leafIndex = index;
 		}
 		
@@ -120,7 +120,7 @@ public class QuadTree {
 			return leafIndex;
 		}
 		
-		public List<QuadtreeEntry> GetEntries() {
+		public List<QuadtreeEntry<T>> GetEntries() {
 			return entries;
 		}
 		public Node GetParent() {
@@ -138,7 +138,7 @@ public class QuadTree {
 		private int depth;
 		private Vector2 centre;
 		
-		private QuadTree treeBase;
+		private QuadTree<T> treeBase;
 		
 		private TreeElement[] branches = new TreeElement[4];
 		
@@ -162,12 +162,12 @@ public class QuadTree {
 			for(int i = 0; i < branches.Length; ++i) {
 				branches[i] = new Leaf(treeBase.bucketSize, this, i);
 			}
-			foreach(QuadtreeEntry entry in original.GetEntries()) {
+			foreach(QuadtreeEntry<T> entry in original.GetEntries()) {
 				AddEntry(entry);
 			}
 		}
 		
-		public TreeElement AddEntry(QuadtreeEntry entry) {
+		public TreeElement AddEntry(QuadtreeEntry<T> entry) {
 			if(!CanContainElement(entry)) {
 				//Debug.Log("Badly positioned entry!");
 			}
@@ -183,7 +183,7 @@ public class QuadTree {
 			return this;
 		}
 		
-		public Node(QuadTree tree, int startingDepth, Vector2 startCentre) {
+		public Node(QuadTree<T> tree, int startingDepth, Vector2 startCentre) {
 			treeBase = tree;
 			depth = startingDepth;
 			centre = startCentre;
@@ -202,29 +202,22 @@ public class QuadTree {
 		public int GetDepth() {
 			return depth;
 		}
-		public bool CanContainElement(QuadtreeEntry element) {
+		public bool CanContainElement(QuadtreeEntry<T> element) {
 			float maxOffset = (1f / Mathf.Pow(2, depth)) * treeBase.scale;
 			return new Rect(centre.x - maxOffset, centre.y - maxOffset, maxOffset * 2, maxOffset * 2).Contains(element.GetPosition());
 		}
-		public QuadTree GetBaseTree() {
+		public QuadTree<T> GetBaseTree() {
 			return treeBase;
 		}
 		public void DrawNode(Color drawColour) {
 			Vector3 worldCentre = new Vector3(centre.x, 0, centre.y);
 			float maxOffset = (1f / Mathf.Pow(2, depth)) * treeBase.scale;
-			Debug.DrawLine(worldCentre + Vector3.forward * maxOffset, worldCentre - Vector3.forward * maxOffset, GetSpectrum(depth));
-			Debug.DrawLine(worldCentre + Vector3.right * maxOffset, worldCentre - Vector3.right * maxOffset, GetSpectrum(depth));
+			Debug.DrawLine(worldCentre + Vector3.forward * maxOffset, worldCentre - Vector3.forward * maxOffset, ColourUtility.GetSpectrum(depth));
+			Debug.DrawLine(worldCentre + Vector3.right * maxOffset, worldCentre - Vector3.right * maxOffset, ColourUtility.GetSpectrum(depth));
 			foreach(TreeElement element in branches) {
 				element.DrawNode(drawColour);
 			}
 		}
-	}
-	public static Color GetSpectrum(float point)
-	{
-		float r = Mathf.Clamp01(Mathf.Sin(point));
-		float g = Mathf.Clamp01(Mathf.Cos(point + (0.66f * Mathf.PI)));
-		float b = Mathf.Clamp01(Mathf.Sin(point + (1.33f * Mathf.PI)));
-		return new Color(r, g, b, 1f);
 	}
 }
 	

@@ -12,10 +12,9 @@ public class Legs : MonoBehaviour {
 	public float maxSpeed = 9.0f; //m s-1
 	public float maxForce = 10.0f; //Newtons
 	
-	/* Can run at this speed constantly without tiring.
-	   any faster drains stamina, any slower regenerates
-	   it. */
 	public float equilibrium = 3.0f; //m s-1
+	
+	public bool inspectSteering = false;
 	
 	private Vector2 velocity = new Vector2(0,0); //m s-1
 	private Vector2 acceleration = new Vector2(0,0); //m s-2
@@ -74,12 +73,16 @@ public class Legs : MonoBehaviour {
 				Vector2 steering_force = Vector2.ClampMagnitude(behaviour.getDesiredVelocity() - velocity,maxForce);
 				sum += behaviour.getWeight ();
 				acceleration += behaviour.getWeight()*(steering_force/mass);
+				Debug.DrawRay(myTrans.position, behaviour.getDesiredVelocity().ToWorldCoords(), ColourUtility.GetSpectrum(sum));
 			}
 			if (sum == 0)
 				return;
 			acceleration /= sum;
 			velocity = Vector2.ClampMagnitude(velocity + (acceleration * Time.deltaTime), maxSpeed);
-			this.transform.position += new Vector3(velocity.x,0,velocity.y) * Time.deltaTime;
+			myTrans.position += new Vector3(velocity.x,0,velocity.y) * Time.deltaTime;
+			if(velocity.sqrMagnitude > 0) {
+				myTrans.rotation = Quaternion.LookRotation(new Vector3(velocity.x,0,velocity.y));
+			}
 			Debug.DrawRay(myTrans.position, new Vector3(velocity.x,0,velocity.y), Color.yellow);
 			//movement.Translate (velocity * Time.deltaTime);
 		}
@@ -91,5 +94,14 @@ public class Legs : MonoBehaviour {
 	
 	public Vector2 getPosition() {
 		return new Vector2(myTrans.position.x, myTrans.position.y);
+	}
+	
+	void OnGUI() {
+		if(!inspectSteering) {
+			return;
+		}
+		foreach(SteeringBehaviour behaviour in steeringBehaviours) {
+			GUILayout.Label(behaviour.GetType().ToString() + ", Current velocity: " + behaviour.getDesiredVelocity() + ", Weight: " + behaviour.getWeight());
+		}
 	}
 }

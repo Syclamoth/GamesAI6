@@ -8,7 +8,7 @@ public class PlayerBehaviour : MonoBehaviour {
 	public SensableObjects allObjects;
 	
 	void Start() {
-		allObjects.RegisterObject(gameObject);
+		allObjects.RegisterObject(new SensableObject(gameObject, AgentClassification.Shepherd));
 	}
 	
 	

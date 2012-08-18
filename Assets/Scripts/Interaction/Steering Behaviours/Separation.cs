@@ -19,8 +19,10 @@ public class Separation : GroupMemberSteeringBehaviour {
 			Vector2 target = new Vector2(obj.transform.position.x, obj.transform.position.z);
 			Vector2 change = position - target;
 			//sum += change.normalized * (change.magnitude / 1.5f);
-			sum += change * Mathf.Lerp (500, 0, change.magnitude / avoidanceDistance);
+			sum += change * Mathf.Lerp (300, 0, change.magnitude / avoidanceDistance);
 		}
+		
+		this.setInternalWeight(Mathf.Clamp(objectsToAvoid.Count / 2, 0, 6));
 		
 		return sum/objectsToAvoid.Count;
 	}

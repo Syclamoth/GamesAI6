@@ -6,7 +6,7 @@ public class Idle : State {
 	public ExplicitStateReference alarm = new ExplicitStateReference(null);
 	
 	
-	public override IEnumerator Enter(Machine owner) {
+	public override IEnumerator Enter(Machine owner, Brain controller) {
 		yield return null;
 	}
 	public override IEnumerator Exit() {

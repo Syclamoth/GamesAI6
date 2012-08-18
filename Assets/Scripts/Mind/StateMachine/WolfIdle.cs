@@ -2,31 +2,34 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SheepIdle : State {
+public class WolfIdle : State {
 	
-	public ExplicitStateReference alarm = new ExplicitStateReference(null);
-	
-	public SheepCharacteristics stats;
+	public ExplicitStateReference attack = new ExplicitStateReference(null);
 	
 	Machine mainMachine;
 	
+	private RandomWalk wander = new RandomWalk(0.6f, 1, 60);
+	
+	private Brain myBrain;
+	
 	public override IEnumerator Enter(Machine owner, Brain controller) {
 		mainMachine = owner;
+		myBrain = controller;
+		
+		myBrain.legs.addSteeringBehaviour(wander);
 		yield return null;
 	}
 	public override IEnumerator Exit() {
+		myBrain.legs.removeSteeringBehaviour(wander);
 		yield return null;
 	}
 	public override IEnumerator Run(Brain controller) {
 		
 		foreach(SensedObject obj in controller.senses.GetSensedObjects()) {
-			if(obj.getAgentType() == AgentClassification.Wolf) {
-				controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") + 10);
+			if(obj.getAgentType() == AgentClassification.Sheep) {
+				controller.memory.SetValue("SeenTarget", obj.getObject());
+				
 			}
-		}
-		
-		if((float)controller.memory.GetValue("Panic") >= 85) {
-			mainMachine.RequestStateTransition(alarm.GetTarget());
 		}
 		yield return null;
 	}
@@ -39,17 +42,16 @@ public class SheepIdle : State {
 	
 	override public List<LinkedStateReference> GetStateTransitions() {
 		List<LinkedStateReference> retV = new List<LinkedStateReference>();
-		retV.Add(new LinkedStateReference(alarm, "Alarm"));
+		retV.Add(new LinkedStateReference(attack, "Attack"));
 		return retV;
 	}
 	
 	
 	//State Machine editor
 	override public string GetNiceName() {
-		return "Sheep Idle";
+		return "Wolf Wander";
 	}
 	override public void DrawInspector() {
-		//stats = (SheepCharacteristics)EditorGUILayout.ObjectField(stats, typeof(SheepCharacteristics), true);
 	}
 	override public int DrawObservableSelector(int currentlySelected) {
 		string[] gridLabels = new string[] {

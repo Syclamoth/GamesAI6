@@ -2,12 +2,22 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+public struct SensableObject {
+	public GameObject obj;
+	public AgentClassification classification;
+	
+	public SensableObject(GameObject newObj, AgentClassification newClass) {
+		obj = newObj;
+		classification = newClass;
+	}
+}
+
 public class SensableObjects : MonoBehaviour {
 	
 	public bool usingQuadtree = false;
-	private HashSet<GameObject> objects = new HashSet<GameObject>();
+	private HashSet<SensableObject> objects = new HashSet<SensableObject>();
 	
-	private QuadTree objectTree;
+	private QuadTree<SensableObject> objectTree;
 	
 	void Update() {
 		if(usingQuadtree) {
@@ -17,24 +27,24 @@ public class SensableObjects : MonoBehaviour {
 		}
 	}
 	
-	private QuadTree RebuildQuadTree(float treeScale, int maxDepth) {
-		QuadTree tree = new QuadTree(treeScale, maxDepth);
+	private QuadTree<SensableObject> RebuildQuadTree(float treeScale, int maxDepth) {
+		QuadTree<SensableObject> tree = new QuadTree<SensableObject>(treeScale, maxDepth);
 		
-		foreach(GameObject obj in objects) {
-			tree.AddElement(new QuadtreeEntry(obj, new Vector2(obj.transform.position.x, obj.transform.position.z)));
+		foreach(SensableObject obj in objects) {
+			tree.AddElement(new QuadtreeEntry<SensableObject>(obj, new Vector2(obj.obj.transform.position.x, obj.obj.transform.position.z)));
 		}
 		return tree;
 	}
 	
-	public List<GameObject> GetObjectsInRadius(Vector3 position, float radius)
+	public List<SensableObject> GetObjectsInRadius(Vector3 position, float radius)
 	{
 		// Currently implemented in the most naive fashion. Will add additional algorithms later,
 		// with logic to choose the most efficient one for the current task.
-		List<GameObject> retV = new List<GameObject>();
+		List<SensableObject> retV = new List<SensableObject>();
 		float sqrRadius = radius * radius;
-		foreach(GameObject obj in objects)
+		foreach(SensableObject obj in objects)
 		{
-			if((obj.transform.position - position).sqrMagnitude < sqrRadius)
+			if((obj.obj.transform.position - position).sqrMagnitude < sqrRadius)
 			{
 				retV.Add (obj);
 			}
@@ -42,18 +52,18 @@ public class SensableObjects : MonoBehaviour {
 		return retV;
 	}
 	
-	public void RegisterObject(GameObject obj)
+	public void RegisterObject(SensableObject obj)
 	{
 		if(!objects.Add (obj))
 		{
-			Debug.Log ("Object " + obj.name + " already registered!");
+			Debug.Log ("Object " + obj.obj.name + " already registered!");
 		}
 	}
-	
+	/*
 	public void OnGUI() {
 		for(int i = -5; i < 8; ++i) {
 			GUI.color = QuadTree.GetSpectrum(i);
 			GUILayout.Label("Depth: " + i);
 		}
-	}
+	}*/
 }

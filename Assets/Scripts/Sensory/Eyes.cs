@@ -71,13 +71,13 @@ public class Eyes : Sense {
 	
 	public void Update()
 	{
-		foreach(GameObject obj in allObjects.GetObjectsInRadius(transform.position, maxViewDistance))
+		foreach(SensableObject obj in allObjects.GetObjectsInRadius(transform.position, maxViewDistance))
 		{
-			if(!aggregates.ContainsKey(obj))
+			if(!aggregates.ContainsKey(obj.obj))
 			{
-				aggregates.Add(obj, new RaycastAggregate(transform, obj.GetComponentInChildren<MeshFilter>(), visibleLayers));
+				aggregates.Add(obj.obj, new RaycastAggregate(transform, obj.obj.GetComponentInChildren<MeshFilter>(), visibleLayers));
 			}
-			aggregates[obj].QueueRaycast();
+			aggregates[obj.obj].QueueRaycast();
 		}
 		
 	}

@@ -13,7 +13,7 @@ public class SheepLegs : Legs {
 	public override void init ()
 	{
 		if(objectRegistry) {
-			objectRegistry.RegisterObject(gameObject);
+			objectRegistry.RegisterObject(new SensableObject(gameObject, AgentClassification.Sheep));
 		}
 		seekBehaviour = new Arrive();
 		seekBehaviour.Init (this);
@@ -23,7 +23,7 @@ public class SheepLegs : Legs {
 		cohesion.Init (this);
 		alignment = new Alignment();
 		alignment.Init (this);
-		random = new RandomWalk(0.6f, 1);
+		random = new RandomWalk(0.6f, 1, 2);
 		random.Init (this);
 		// By name
     	var go = GameObject.Find("SheepTarget");

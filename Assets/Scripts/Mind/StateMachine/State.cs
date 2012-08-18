@@ -62,7 +62,7 @@ public abstract class State : MonoBehaviour {
 	 * Enter and exit are to be used with Unity's coroutine scheduler,
 	 * so that they have the option of including behaviour modelled over several frames.
 	 */
-	public abstract IEnumerator Enter(Machine owner);
+	public abstract IEnumerator Enter(Machine owner, Brain controller);
 	public abstract IEnumerator Exit();
 	
 	// Run will be called from within an update loop, but can be used to delay execution.

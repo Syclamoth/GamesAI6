@@ -7,7 +7,7 @@ public class FuzzyTransition : State {
 
 	public ExplicitStateReference optionOneRef = new ExplicitStateReference(null);
 	public ExplicitStateReference optionTwoRef = new ExplicitStateReference(null);
-	public override IEnumerator Enter(Machine owner) {
+	public override IEnumerator Enter(Machine owner, Brain controller) {
 		owner.RequestStateTransition(fuzzyChance > Random.value ? optionOneRef.GetTarget() : optionTwoRef.GetTarget());
 		yield return null;
 	}

@@ -11,6 +11,18 @@ public class Brain : MonoBehaviour {
 	public Memory memory = new Memory();
 	
 	void Start() {
+        System.Random ranObj = new System.Random();
+
+        //set courageLevel for sheep
+        memory.SetValue("courageLevel", (float)ranObj.NextDouble());
+
+        //set leaderLevel for wolf
+        memory.SetValue("leaderLevel", (float)ranObj.Next(100));
+
+        if (gameObject.tag == "Sheep" || gameObject.name == "Sheep")
+        {
+            legs = new SheepLegs();
+        }
 		StartCoroutine(RunStateMachine());
 	}
 	

@@ -5,6 +5,8 @@ public class SensedObject {
 
 	private GameObject sensedObject;
 	private AgentClassification type;
+    
+
     public SensedObject(GameObject obj)
     {
         sensedObject = obj;
@@ -22,4 +24,10 @@ public class SensedObject {
 	public AgentClassification getAgentType() {
 		return type;
 	}
+    public Memory getMemory()
+    {
+        Brain thisObjBrain = (Brain)sensedObject.GetComponent("Brain");
+        
+        return thisObjBrain.memory;
+    }
 }

@@ -11,7 +11,7 @@ public class Alignment : GroupMemberSteeringBehaviour {
 		
 		List<GameObject> nearby = this.getNearbyFilteredObjects(10.0f, AgentClassification.Sheep);
 		
-		if (nearby == null)
+		if (nearby == null || nearby.Count == 0)
 			return this.getLegs ().getVelocity();
 		
 		IEnumerator<GameObject> it = nearby.GetEnumerator();

@@ -10,7 +10,7 @@ public class Separation : GroupMemberSteeringBehaviour {
 		Vector2 position = new Vector2(this.getLegs().transform.position.x,this.getLegs().transform.position.z);
 		float avoidanceDistance = 1.5f;
 		List<GameObject> objectsToAvoid = this.getNearbyObjects(avoidanceDistance);
-		if (objectsToAvoid == null)
+		if (objectsToAvoid == null || objectsToAvoid.Count == 0)
 			return this.getLegs ().getVelocity();
 		
 		Vector2 sum = new Vector2(0,0);

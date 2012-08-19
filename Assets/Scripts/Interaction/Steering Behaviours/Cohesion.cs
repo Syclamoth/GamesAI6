@@ -19,7 +19,7 @@ public class Cohesion : GroupMemberSteeringBehaviour {
 	{
 		List<GameObject> nearby = this.getNearbyFilteredObjects(5.0f, AgentClassification.Sheep);
 		
-		if (nearby == null)
+		if (nearby == null || nearby.Count == 0)
 			return this.getLegs ().getVelocity();
 		
 		this.setInternalWeight(Mathf.Clamp(nearby.Count / 2, 0, 3));

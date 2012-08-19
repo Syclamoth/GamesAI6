@@ -101,7 +101,7 @@ public class Legs : MonoBehaviour {
 			return;
 		}
 		foreach(SteeringBehaviour behaviour in steeringBehaviours) {
-			GUILayout.Label(behaviour.GetType().ToString() + ", Current velocity: " + behaviour.getDesiredVelocity() + ", Weight: " + behaviour.getWeight());
+			GUILayout.Label(behaviour.GetType().ToString() + ", Desired velocity: " + behaviour.getDesiredVelocity() + ", Weight: " + behaviour.getWeight());
 		}
 	}
 }

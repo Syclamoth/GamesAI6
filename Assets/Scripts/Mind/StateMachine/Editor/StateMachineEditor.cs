@@ -50,7 +50,8 @@ public class StateMachineEditor : EditorWindow {
 	StateMenuItem[] menuItems = new StateMenuItem[] {
 		new StateMenuItem("Fuzzy Transition", typeof(FuzzyTransition)),
 		new StateMenuItem("Idle", typeof(Idle)),
-		new StateMenuItem("Sheep Idle", typeof(SheepIdle))
+		new StateMenuItem("Sheep Idle", typeof(SheepIdle)),
+		new StateMenuItem("Wolf Idle", typeof(WolfIdle))
 	};
 	
 	////---- END
@@ -133,7 +134,7 @@ public class StateMachineEditor : EditorWindow {
 		}
 		statesToRemove = new List<State>();
 		
-		if(stMachine.startingState == null && stMachine.controlledStates.Count > 0) {
+		if(stMachine != null && stMachine.startingState == null && stMachine.controlledStates.Count > 0) {
 			stMachine.startingState = stMachine.controlledStates[0];
 		}
 	}

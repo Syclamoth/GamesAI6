@@ -8,14 +8,14 @@ public class WolfIdle : State {
 	
 	Machine mainMachine;
 	
-	private RandomWalk wander = new RandomWalk(0.6f, 1, 60);
+	private RandomWalk wander = new RandomWalk(0.6f, 1, 500);
 	
 	private Brain myBrain;
 	
 	public override IEnumerator Enter(Machine owner, Brain controller) {
 		mainMachine = owner;
 		myBrain = controller;
-		
+		wander.Init(myBrain.legs);
 		myBrain.legs.addSteeringBehaviour(wander);
 		yield return null;
 	}
@@ -25,10 +25,12 @@ public class WolfIdle : State {
 	}
 	public override IEnumerator Run(Brain controller) {
 		
+		//Debug.Log ("Wolfie running!");
+		
 		foreach(SensedObject obj in controller.senses.GetSensedObjects()) {
 			if(obj.getAgentType() == AgentClassification.Sheep) {
 				controller.memory.SetValue("SeenTarget", obj.getObject());
-				
+				mainMachine.RequestStateTransition(attack.GetTarget());
 			}
 		}
 		yield return null;

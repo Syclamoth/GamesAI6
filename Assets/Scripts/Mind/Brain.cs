@@ -11,15 +11,19 @@ public class Brain : MonoBehaviour {
 	public Memory memory = new Memory();
 	
 	void Start() {
-		StartCoroutine(RunStateMachine());
+		if(behaviour) {
+			StartCoroutine(RunStateMachine());
+		}
 	}
 	
 	IEnumerator RunStateMachine() {
+		yield return StartCoroutine(behaviour.Enter(null, this));
 		while(true) {
 			if (behaviour == null)
 				break;
-			yield return behaviour.Run (this);
+			yield return StartCoroutine(behaviour.Run (this));
 		}
+		//Debug.Log ("Machine stopped");
 	}
 	
 	void RunDebug() {

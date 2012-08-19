@@ -30,10 +30,9 @@ public class RandomWalk : SteeringBehaviour {
 			currentAngle += Random.Range(-1f, 1f) * rate;
 			lastStep += stepTime;
 		}
-		
-		Vector2 circleCentre = this.getLegs().getPosition() + (this.getLegs().getVelocity().normalized * Mathf.Sqrt(2));
+		Vector2 circleCentre = getLegs().getPosition() + (getLegs().getVelocity().normalized * Mathf.Sqrt(2));
 		Vector2 currentVectorOffset = circleCentre + (new Vector2(Mathf.Sin(currentAngle) * strength, Mathf.Cos(currentAngle)) * strength);
 		
-		return this.getLegs().getVelocity() + ((currentVectorOffset - this.getLegs().getPosition()) * forceMultiplier);
+		return this.getLegs().getVelocity() + ((currentVectorOffset - this.getLegs().getPosition()).normalized * forceMultiplier);
 	}
 }

@@ -17,7 +17,7 @@ public class Eyes : Sense {
 	
 	public SensableObjects allObjects;
 	
-	private Dictionary<GameObject, RaycastAggregate> aggregates = new Dictionary<GameObject, RaycastAggregate>();
+	private Dictionary<SensableObject, RaycastAggregate> aggregates = new Dictionary<SensableObject, RaycastAggregate>();
 	
 	private List<StringAtPoint> debugStrings = new List<StringAtPoint>();
 	
@@ -26,24 +26,17 @@ public class Eyes : Sense {
 		List<SensedObject> retV = new List<SensedObject>();
 		debugStrings = new List<StringAtPoint>();
 		float sqrRadius = maxViewDistance * maxViewDistance;
-		foreach (GameObject obj in aggregates.Keys)
+		foreach (SensableObject obj in aggregates.Keys)
 		{
-			if((obj.transform.position - transform.position).sqrMagnitude < sqrRadius)
+			if((obj.obj.transform.position - transform.position).sqrMagnitude < sqrRadius)
 			{
 				// The object is in range, check its angle
-				if(Vector3.Angle(obj.transform.position - transform.position, transform.forward) < peripheralFOV)
+				if(Vector3.Angle(obj.obj.transform.position - transform.position, transform.forward) < peripheralFOV)
 				{
 					float totalAggregate = GetTotalAggregate(obj);
-					debugStrings.Add(new StringAtPoint(totalAggregate.ToString(), obj.transform.position));
+					debugStrings.Add(new StringAtPoint(totalAggregate.ToString(), obj.obj.transform.position));
 					if(totalAggregate > attentiveness) {
-						AgentClassification myType = AgentClassification.Unknown;
-						if(obj.tag == "Wolf") {
-							myType = AgentClassification.Wolf;
-						}
-						if(obj.tag == "Sheep") {
-							myType = AgentClassification.Sheep;
-						}
-						retV.Add(new SensedObject(obj, myType));
+						retV.Add(new SensedObject(obj.obj, obj.classification));
 					}
 				}
 			}
@@ -51,20 +44,20 @@ public class Eyes : Sense {
 		return retV;
     }
 	
-	private float GetTotalAggregate(GameObject obj)
+	private float GetTotalAggregate(SensableObject obj)
 	{
 		float baseAggregate = aggregates[obj].GetAggregate(1); // This number determines how quickly the eyes can pick up new targets
-		float angle = Vector3.Angle(obj.transform.position - transform.position, transform.forward);
+		float angle = Vector3.Angle(obj.obj.transform.position - transform.position, transform.forward);
 		if(angle < focusedFOV) {
-			Debug.Log ("Focused");
+			//Debug.Log ("Focused");
 			return baseAggregate * 1.5f;
 		}
 		if(angle < fOV)
 		{
-			Debug.Log ("Visible");
+			//Debug.Log ("Visible");
 			return baseAggregate;
 		}
-		Debug.Log ("Peripheral");
+		//Debug.Log ("Peripheral");
 		// When I have access to speed data, put the speed modifier here. Objects should get more visible when moving fast.
 		return baseAggregate * (1 - ((fOV - angle) / (fOV - peripheralFOV)));
 	}
@@ -73,14 +66,14 @@ public class Eyes : Sense {
 	{
 		foreach(SensableObject obj in allObjects.GetObjectsInRadius(transform.position, maxViewDistance))
 		{
-			if(!aggregates.ContainsKey(obj.obj))
+			if(!aggregates.ContainsKey(obj))
 			{
-				aggregates.Add(obj.obj, new RaycastAggregate(transform, obj.obj.GetComponentInChildren<MeshFilter>(), visibleLayers));
+				aggregates.Add(obj, new RaycastAggregate(transform, obj.obj.GetComponentInChildren<MeshFilter>(), visibleLayers));
 			}
-			aggregates[obj.obj].QueueRaycast();
+			aggregates[obj].QueueRaycast();
 		}
 		
-	}
+	}/*
 	//Delete this when I'm done
 	void OnGUI()
 	{
@@ -91,7 +84,7 @@ public class Eyes : Sense {
 			GUI.color = Color.red;
 			GUI.Label (new Rect(wordCentre.x - 20, wordCentre.y - 10, 40, 20), str.word);
 		}
-	}
+	}*/
 }
 
 public class RaycastAggregate {

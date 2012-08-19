@@ -51,6 +51,7 @@ public class StateMachineEditor : EditorWindow {
 		new StateMenuItem("Fuzzy Transition", typeof(FuzzyTransition)),
 		new StateMenuItem("Idle", typeof(Idle)),
 		new StateMenuItem("Setup Steering", typeof(SetupSteering)),
+		new StateMenuItem("Setup Additional Sheep Steering", typeof(SetupSheepSteering)),
 		new StateMenuItem("Sheep Roaming", typeof(Sheep_roaming)),
 		new StateMenuItem("Sheep Nuts", typeof(Sheep_gonenut)),
 		new StateMenuItem("Sheep Running", typeof(Sheep_running)),

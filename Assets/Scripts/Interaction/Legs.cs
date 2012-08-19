@@ -79,6 +79,7 @@ public class Legs : MonoBehaviour {
 				return;
 			acceleration /= sum;
 			velocity = Vector2.ClampMagnitude(velocity + (acceleration * Time.deltaTime), maxSpeed);
+			//Debug.Log (velocity);
 			myTrans.position += new Vector3(velocity.x,0,velocity.y) * Time.deltaTime;
 			if(velocity.sqrMagnitude > 0) {
 				myTrans.rotation = Quaternion.LookRotation(new Vector3(velocity.x,0,velocity.y));

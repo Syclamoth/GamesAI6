@@ -9,11 +9,7 @@ public class SetupSteering : State {
 
     Machine mainMachine;
     Brain myBrain;
-	
-	private Arrive seekBehaviour;
 	private Separation separation;
-	private Cohesion cohesion;
-	private Alignment alignment;
 	private RandomWalk random;
 	
     public override IEnumerator Enter(Machine owner, Brain controller)
@@ -21,23 +17,11 @@ public class SetupSteering : State {
         mainMachine = owner;
         myBrain = controller;
 		Legs myLegs = myBrain.legs;
-		seekBehaviour = new Arrive();
-		seekBehaviour.Init (myLegs);
-		separation = new Separation();
-		separation.Init (myLegs);
-		cohesion = new Cohesion();
-		cohesion.Init (myLegs);
-		alignment = new Alignment();
-		alignment.Init (myLegs);
-		random = new RandomWalk(0.6f, 1, 2);
+		separation = new Separation(controller.allObjects);
+		separation.Init(myLegs);
+		random = new RandomWalk(0.6f, 1, 20);
 		random.Init (myLegs);
-		// By name
-    	var go = GameObject.Find("SheepTarget");
-		seekBehaviour.setTarget (go);
-		myLegs.addSteeringBehaviour(seekBehaviour);
 		myLegs.addSteeringBehaviour(separation);
-		myLegs.addSteeringBehaviour(cohesion);
-		myLegs.addSteeringBehaviour(alignment);
 		myLegs.addSteeringBehaviour(random);
         yield return null;
     }

@@ -9,7 +9,9 @@ public class BoxManager : MonoBehaviour {
 	private List<Bounds> allBoxes = new List<Bounds>();
 	
 	void Awake() {
-		
+		foreach(BoxCollider curBox in startingBoxes) {
+			AddBox(curBox.bounds);
+		}
 	}
 	
 	public void AddBox(Bounds addThis) {

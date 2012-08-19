@@ -14,12 +14,15 @@ public class Eyes : Sense {
 	public float attentiveness = 0.7f;
 	
 	public LayerMask visibleLayers;
-	
-	public SensableObjects allObjects;
+	private SensableObjects allObjects;
 	
 	private Dictionary<SensableObject, RaycastAggregate> aggregates = new Dictionary<SensableObject, RaycastAggregate>();
 	
 	private List<StringAtPoint> debugStrings = new List<StringAtPoint>();
+	
+	void Awake() {
+		allObjects = GetComponent<Brain>().allObjects;
+	}
 	
     public override List<SensedObject> SensedObjects()
     {

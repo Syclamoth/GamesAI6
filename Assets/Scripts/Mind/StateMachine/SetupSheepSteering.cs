@@ -2,26 +2,27 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Sheep_roaming : State {
-    public ExplicitStateReference alarm = new ExplicitStateReference(null);
+public class SetupSheepSteering : State {
+	public ExplicitStateReference done = new ExplicitStateReference(null);
 
     //public SheepCharacteristics stats;
 
     Machine mainMachine;
     Brain myBrain;
-	
-	private bool firstActivation = false;
+	private Cohesion cohesion;
+	private Alignment alignment;
 	
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
         myBrain = controller;
-		if(firstActivation)
-		{
-        	//set courageLevel for sheep
-        	myBrain.memory.SetValue("courageLevel", Random.value);
-			firstActivation = false;
-		}
+		Legs myLegs = myBrain.legs;
+		cohesion = new Cohesion(controller.allObjects);
+		cohesion.Init (myLegs);
+		alignment = new Alignment(controller.allObjects);
+		alignment.Init (myLegs);
+		myLegs.addSteeringBehaviour(cohesion);
+		myLegs.addSteeringBehaviour(alignment);
         yield return null;
     }
     public override IEnumerator Exit()
@@ -30,22 +31,7 @@ public class Sheep_roaming : State {
     }
     public override IEnumerator Run(Brain controller)
     {
-		// ALL THESE STATES ARE BROKEN! I'm disabling them until tomorrow, when we can sort this out.
-		yield break;
-		
-        if (controller.senses.isContainAgent(AgentClassification.Wolf))
-        {
-            //update panic level of the sheep when it sees a Wolf, according to his courage level which is ranged from 0.0 to 1.0
-            controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") + 1 * controller.memory.GetValue<float>("courageLevel"));
-        }
-        
-        //do the roaming, need help with whatever are coded inside sheeplegs
-
-        // if panic level larger than 7, change to running state.
-        if ((float)controller.memory.GetValue("Panic") >= 7)
-        {
-            mainMachine.RequestStateTransition(alarm.GetTarget());
-        }
+		mainMachine.RequestStateTransition(done.GetTarget());
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()
@@ -58,7 +44,7 @@ public class Sheep_roaming : State {
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Alarm"));
+        retV.Add(new LinkedStateReference(done, "Finished"));
         return retV;
     }
 
@@ -66,7 +52,7 @@ public class Sheep_roaming : State {
     //State Machine editor
     override public string GetNiceName()
     {
-        return "Sheep Roaming";
+        return "Setup Sheep";
     }
     override public void DrawInspector()
     {

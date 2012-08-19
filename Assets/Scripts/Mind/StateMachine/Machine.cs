@@ -51,10 +51,10 @@ public class Machine : State {
 			}
 		}
 		if(nextState != null) {
-			yield return currentState.Exit();
+			yield return StartCoroutine(currentState.Exit());
 			currentState = nextState;
 			nextState = null;
-			yield return currentState.Enter(this, controller);
+			yield return StartCoroutine(currentState.Enter(this, controller));
 		}
 	}
 	

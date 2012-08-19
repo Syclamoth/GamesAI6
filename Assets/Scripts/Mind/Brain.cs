@@ -8,9 +8,13 @@ public class Brain : MonoBehaviour {
 	public Legs legs;
 	public State behaviour;
 	
+	public AgentClassification classification;
+	public SensableObjects allObjects;
+	
 	public Memory memory = new Memory();
 	
 	void Start() {
+		allObjects.RegisterObject(new SensableObject(gameObject, classification));
 		if(behaviour) {
 			StartCoroutine(RunStateMachine());
 		}

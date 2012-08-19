@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Cohesion : GroupMemberSteeringBehaviour {
+	
+	public Cohesion(SensableObjects allObjects) : base(allObjects) {}
+	
 	private Seek seek;
 	private Seek getSeekBehaviour() {
 		if (seek == null)
@@ -14,7 +17,7 @@ public class Cohesion : GroupMemberSteeringBehaviour {
 	}
 	public override Vector2 _getDesiredVelocity ()
 	{
-		List<GameObject> nearby = this.getNearbyTaggedObjects("Sheep",5.0f);
+		List<GameObject> nearby = this.getNearbyFilteredObjects(5.0f, AgentClassification.Sheep);
 		
 		if (nearby == null)
 			return this.getLegs ().getVelocity();

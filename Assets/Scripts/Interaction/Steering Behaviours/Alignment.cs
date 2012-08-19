@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Alignment : GroupMemberSteeringBehaviour {
+	
+	public Alignment(SensableObjects allObjects) : base(allObjects) {}
+	
 	public override Vector2 _getDesiredVelocity ()
 	{
 		
-		List<GameObject> nearby = this.getNearbyTaggedObjects("Sheep",10.0f);
+		List<GameObject> nearby = this.getNearbyFilteredObjects(10.0f, AgentClassification.Sheep);
 		
 		if (nearby == null)
 			return this.getLegs ().getVelocity();
@@ -17,7 +20,7 @@ public class Alignment : GroupMemberSteeringBehaviour {
 		
 		while (it.MoveNext ())
 		{
-			Brain brain = (Brain)it.Current.GetComponent("Brain");
+			Brain brain = it.Current.GetComponent<Brain>();
 			avg += brain.legs.getVelocity();
 		}
 		avg /= nearby.Count;

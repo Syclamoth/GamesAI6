@@ -50,8 +50,12 @@ public class StateMachineEditor : EditorWindow {
 	StateMenuItem[] menuItems = new StateMenuItem[] {
 		new StateMenuItem("Fuzzy Transition", typeof(FuzzyTransition)),
 		new StateMenuItem("Idle", typeof(Idle)),
-		new StateMenuItem("Sheep Idle", typeof(SheepIdle)),
-		new StateMenuItem("Wolf Idle", typeof(WolfIdle))
+		new StateMenuItem("Setup Steering", typeof(SetupSteering)),
+		new StateMenuItem("Sheep Roaming", typeof(Sheep_roaming)),
+		new StateMenuItem("Sheep Nuts", typeof(Sheep_gonenut)),
+		new StateMenuItem("Sheep Running", typeof(Sheep_running)),
+		new StateMenuItem("Wolf Roaming", typeof(Wolf_roaming)),
+		new StateMenuItem("Wolf Hunting", typeof(Wolf_hunting))
 	};
 	
 	////---- END

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Sheep_running : State {
 
-    public ExplicitStateReference alarm = new ExplicitStateReference(null);
-
+    public ExplicitStateReference calmed = new ExplicitStateReference(null);
+	public ExplicitStateReference nuts = new ExplicitStateReference(null);
     //public SheepCharacteristics stats;
 
     Machine mainMachine;
@@ -42,12 +42,12 @@ public class Sheep_running : State {
         // if panic level larger than 7, change to gonenuts state.
         if ((float)controller.memory.GetValue("Panic") >= 50)
         {
-            mainMachine.RequestStateTransition(alarm.GetTarget());
+            mainMachine.RequestStateTransition(nuts.GetTarget());
         }
         // if can't see wolf and panic level has decreased, change to roaming state
         else if ((float)controller.memory.GetValue("Panic") < 7)
         {
-            mainMachine.RequestStateTransition(alarm.GetTarget());
+            mainMachine.RequestStateTransition(calmed.GetTarget());
         }
         yield return null;
     }
@@ -61,7 +61,8 @@ public class Sheep_running : State {
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Alarm"));
+        retV.Add(new LinkedStateReference(calmed, "Calmed"));
+        retV.Add(new LinkedStateReference(nuts, "Insane"));
         return retV;
     }
 

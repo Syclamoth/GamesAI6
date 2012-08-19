@@ -14,9 +14,6 @@ public class Brain : MonoBehaviour {
 		if(behaviour) {
 			StartCoroutine(RunStateMachine());
 		}
-
-
-		StartCoroutine(RunStateMachine());
 	}
 	
 	IEnumerator RunStateMachine() {

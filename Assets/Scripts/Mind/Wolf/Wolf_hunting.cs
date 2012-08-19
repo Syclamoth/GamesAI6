@@ -7,7 +7,7 @@ public class Wolf_hunting : State
 
     public ExplicitStateReference alarm = new ExplicitStateReference(null);
 
-    private int time;
+    private float time;
     //public SheepCharacteristics stats;
 
     Machine mainMachine;
@@ -37,7 +37,7 @@ public class Wolf_hunting : State
         //if the wolf can't see his target anymore, chase it for 10sec to gain vision, if it still can't find the sheep, change to roaming state.
         else
         {
-            time++;
+            time += Time.deltaTime;
             if (time > 10)
             {
                 //delete its target
@@ -65,7 +65,7 @@ public class Wolf_hunting : State
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Alarm"));
+        retV.Add(new LinkedStateReference(alarm, "Lost Target"));
         return retV;
     }
 

@@ -35,7 +35,7 @@ public class Wolf_roaming : State {
     public override IEnumerator Run(Brain controller)
     {
         //check if this wolf has been given command to attack or not
-        if (!controller.memory.GetValue<SensedObject>("hasCommand").Equals(null))
+        if (controller.memory.GetValue<SensedObject>("hasCommand") != null)
         {
             //decrease leaderLevel because it has been given command by others
             controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") - 0.25);
@@ -105,7 +105,7 @@ public class Wolf_roaming : State {
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Alarm"));
+        retV.Add(new LinkedStateReference(alarm, "Attack"));
         return retV;
     }
 

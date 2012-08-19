@@ -4,7 +4,13 @@ using System.Collections.Generic;
 
 public class BoxManager : MonoBehaviour {
 	
+	public List<BoxCollider> startingBoxes;
+	
 	private List<Bounds> allBoxes = new List<Bounds>();
+	
+	void Awake() {
+		
+	}
 	
 	public void AddBox(Bounds addThis) {
 		allBoxes.Add(addThis);

@@ -30,7 +30,7 @@ public class SoundManager {
 	public PriorityQueue<IHearable> getObjectsObservableBy(IHearing listener) {
 		//Brute force approach = O(n)
 		//For all hearing objects it's O(m*n) ~ Acceptable.
-		PriorityQueue<IHearable> queue = new PriorityQueue<IHearable>();
+		PriorityQueue<IHearable> queue = new PriorityQueue<IHearable>(true);
 		int i;
 		
 		IHearable target;

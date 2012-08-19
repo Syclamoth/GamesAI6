@@ -16,12 +16,18 @@ public class PriorityQueue<T> : ICollection<T> {
 	//are not used for efficiency reasons.
 	private int count;
 	
+	public const bool  ASCENDING = true;
+	public const bool DESCENDING = false;
+	
+	private bool ascending;
+	
 	//The priority used when the user uses the ICollection.Add() method
 	public double DefaultPriority = 0;
 	
 	//O(1)
 	//Initializes the list
-	public PriorityQueue() {
+	public PriorityQueue(bool ascending) {
+		this.ascending = ascending;
 		this.nodes = new List<PriorityEnqueuedItem<T>>();
 		count = 0;
 	}
@@ -34,18 +40,18 @@ public class PriorityQueue<T> : ICollection<T> {
 		int parent;
 		PriorityEnqueuedItem<T> temp;
 		nodes.Add (item);
+		double c = (ascending == ASCENDING) ? 1 : -1; // co-efficient
 		
 		/* Works by adding the new node to the end of the tree, then swapping 
 		 * it with lower valued higher branches until in the correct position.
 		 * This ensures that every nodes children's value is lower than itself.
 		 */
-		for (;;) {
-			if (index == 0)
-				return;
+		
+		while (index != 0) {
 			parent = (index-1)/2;
 			
 			//If the parent's priority is lower, swap the values.
-			if (nodes[parent].priority < nodes[index].priority) {
+			if (c * nodes[parent].priority < c * nodes[index].priority) {
 				temp = nodes[index];
 				nodes[index] = nodes[parent];
 				nodes[parent] = temp;
@@ -134,6 +140,8 @@ public class PriorityQueue<T> : ICollection<T> {
 		int child1;
 		T returnMe;
 		PriorityEnqueuedItem<T> temp;
+		double c = (ascending == ASCENDING) ? 1 : -1; // co-efficient
+		
 		//Edge case for empty queue or out of bounds
 		if (count == 0) {
 			throw new System.InvalidOperationException("Queue is empty.");
@@ -166,7 +174,7 @@ public class PriorityQueue<T> : ICollection<T> {
 			if (child1 + 1 == count) {
 				//Children are smaller than moved node, heap is correctly
 				//sorted
-				if (nodes[index].priority > nodes[child1].priority) {
+				if (c * nodes[index].priority > c * nodes[child1].priority) {
 					return returnMe;
 				}
 				//Swap node with left child node
@@ -177,13 +185,13 @@ public class PriorityQueue<T> : ICollection<T> {
 				continue;
 			}
 			//Current node has 2 children, will swap it with the larger of the 2.
-			if (nodes[child1].priority <= nodes[child1+1].priority) {
+			if (c * nodes[child1].priority <= c * nodes[child1+1].priority) {
 				child1 = child1+1;
 			}
 			
 			//Children are smaller than moved node, heap is correctly
 			//sorted
-			if (nodes[index].priority > nodes[child1].priority) {
+			if (c * nodes[index].priority > c * nodes[child1].priority) {
 				return returnMe;
 			}
 			

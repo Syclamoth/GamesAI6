@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+ * Cohesion Steering Behaviour
+ * Steers to the average location of all objects within a radius
+ */
 public class Cohesion : GroupMemberSteeringBehaviour {
 	
 	public Cohesion(SensableObjects allObjects) : base(allObjects) {}

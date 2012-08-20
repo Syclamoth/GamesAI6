@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
+/* Arrive Steering Behaviour
+ * Steers towards a certain target point, and then slows down as it gets there.
+ */
+
 public class Arrive : TargetableSteeringBehaviour {
 
 	public override Vector2 _getDesiredVelocity ()

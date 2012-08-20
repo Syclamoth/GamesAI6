@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
+/* Separation Steering Behaviour
+ * Steers away from everything within a certain radius
+ */
 public class Separation : GroupMemberSteeringBehaviour {
 	
 	public Separation(SensableObjects allObjects) : base(allObjects) {}

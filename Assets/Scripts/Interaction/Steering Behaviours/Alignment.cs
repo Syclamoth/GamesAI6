@@ -1,7 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+/*
+ * Alignment Steering Behaviour
+ * Gets all nearby objects and then sets the desired velocity to their average.
+ */
 public class Alignment : GroupMemberSteeringBehaviour {
 	
 	public Alignment(SensableObjects allObjects) : base(allObjects) {}

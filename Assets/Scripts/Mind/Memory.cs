@@ -14,6 +14,7 @@ public class Memory {
 		}
 	}
 	
+
 	/*
 	 * A generic version of GetValue. Reduces the need for messy casts in other code by performing type checking internally.
 	 * Will return a default value (either 0 or null) if there is no such key, or the returned datatype is incompatible.

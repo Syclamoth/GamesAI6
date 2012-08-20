@@ -26,7 +26,7 @@ public class SensoryCortex : MonoBehaviour {
             //if (obj.getAgentType() == AgentClassification.Wolf)
             if (obj.getAgentType() == AgentClassification.Sheep)
             {
-                seenSheep.Add((SensedObject)obj);
+                seenSheep.Add(obj);
             }
         }
 
@@ -53,13 +53,13 @@ public class SensoryCortex : MonoBehaviour {
     //check if there are wolf, sheep or sheperd, unknown object in SensedObject array
     public bool isContainAgent(AgentClassification type)
     {
-        bool flag = true;
+        bool flag = false;
         foreach (SensedObject obj in this.GetSensedObjects())
         {
             //if (obj.getAgentType() == AgentClassification.Wolf)
             if (obj.getAgentType() == type)
             {
-                flag = false;
+                flag = true;
             }
         }
         

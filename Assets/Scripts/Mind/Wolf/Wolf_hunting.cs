@@ -12,17 +12,24 @@ public class Wolf_hunting : State
 
     Machine mainMachine;
     Brain myBrain;
+	private Arrive arriveBehaviour;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
         myBrain = controller;
-
+		Legs myLeg = myBrain.legs;
+		arriveBehaviour = new Arrive();
+		arriveBehaviour.setTarget(controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+		arriveBehaviour.Init(myLeg);
+		myLeg.addSteeringBehaviour(arriveBehaviour);
+		
         time = 0;
         yield return null;
     }
     public override IEnumerator Exit()
     {
+		myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
         yield return null;
     }
     public override IEnumerator Run(Brain controller)

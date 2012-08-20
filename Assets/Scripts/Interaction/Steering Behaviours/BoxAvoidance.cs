@@ -16,7 +16,7 @@ public class BoxAvoidance : SteeringBehaviour {
 		setInternalWeight(0);
 		float curDistance;
 		Vector3 curNormal;
-		Vector3 raycastDirection = (getLegs().getVelocity().normalized * 2).ToWorldCoords() + Random.insideUnitCircle.ToWorldCoords();
+		Vector3 raycastDirection = (getLegs().getVelocity().normalized * 1.1f).ToWorldCoords() + Random.insideUnitCircle.ToWorldCoords();
 		if(boxes.Raycast(new Ray(getLegs().myTrans.position, raycastDirection), out curDistance, out curNormal)) {
 			
 			float maxDistance = getLegs().getVelocity().magnitude * predictionTime;

@@ -84,6 +84,36 @@ public static class Extensions {
 	public static Vector3 ToWorldCoords(this Vector2 vector) {
 		return new Vector3(vector.x, 0, vector.y);
 	}
+	
+	public static bool IntersectCircle(this Rect rectangle, Vector2 centre, float radius) {
+		// Naive pass if the rectangle contains the centre of the circle:
+		if(rectangle.Contains(centre)) {
+			return true;
+		}
+		// Naive fail if the centre of the circle is further away from the edge than radius:
+		if(centre.x > rectangle.xMax + radius || centre.x < rectangle.xMin - radius || centre.y > rectangle.yMax + radius || centre.y < rectangle.yMin - radius) {
+			return false;
+		}
+		
+		if(centre.x < rectangle.xMax && centre.x > rectangle.xMin) {
+			// is within x axis, so passes
+			return true;
+		}
+		if(centre.y < rectangle.yMax && centre.y > rectangle.yMin) {
+			// is within y axis, so passes
+			return true;
+		}
+		// Square the radius ahead of time to avoid a sqrt operation
+		float sqrRadius = radius * radius;
+		// Check if the circle intersects each corner
+		foreach(Vector2 corner in rectangle.GetCorners()) {
+			if((corner - centre).sqrMagnitude < sqrRadius) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 }
 

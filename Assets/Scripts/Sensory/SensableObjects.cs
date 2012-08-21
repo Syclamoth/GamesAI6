@@ -12,6 +12,16 @@ public struct SensableObject {
 	}
 }
 
+public class SensableObjectComparer : IEqualityComparer<SensableObject> {
+	public bool Equals(SensableObject lhs, SensableObject rhs) {
+		return lhs.obj.GetInstanceID() == rhs.obj.GetInstanceID();
+	}
+	
+	public int GetHashCode(SensableObject obj) {
+		return obj.obj.GetHashCode() ^ obj.classification.GetHashCode();
+	}
+}
+
 public class SensableObjects : MonoBehaviour {
 	
 	public bool usingQuadtree = false;

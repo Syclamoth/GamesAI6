@@ -31,18 +31,18 @@ public class Sheep_roaming : State {
     public override IEnumerator Run(Brain controller)
     {
 		// ALL THESE STATES ARE BROKEN! I'm disabling them until tomorrow, when we can sort this out.
-		yield break;
+		//yield break;
 		
         if (controller.senses.isContainAgent(AgentClassification.Wolf))
         {
             //update panic level of the sheep when it sees a Wolf, according to his courage level which is ranged from 0.0 to 1.0
-            controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") + 1 * controller.memory.GetValue<float>("courageLevel"));
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + Time.deltaTime * controller.memory.GetValue<float>("courageLevel"));
         }
         
         //do the roaming, need help with whatever are coded inside sheeplegs
 
         // if panic level larger than 7, change to running state.
-        if ((float)controller.memory.GetValue("Panic") >= 7)
+        if (controller.memory.GetValue<float>("Panic") >= 7)
         {
             mainMachine.RequestStateTransition(alarm.GetTarget());
         }

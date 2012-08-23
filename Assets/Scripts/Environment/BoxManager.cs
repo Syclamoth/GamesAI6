@@ -22,16 +22,27 @@ public class BoxManager : MonoBehaviour {
 		distance = float.MaxValue;
 		normal = Vector3.zero;
 		bool retV = false;
-		Debug.DrawRay(input.origin, input.direction, Color.blue);
+		//Debug.DrawRay(input.origin, input.direction, Color.blue);
 		foreach(Bounds box in allBoxes) {
 			float curDistance;
 			if(box.IntersectRay(input, out curDistance)) {
 				if(curDistance < distance) {
-					normal = (input.GetPoint(curDistance) - box.center).normalized;
+					normal = Vector3.zero;
+					Vector3 impactPoint = input.GetPoint(curDistance -0.1f);
+					if(impactPoint.x > box.max.x) {
+						normal += Vector3.right;
+					} else if(impactPoint.x < box.min.x) {
+						normal -= Vector3.right;
+					}
+					if(impactPoint.z > box.max.z) {
+						normal += Vector3.forward;
+					} else if(impactPoint.z < box.min.z) {
+						normal -= Vector3.forward;
+					}
 					distance = curDistance;
 				}
 				retV = true;
-				Debug.DrawRay(input.GetPoint(curDistance), normal, Color.red);
+				//Debug.DrawRay(input.GetPoint(curDistance), normal, Color.red);
 			}
 		}
 		return retV;

@@ -34,10 +34,6 @@ public class Wolf_roaming : State {
     }
     public override IEnumerator Run(Brain controller)
     {
-		// ALL THESE STATES ARE BROKEN! I'm disabling them until tomorrow, when we can sort this out.
-		yield break;
-		
-		
         //check if this wolf has been given command to attack or not
         if (controller.memory.GetValue<SensedObject>("hasCommand") != null)
         {
@@ -54,7 +50,7 @@ public class Wolf_roaming : State {
             if (controller.senses.isContainAgent(AgentClassification.Sheep))
             {
                 //choose the target
-                //if the wolf hasn't have his target, pick it
+                //if the wolf hasn't have his target, pick it\
                 target = controller.senses.GetSensedSheep()[(int)Random.Range(0, controller.senses.GetSensedSheep().Count)];
 
                 //set the target for this wolf
@@ -79,7 +75,8 @@ public class Wolf_roaming : State {
 
                 //Change to hunting phase
                 mainMachine.RequestStateTransition(alarm.GetTarget());
-            } else
+            } 
+			else
             {
                 if (time >= 7) //wait for 7 sec
                 {

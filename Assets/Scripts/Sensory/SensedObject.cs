@@ -15,7 +15,7 @@ public class SensedObject {
 	public SensedObject(GameObject obj, AgentClassification newType)
     {
         sensedObject = obj;
-		type = newType;
+		type = newType; 
     }
     public GameObject getObject()
     {

@@ -101,6 +101,7 @@ public class Legs : MonoBehaviour {
 		if(!inspectSteering) {
 			return;
 		}
+		GUI.color = Color.black;
 		foreach(SteeringBehaviour behaviour in steeringBehaviours) {
 			GUILayout.Label(behaviour.GetType().ToString() + ", Desired velocity: " + behaviour.getDesiredVelocity() + ", Weight: " + behaviour.getWeight());
 		}

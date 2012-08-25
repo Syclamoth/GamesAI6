@@ -10,43 +10,145 @@ public class Sheep_running : State {
 
     Machine mainMachine;
     Brain myBrain;
+    private Arrive arriveBehaviour;
+
+    private float decayFollowRate = 0.5f;
+    private float increaseFollowRate = 3f;
+
+    private float decayPanicRate = 0.75f;
+    private float increasePanicRate = 4f;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
         myBrain = controller;
+        Legs myLeg = myBrain.legs;
+        arriveBehaviour = new Arrive();
+
+        arriveBehaviour.Init(myLeg);
+        myLeg.addSteeringBehaviour(arriveBehaviour);
+
+        //inscrease speed
+        myBrain.legs.maxSpeed = 9f;
 
         yield return null;
     }
     public override IEnumerator Exit()
     {
+        myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
         yield return null;
     }
     public override IEnumerator Run(Brain controller)
     {
-        //see wolf, panic!
-        if (controller.senses.isContainAgent(AgentClassification.Wolf))
+        bool thereIsSheperd = false;
+        bool thereIsWolf = false;
+
+        foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
-            //update panic level of the sheep when it sees a Wolf, according to his courage level which is ranged from 0.0 to 1.0
-            controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") + 1 * controller.memory.GetValue<float>("courageLevel"));
+            if (obj.getAgentType().Equals(AgentClassification.Wolf))
+            {
+                thereIsWolf = true;
+            }
+
+            if (obj.getAgentType().Equals(AgentClassification.Shepherd))
+            {
+                thereIsSheperd = true;
+            }
         }
-        //can't see any wolf around
+
+        if (thereIsWolf)
+        {
+            //the less cowardLevel is, the less Panic increases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+        }
         else
         {
-            controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") - 0.5 * controller.memory.GetValue<float>("courageLevel"));
+            //the less cowardLevel is, the more Panic decreases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+            }
         }
 
-        //do the running, need help with whatever are coded inside sheeplegs. 
-        //First, speed must be increased, second, it should run to where the player if it saw him.
-
-        // if panic level larger than 7, change to gonenuts state.
-        if ((float)controller.memory.GetValue("Panic") >= 50)
+        if (thereIsSheperd)
         {
+            //set the target
+            arriveBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
+
+            //set the weight, this is top priority
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
+            //set maximum weight
+            if (arriveBehaviour.getWeight() > 20f)
+            {
+                arriveBehaviour.setWeight(20f);
+            }
+        }
+        else
+        {
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
+            //set minimum weight
+            if (arriveBehaviour.getWeight() < 0f)
+            {
+                arriveBehaviour.setWeight(0f);
+            }
+        }
+
+        /*
+        //see Shepherd, follow him
+        if (controller.senses.isContainAgent(AgentClassification.Shepherd))
+        {
+            //set the target
+            arriveBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
+
+            //set the weight, this is top priority
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
+            //set maximum weight
+            if (arriveBehaviour.getWeight() > 20f)
+            {
+                arriveBehaviour.setWeight(20f);
+            }
+        }
+        else
+        {
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
+            //set minimum weight
+            if (arriveBehaviour.getWeight() < 0f)
+            {
+                arriveBehaviour.setWeight(0f);
+            }
+        }
+
+        if (controller.senses.isContainAgent(AgentClassification.Wolf))
+        {
+
+            //the less cowardLevel is, the less Panic increases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+        }
+        else
+        {
+            //the less cowardLevel is, the more Panic decreases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+            }
+        }
+        */
+        // if panic level larger than 30, change to gonenuts state.
+        if ((float)controller.memory.GetValue("Panic") >= 25f)
+        {
+            Debug.Log("I'm so scared!");
             mainMachine.RequestStateTransition(nuts.GetTarget());
         }
         // if can't see wolf and panic level has decreased, change to roaming state
-        else if ((float)controller.memory.GetValue("Panic") < 7)
+        else if ((float)controller.memory.GetValue("Panic") < 7f)
         {
+            Debug.Log("Wolf's gone!");
             mainMachine.RequestStateTransition(calmed.GetTarget());
         }
         yield return null;

@@ -16,6 +16,7 @@ public class SensoryCortex : MonoBehaviour {
         return seenObjects;
     }
 
+    
     //get every sheep inside the wolf's radius
     public List<SensedObject> GetSensedSheep()
     {
@@ -23,7 +24,6 @@ public class SensoryCortex : MonoBehaviour {
 
         foreach (SensedObject obj in this.GetSensedObjects())
         {
-            //if (obj.getAgentType() == AgentClassification.Wolf)
             if (obj.getAgentType() == AgentClassification.Sheep)
             {
                 seenSheep.Add(obj);
@@ -37,6 +37,7 @@ public class SensoryCortex : MonoBehaviour {
     public List<SensedObject> GetSensedWolf()
     {
         List<SensedObject> seenWolf = new List<SensedObject>();
+
 
         foreach (SensedObject obj in this.GetSensedObjects())
         {
@@ -53,18 +54,18 @@ public class SensoryCortex : MonoBehaviour {
     //check if there are wolf, sheep or sheperd, unknown object in SensedObject array
     public bool isContainAgent(AgentClassification type)
     {
-        bool flag = false;
-        foreach (SensedObject obj in this.GetSensedObjects())
+
+        foreach (SensedObject obj in GetSensedObjects())
         {
-            //if (obj.getAgentType() == AgentClassification.Wolf)
-            if (obj.getAgentType() == type)
+            if (obj.getAgentType().Equals(type))
             {
-                flag = true;
+                return true;
             }
         }
         
-        return flag;
+        return false;
     }
+    
 
     public float getHighestLeaderLevel(Brain controller)
     {

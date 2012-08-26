@@ -73,7 +73,7 @@ public class Legs : MonoBehaviour {
 				Vector2 steering_force = Vector2.ClampMagnitude(behaviour.getDesiredVelocity() - velocity,maxForce);
 				sum += behaviour.getWeight ();
 				acceleration += behaviour.getWeight()*(steering_force/mass);
-				Debug.DrawRay(myTrans.position, behaviour.getDesiredVelocity().ToWorldCoords(), ColourUtility.GetSpectrum(sum));
+				//Debug.DrawRay(myTrans.position, behaviour.getDesiredVelocity().ToWorldCoords(), ColourUtility.GetSpectrum(sum));
 			}
 			if (sum == 0)
 				return;
@@ -101,6 +101,7 @@ public class Legs : MonoBehaviour {
 		if(!inspectSteering) {
 			return;
 		}
+		GUI.color = Color.black;
 		foreach(SteeringBehaviour behaviour in steeringBehaviours) {
 			GUILayout.Label(behaviour.GetType().ToString() + ", Desired velocity: " + behaviour.getDesiredVelocity() + ", Weight: " + behaviour.getWeight());
 		}

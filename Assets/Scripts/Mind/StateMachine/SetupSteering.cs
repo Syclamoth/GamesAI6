@@ -11,6 +11,7 @@ public class SetupSteering : State {
     Brain myBrain;
 	private Separation separation;
 	private RandomWalk random;
+	private BoxAvoidance avoidWalls;
 	
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -21,8 +22,11 @@ public class SetupSteering : State {
 		separation.Init(myLegs);
 		random = new RandomWalk(0.6f, 1, 20);
 		random.Init (myLegs);
+		avoidWalls = new BoxAvoidance(controller.boxes, 3);
+		avoidWalls.Init (myLegs);
 		myLegs.addSteeringBehaviour(separation);
 		myLegs.addSteeringBehaviour(random);
+		myLegs.addSteeringBehaviour(avoidWalls);
         yield return null;
     }
     public override IEnumerator Exit()

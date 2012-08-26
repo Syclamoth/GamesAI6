@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System;
 using System.Linq;
 public class Eyes : Sense {
@@ -16,11 +17,13 @@ public class Eyes : Sense {
 	public LayerMask visibleLayers;
 	private SensableObjects allObjects;
 	
-	private Dictionary<SensableObject, RaycastAggregate> aggregates = new Dictionary<SensableObject, RaycastAggregate>();
+	private Dictionary<SensableObject, RaycastAggregate> aggregates;
 	
 	private List<StringAtPoint> debugStrings = new List<StringAtPoint>();
 	
+	
 	void Awake() {
+		aggregates = new Dictionary<SensableObject, RaycastAggregate>();
 		allObjects = GetComponent<Brain>().allObjects;
 	}
 	
@@ -28,20 +31,13 @@ public class Eyes : Sense {
     {
 		List<SensedObject> retV = new List<SensedObject>();
 		debugStrings = new List<StringAtPoint>();
-		float sqrRadius = maxViewDistance * maxViewDistance;
 		foreach (SensableObject obj in aggregates.Keys)
 		{
-			if((obj.obj.transform.position - transform.position).sqrMagnitude < sqrRadius)
-			{
-				// The object is in range, check its angle
-				if(Vector3.Angle(obj.obj.transform.position - transform.position, transform.forward) < peripheralFOV)
-				{
-					float totalAggregate = GetTotalAggregate(obj);
-					debugStrings.Add(new StringAtPoint(totalAggregate.ToString(), obj.obj.transform.position));
-					if(totalAggregate > attentiveness) {
-						retV.Add(new SensedObject(obj.obj, obj.classification));
-					}
-				}
+			float totalAggregate = GetTotalAggregate(obj);
+			debugStrings.Add(new StringAtPoint(totalAggregate.ToString(), obj.obj.transform.position));
+			if(totalAggregate > attentiveness) {
+				retV.Add(new SensedObject(obj.obj, obj.classification));
+				Debug.DrawLine(transform.position, obj.obj.transform.position, Color.blue);
 			}
 		}
 		return retV;
@@ -73,10 +69,13 @@ public class Eyes : Sense {
 			{
 				aggregates.Add(obj, new RaycastAggregate(transform, obj.obj.GetComponentInChildren<MeshFilter>(), visibleLayers));
 			}
-			aggregates[obj].QueueRaycast();
+			if(Vector3.Angle(obj.obj.transform.position - transform.position, transform.forward) < peripheralFOV) {
+				aggregates[obj].QueueRaycast();
+			}
 		}
-		
-	}/*
+	}
+	
+	/*
 	//Delete this when I'm done
 	void OnGUI()
 	{
@@ -89,6 +88,8 @@ public class Eyes : Sense {
 		}
 	}*/
 }
+
+
 
 public class RaycastAggregate {
 	private Transform startTrans;
@@ -118,7 +119,10 @@ public class RaycastAggregate {
 		}
 		//Add a new timed boolean to the queue of timed booleans. TimeBool class
 		raycasts.Enqueue(new TimedBool(queueThis));
-		Debug.DrawLine(startTrans.position, endPoint, queueThis ? Color.green : Color.red);
+		
+		// This line shows how occluded an object is.
+		
+		//Debug.DrawLine(startTrans.position, endPoint, queueThis ? Color.green : Color.red);
 	}
 	
 	public bool ContainsData()

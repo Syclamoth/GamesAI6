@@ -11,6 +11,8 @@ public class Brain : MonoBehaviour {
 	public AgentClassification classification;
 	public SensableObjects allObjects;
 	
+	public BoxManager boxes;
+	
 	public Memory memory = new Memory();
 	
 	void Start() {

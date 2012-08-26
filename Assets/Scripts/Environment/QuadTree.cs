@@ -83,10 +83,25 @@ public class QuadTree<T> {
 		baseNode.DrawNode(drawColour);
 	}
 	
+	public List<T> GetElementsInCircle(Vector2 centre, float radius) {
+		List<QuadtreeEntry<T>> firstPass = baseNode.GetElementsInIntersectingLeaves(centre, radius);
+		
+		List<T> retV = new List<T>();
+		
+		float sqrRadius = radius * radius;
+		foreach(QuadtreeEntry<T> entry in firstPass) {
+			if((entry.GetPosition() - centre).sqrMagnitude < sqrRadius) {
+				retV.Add(entry.GetObject());
+			}
+		}
+		
+		return retV;
+	}
 	
 	interface TreeElement {
 		TreeElement AddEntry(QuadtreeEntry<T> entry);
 		void DrawNode(Color drawColour);
+		List<QuadtreeEntry<T>> GetElementsInIntersectingLeaves(Vector2 centre, float radius);
 	}
 	
 	class Leaf : TreeElement{
@@ -125,6 +140,9 @@ public class QuadTree<T> {
 		}
 		public Node GetParent() {
 			return parent;
+		}
+		public List<QuadtreeEntry<T>> GetElementsInIntersectingLeaves(Vector2 centre, float radius) {
+			return entries;
 		}
 		public void DrawNode(Color drawColour) {
 			//foreach(QuadtreeEntry entry in entries) {
@@ -201,6 +219,25 @@ public class QuadTree<T> {
 		}
 		public int GetDepth() {
 			return depth;
+		}
+		public List<QuadtreeEntry<T>> GetElementsInIntersectingLeaves(Vector2 centre, float radius) {
+			List<QuadtreeEntry<T>> retV = new List<QuadtreeEntry<T>>();
+			float maxOffset = (1f / Mathf.Pow(2, depth)) * treeBase.scale;
+			Rect curNodeRect = new Rect(centre.x - maxOffset, centre.y - maxOffset, maxOffset, maxOffset);
+			for (int i = 0; i < 4; ++i) {
+				if(curNodeRect.IntersectCircle(centre, radius)) {
+					retV.AddRange(branches[i].GetElementsInIntersectingLeaves(centre, radius));
+				}
+				if (i % 2 == 0) {
+					curNodeRect.x += maxOffset;
+				} else {
+					curNodeRect.x -= maxOffset;
+				}
+				if(i / 2 == 1) {
+					curNodeRect.y += maxOffset;
+				}
+			}
+			return retV;
 		}
 		public bool CanContainElement(QuadtreeEntry<T> element) {
 			float maxOffset = (1f / Mathf.Pow(2, depth)) * treeBase.scale;

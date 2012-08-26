@@ -12,12 +12,26 @@ public struct SensableObject {
 	}
 }
 
+public class SensableObjectComparer : IEqualityComparer<SensableObject> {
+	public bool Equals(SensableObject lhs, SensableObject rhs) {
+		return lhs.obj.GetInstanceID() == rhs.obj.GetInstanceID();
+	}
+	
+	public int GetHashCode(SensableObject obj) {
+		return obj.obj.GetHashCode() ^ obj.classification.GetHashCode();
+	}
+}
+
 public class SensableObjects : MonoBehaviour {
 	
 	public bool usingQuadtree = false;
 	private HashSet<SensableObject> objects = new HashSet<SensableObject>();
 	
 	private QuadTree<SensableObject> objectTree;
+	
+	void Awake() {
+		objectTree = RebuildQuadTree(20, 8);
+	}
 	
 	void Update() {
 		if(usingQuadtree) {
@@ -40,6 +54,7 @@ public class SensableObjects : MonoBehaviour {
 	{
 		// Currently implemented in the most naive fashion. Will add additional algorithms later,
 		// with logic to choose the most efficient one for the current task.
+		/*
 		List<SensableObject> retV = new List<SensableObject>();
 		float sqrRadius = radius * radius;
 		foreach(SensableObject obj in objects)
@@ -50,6 +65,11 @@ public class SensableObjects : MonoBehaviour {
 			}
 		}
 		return retV;
+		*/
+		
+		// NOW USING QUADTREE!
+		
+		return objectTree.GetElementsInCircle(new Vector2(position.x, position.z), radius);
 	}
 	
 	public void RegisterObject(SensableObject obj)

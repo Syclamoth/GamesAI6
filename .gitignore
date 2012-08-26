@@ -2,7 +2,7 @@
 *.pidb
 Library/**/*
 Library/*
-*.sln
+gamesai6.sln
 *.userprefs
 .svn/**/*
 .svn

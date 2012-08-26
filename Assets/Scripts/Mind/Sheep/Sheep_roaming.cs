@@ -9,41 +9,216 @@ public class Sheep_roaming : State {
 
     Machine mainMachine;
     Brain myBrain;
-	
-	private bool firstActivation = false;
+    private Arrive arriveBehaviour;
+    private Seek seekBehaviour;
+
+    private Vector2 oldPlayerPosition;
+
+	private bool firstActivation = true;
+
+    private float decayFollowRate = 0.5f;
+    private float increaseFollowRate = 3f;
+    
+    private float decayPanicRate = 0.75f;
+    private float increasePanicRate = 4f;
 	
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
         myBrain = controller;
+        Legs myLeg = myBrain.legs;
+        arriveBehaviour = new Arrive();
+        seekBehaviour = new Seek();
+
+        arriveBehaviour.Init(myLeg);
+        seekBehaviour.Init(myLeg);
+        myLeg.addSteeringBehaviour(arriveBehaviour);
+        myLeg.addSteeringBehaviour(seekBehaviour);
+
+        //set speed back to normal
+        myBrain.legs.maxSpeed = 5f;
+
 		if(firstActivation)
 		{
-        	//set courageLevel for sheep
-        	myBrain.memory.SetValue("courageLevel", Random.value);
+            //set cowardLevel for sheep. Random.value returns a random number between 0.0 [inclusive] and 1.0 [inclusive]. 
+            float coward = Random.value;
+
+            if (coward < 0.2f)
+            {
+                coward = 0.2f;
+            }
+
+        	myBrain.memory.SetValue("cowardLevel", coward);
 			firstActivation = false;
 		}
         yield return null;
     }
     public override IEnumerator Exit()
     {
+        myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
+        myBrain.legs.removeSteeringBehaviour(seekBehaviour);
         yield return null;
     }
     public override IEnumerator Run(Brain controller)
     {
-		// ALL THESE STATES ARE BROKEN! I'm disabling them until tomorrow, when we can sort this out.
-		yield break;
-		
+        bool thereIsSheperd = false;
+        bool thereIsWolf = false;
+
+        foreach (SensedObject obj in controller.senses.GetSensedObjects())
+        {
+            if (obj.getAgentType().Equals(AgentClassification.Wolf))
+            {
+                thereIsWolf = true;
+            }
+
+            if (obj.getAgentType().Equals(AgentClassification.Shepherd))
+            {
+                thereIsSheperd = true;
+            }
+        }
+
+        if (thereIsWolf)
+        {
+            //the less cowardLevel is, the less Panic increases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+        }
+        else
+        {
+            //the less cowardLevel is, the more Panic decreases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+            }
+        }
+
+        if (thereIsSheperd)
+        {
+            //set the target
+            arriveBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
+
+            //set the weight, this is top priority
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
+            //set maximum weight
+            if (arriveBehaviour.getWeight() > 20f)
+            {
+                arriveBehaviour.setWeight(20f);
+            }
+
+            oldPlayerPosition = arriveBehaviour.getTarget();
+
+            //if the sheep sees the shephered, it stops seeking
+            seekBehaviour.setWeight(seekBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
+
+            //minimum 0 weight
+            if (seekBehaviour.getWeight() < 0f)
+            {
+                seekBehaviour.setWeight(0f);
+            }
+        }
+        else
+        {
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
+
+            //get last player's location so the sheep will seek around that
+            seekBehaviour.setTarget(oldPlayerPosition);
+            seekBehaviour.setWeight(seekBehaviour.getWeight() + (Time.deltaTime * decayFollowRate));
+
+            //maximum 10 weight
+            if (seekBehaviour.getWeight() > 10f)
+            {
+                seekBehaviour.setWeight(10f);
+            }
+
+            //set minimum weight
+            if (arriveBehaviour.getWeight() < 0f)
+            {
+                arriveBehaviour.setWeight(0f);
+                seekBehaviour.setWeight(seekBehaviour.getWeight() - Time.deltaTime);
+
+                if (seekBehaviour.getWeight() < 0f)
+                {
+                    seekBehaviour.setWeight(0f);
+                }
+            }
+        }
+
+        /*
+        if(controller.senses.isContainAgent(AgentClassification.Shepherd))
+        {
+            //set the target
+            arriveBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
+
+            //set the weight, this is top priority
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
+            //set maximum weight
+            if (arriveBehaviour.getWeight() > 20f)
+            {
+                arriveBehaviour.setWeight(20f);
+            }
+
+            oldPlayerPosition = arriveBehaviour.getTarget();
+
+            //if the sheep sees the shephered, it stops seeking
+            seekBehaviour.setWeight(seekBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
+
+            //minimum 0 weight
+            if (seekBehaviour.getWeight() < 0f)
+            {
+                seekBehaviour.setWeight(0f);
+            }
+        }
+        else
+        {
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
+
+            //get last player's location so the sheep will seek around that
+            seekBehaviour.setTarget(oldPlayerPosition);
+            seekBehaviour.setWeight(seekBehaviour.getWeight() + (Time.deltaTime * decayFollowRate));
+
+            //maximum 10 weight
+            if (seekBehaviour.getWeight() > 10f)
+            {
+                seekBehaviour.setWeight(10f);
+            }
+
+            //set minimum weight
+            if (arriveBehaviour.getWeight() < 0f)
+            {
+                arriveBehaviour.setWeight(0f);
+                seekBehaviour.setWeight(seekBehaviour.getWeight() - Time.deltaTime);
+
+                if (seekBehaviour.getWeight() < 0f)
+                {
+                    seekBehaviour.setWeight(0f);
+                }
+            }
+        }
+
         if (controller.senses.isContainAgent(AgentClassification.Wolf))
         {
-            //update panic level of the sheep when it sees a Wolf, according to his courage level which is ranged from 0.0 to 1.0
-            controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") + 1 * controller.memory.GetValue<float>("courageLevel"));
+            
+            //the less cowardLevel is, the less Panic increases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
         }
-        
-        //do the roaming, need help with whatever are coded inside sheeplegs
-
-        // if panic level larger than 7, change to running state.
-        if ((float)controller.memory.GetValue("Panic") >= 7)
+        else
         {
+            //the less cowardLevel is, the more Panic decreases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+            }
+        }
+        */
+        // if panic level larger than 7, change to running state.
+        if (controller.memory.GetValue<float>("Panic") >= 7f)
+        {
+            Debug.Log("I saw wolf. RUN!");
             mainMachine.RequestStateTransition(alarm.GetTarget());
         }
         yield return null;

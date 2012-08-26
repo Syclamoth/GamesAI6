@@ -5,17 +5,29 @@ using System.Collections.Generic;
 public class SensoryCortex : MonoBehaviour {
 
 	public Sense[] senses;
-
+	
+	private HashSet<SensedObject> thisFrameObjects = null;
+	
     public HashSet<SensedObject> GetSensedObjects()
     {
+		if(thisFrameObjects != null) {
+			return thisFrameObjects;
+		}
         HashSet<SensedObject> seenObjects = new HashSet<SensedObject>();
         for (int i = 0; i < senses.Length; i++)
         {
             seenObjects.UnionWith(senses[i].SensedObjects());
         }
+		thisFrameObjects = seenObjects;
         return seenObjects;
     }
-
+	
+	void LateUpdate() {
+		if(thisFrameObjects != null) {
+			thisFrameObjects = null;
+		}
+	}
+    
     //get every sheep inside the wolf's radius
     public List<SensedObject> GetSensedSheep()
     {
@@ -23,10 +35,9 @@ public class SensoryCortex : MonoBehaviour {
 
         foreach (SensedObject obj in this.GetSensedObjects())
         {
-            //if (obj.getAgentType() == AgentClassification.Wolf)
             if (obj.getAgentType() == AgentClassification.Sheep)
             {
-                seenSheep.Add((SensedObject)obj);
+                seenSheep.Add(obj);
             }
         }
 
@@ -37,6 +48,7 @@ public class SensoryCortex : MonoBehaviour {
     public List<SensedObject> GetSensedWolf()
     {
         List<SensedObject> seenWolf = new List<SensedObject>();
+
 
         foreach (SensedObject obj in this.GetSensedObjects())
         {
@@ -53,18 +65,18 @@ public class SensoryCortex : MonoBehaviour {
     //check if there are wolf, sheep or sheperd, unknown object in SensedObject array
     public bool isContainAgent(AgentClassification type)
     {
-        bool flag = true;
-        foreach (SensedObject obj in this.GetSensedObjects())
+
+        foreach (SensedObject obj in GetSensedObjects())
         {
-            //if (obj.getAgentType() == AgentClassification.Wolf)
-            if (obj.getAgentType() == type)
+            if (obj.getAgentType().Equals(type))
             {
-                flag = false;
+                return true;
             }
         }
         
-        return flag;
+        return false;
     }
+    
 
     public float getHighestLeaderLevel(Brain controller)
     {

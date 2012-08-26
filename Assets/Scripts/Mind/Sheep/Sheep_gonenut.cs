@@ -11,10 +11,16 @@ public class Sheep_gonenut : State {
     Machine mainMachine;
     Brain myBrain;
 
+    private float decayPanicRate = 0.75f;
+    private float increasePanicRate = 4f;
+
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
         myBrain = controller;
+
+        //set speed to minimum
+        myBrain.legs.maxSpeed = 0.1f;
 
         yield return null;
     }
@@ -24,32 +30,89 @@ public class Sheep_gonenut : State {
     }
     public override IEnumerator Run(Brain controller)
     {
-        //see wolf, panic!
-        if (controller.senses.isContainAgent(AgentClassification.Wolf))
+        bool thereIsSheperd = false;
+        bool thereIsWolf = false;
+
+        foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
-            if (controller.memory.GetValue<float>("Panic") < 100) //maximum panic is 100
+            if (obj.getAgentType().Equals(AgentClassification.Wolf))
             {
-                //update panic level of the sheep when it sees a Wolf, according to his courage level which is ranged from 0.0 to 1.0
-                controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") + 1.1 * controller.memory.GetValue<float>("courageLevel"));
+                thereIsWolf = true;
+            }
+
+            if (obj.getAgentType().Equals(AgentClassification.Shepherd))
+            {
+                thereIsSheperd = true;
             }
         }
-        //can't see any wolf around
+
+        if (thereIsWolf)
+        {
+            //the less cowardLevel is, the less Panic increases. However, in this state, the sheep has its panic level increased by 1.25
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * (increasePanicRate * 1.25f) * controller.memory.GetValue<float>("cowardLevel")));
+
+            if (controller.memory.GetValue<float>("Panic") > 90f)
+            {
+                controller.memory.SetValue("Panic", 90f);
+            }
+        }
         else
         {
-            controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") - 0.4 * controller.memory.GetValue<float>("courageLevel"));
+            //if there is no wolf around and it can see the Sheperd, the recover rate from Panic is doubled.
+            if (thereIsSheperd)
+            {
+                //the less cowardLevel is, the more Panic decreases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * 2 * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            }
+            else
+            {
+                //the less cowardLevel is, the more Panic decreases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            }
+
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+            }
         }
 
-        //do the gonenut. It can stand at the ground or just running randomly, wildly. Need help with whatever are coded inside sheeplegs. 
-        //First, speed must be increased, second, it should run randomly or just stand at a spot, or just run slowly slowly.
-
-        // if panic level larger than 7, change to gonenuts state.
-        if ((float)controller.memory.GetValue("Panic") < 50)
+        /*
+        if (controller.senses.isContainAgent(AgentClassification.Wolf))
         {
-            mainMachine.RequestStateTransition(alarm.GetTarget());
+            //the less cowardLevel is, the less Panic increases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+
+            if (controller.memory.GetValue<float>("Panic") > 90f)
+            {
+                controller.memory.SetValue("Panic", 90f);
+            }
         }
+        else
+        {
+            //if there is no wolf around and it can see the Sheperd, the recover rate from Panic is doubled.
+            if (controller.senses.isContainAgent(AgentClassification.Shepherd))
+            {
+                //the less cowardLevel is, the more Panic decreases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * 2 * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            }
+            else
+            {
+                //the less cowardLevel is, the more Panic decreases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            }
+
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+            }
+        }*/
+
         // if can't see wolf and panic level has decreased, change to roaming state
-        if ((float)controller.memory.GetValue("Panic") < 7)
+        if (controller.memory.GetValue<float>("Panic") < 7f)
         {
+            Debug.Log("Wolf's gone and I'm calm now!");
             mainMachine.RequestStateTransition(alarm.GetTarget());
         }
         yield return null;

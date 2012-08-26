@@ -5,17 +5,28 @@ using System.Collections.Generic;
 public class SensoryCortex : MonoBehaviour {
 
 	public Sense[] senses;
-
+	
+	private HashSet<SensedObject> thisFrameObjects = null;
+	
     public HashSet<SensedObject> GetSensedObjects()
     {
+		if(thisFrameObjects != null) {
+			return thisFrameObjects;
+		}
         HashSet<SensedObject> seenObjects = new HashSet<SensedObject>();
         for (int i = 0; i < senses.Length; i++)
         {
             seenObjects.UnionWith(senses[i].SensedObjects());
         }
+		thisFrameObjects = seenObjects;
         return seenObjects;
     }
-
+	
+	void LateUpdate() {
+		if(thisFrameObjects != null) {
+			thisFrameObjects = null;
+		}
+	}
     
     //get every sheep inside the wolf's radius
     public List<SensedObject> GetSensedSheep()

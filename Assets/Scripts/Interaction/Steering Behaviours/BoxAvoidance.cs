@@ -20,7 +20,7 @@ public class BoxAvoidance : SteeringBehaviour {
 		if(boxes.Raycast(new Ray(getLegs().myTrans.position, raycastDirection), out curDistance, out curNormal)) {
 			
 			float maxDistance = getLegs().getVelocity().magnitude * predictionTime;
-			Debug.DrawRay(getLegs().myTrans.position, raycastDirection * maxDistance, Color.cyan);
+			//Debug.DrawRay(getLegs().myTrans.position, raycastDirection * maxDistance, Color.cyan);
 			//Debug.Log (maxDistance);
 			if(curDistance > maxDistance) {
 				return getLegs().getVelocity();

@@ -16,6 +16,7 @@ public class Wolf_hunting : State
     private Seek seekBehaviour;
     private float ferocityRate;
     private Vector2 oldTargetPosition;
+    private float rateShepherd = 1f;
 
 
     public override IEnumerator Enter(Machine owner, Brain controller)
@@ -51,26 +52,40 @@ public class Wolf_hunting : State
     public override IEnumerator Run(Brain controller)
     {
         bool stillSeeTarget = false;
+        bool thereIsSheperd = false;
+
         foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
             if(obj.getObject().Equals(controller.memory.GetValue<SensedObject>("hasCommand").getObject()))
             {
                 stillSeeTarget = true;
             }
+            if(obj.getAgentType().Equals(AgentClassification.Shepherd))
+            {
+                thereIsSheperd = true;
+            }
         }
 
         if (stillSeeTarget)
         {
-            //increase weight based on ferocityRate
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * ferocityRate);
+            if(thereIsSheperd)
+            {
+                rateShepherd = 0.7f;
+            }
+            else
+            {
+                rateShepherd = 1f;
+            }
+
+            //increase weight based on ferocityRate and rateShepherd. If the wolf see the Sheperd, the thought to chase the sheep will be suppressed
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + (Time.deltaTime * ferocityRate * rateShepherd));
+
+            seekBehaviour.setWeight(seekBehaviour.getWeight() - (Time.deltaTime * ferocityRate * rateShepherd));
 
             if (arriveBehaviour.getWeight() > 20f)
             {
                 arriveBehaviour.setWeight(20f);
             }
-
-            seekBehaviour.setWeight(seekBehaviour.getWeight() - Time.deltaTime * ferocityRate);
-
             if (seekBehaviour.getWeight() < 0f)
             {
                 seekBehaviour.setWeight(0f);

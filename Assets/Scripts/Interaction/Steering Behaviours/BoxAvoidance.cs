@@ -28,7 +28,7 @@ public class BoxAvoidance : SteeringBehaviour {
 				//Debug.Log(curNormal);
 				//Debug.DrawRay(new Ray(getLegs().getPosition().ToWorldCoords(), raycastDirection).GetPoint(curDistance), curNormal, Color.red);
 				setInternalWeight(100);
-				return curNormal.normalized * getLegs().getVelocity().magnitude * 10;
+				return new Vector2(curNormal.normalized.x, curNormal.normalized.z) * getLegs().getVelocity().magnitude * 10;
 			}
 		}
 		

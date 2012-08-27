@@ -89,7 +89,7 @@ GameObject:
   - 114: {fileID: 1764991}
   - 114: {fileID: 1764993}
   - 114: {fileID: 1764994}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -167,6 +167,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1764992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,6 +266,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1764986}
@@ -283,7 +290,7 @@ GameObject:
   - 114: {fileID: 11190592}
   - 114: {fileID: 11190593}
   - 114: {fileID: 11190594}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -378,6 +385,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &11190593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,6 +475,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 207014933}
@@ -564,6 +578,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 101272921}
@@ -584,7 +602,7 @@ GameObject:
   - 114: {fileID: 101272927}
   - 114: {fileID: 101272928}
   - 114: {fileID: 101272929}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -679,6 +697,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &101272928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -766,6 +787,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 997090268}
@@ -786,7 +811,7 @@ GameObject:
   - 114: {fileID: 140501946}
   - 114: {fileID: 140501948}
   - 114: {fileID: 140501949}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -864,6 +889,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &140501947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -968,6 +996,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1908015310}
@@ -1028,6 +1060,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1997882826}
@@ -1047,7 +1083,7 @@ GameObject:
   - 114: {fileID: 182732660}
   - 114: {fileID: 182732659}
   - 114: {fileID: 182732658}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1173,7 +1209,7 @@ GameObject:
   - 114: {fileID: 207014939}
   - 114: {fileID: 207014940}
   - 114: {fileID: 207014941}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -1268,6 +1304,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &207014940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1355,6 +1394,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1684069863}
@@ -1374,7 +1417,7 @@ GameObject:
   - 114: {fileID: 225981771}
   - 114: {fileID: 225981770}
   - 114: {fileID: 225981769}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1634,6 +1677,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1462793556}
@@ -1652,7 +1699,7 @@ GameObject:
   - 23: {fileID: 349345285}
   - 114: {fileID: 349345288}
   - 114: {fileID: 349345289}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TerrainBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1797,6 +1844,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1591568557}
@@ -1857,6 +1908,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1759927113}
@@ -1876,7 +1931,7 @@ GameObject:
   - 114: {fileID: 356498336}
   - 114: {fileID: 356498335}
   - 114: {fileID: 356498334}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2065,7 +2120,7 @@ GameObject:
   - 114: {fileID: 384145715}
   - 114: {fileID: 384145717}
   - 114: {fileID: 384145718}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -2143,6 +2198,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &384145716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2206,7 +2264,7 @@ GameObject:
   - 114: {fileID: 398837299}
   - 114: {fileID: 398837298}
   - 114: {fileID: 398837297}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2332,7 +2390,7 @@ GameObject:
   - 114: {fileID: 401400852}
   - 114: {fileID: 401400853}
   - 114: {fileID: 401400854}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wolf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2433,6 +2491,9 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &401400854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2466,7 +2527,7 @@ GameObject:
   - 114: {fileID: 402599861}
   - 114: {fileID: 402599863}
   - 114: {fileID: 402599864}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -2544,6 +2605,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &402599862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2605,7 +2669,7 @@ GameObject:
   - 114: {fileID: 409146981}
   - 114: {fileID: 409146980}
   - 114: {fileID: 409146979}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Machine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2695,7 +2759,7 @@ GameObject:
   - 114: {fileID: 429057109}
   - 114: {fileID: 429057110}
   - 114: {fileID: 429057111}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -2790,6 +2854,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &429057110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2877,6 +2944,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 11190586}
@@ -2937,6 +3008,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 853586185}
@@ -2957,7 +3032,7 @@ GameObject:
   - 114: {fileID: 500498588}
   - 114: {fileID: 500498587}
   - 114: {fileID: 500498586}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wolf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3048,6 +3123,9 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &500498588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3131,6 +3209,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1679103358}
@@ -3151,7 +3233,7 @@ GameObject:
   - 114: {fileID: 579379157}
   - 114: {fileID: 579379156}
   - 114: {fileID: 579379155}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wolf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3242,6 +3324,9 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &579379157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3284,7 +3369,7 @@ GameObject:
   - 114: {fileID: 591128705}
   - 114: {fileID: 591128704}
   - 114: {fileID: 591128703}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3406,7 +3491,7 @@ GameObject:
   - 33: {fileID: 595601868}
   - 65: {fileID: 595601869}
   - 23: {fileID: 595601867}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3477,7 +3562,7 @@ GameObject:
   - 114: {fileID: 636771318}
   - 114: {fileID: 636771320}
   - 114: {fileID: 636771321}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -3555,6 +3640,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &636771319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3618,7 +3706,7 @@ GameObject:
   - 114: {fileID: 652113356}
   - 114: {fileID: 652113355}
   - 114: {fileID: 652113354}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3743,7 +3831,7 @@ GameObject:
   - 114: {fileID: 663329732}
   - 114: {fileID: 663329731}
   - 114: {fileID: 663329730}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3909,6 +3997,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1065378638}
@@ -3969,6 +4061,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 762543934}
@@ -3989,7 +4085,7 @@ GameObject:
   - 114: {fileID: 762543939}
   - 114: {fileID: 762543941}
   - 114: {fileID: 762543942}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -4067,6 +4163,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &762543940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4130,7 +4229,7 @@ GameObject:
   - 114: {fileID: 779233198}
   - 114: {fileID: 779233197}
   - 114: {fileID: 779233196}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4256,7 +4355,7 @@ GameObject:
   - 114: {fileID: 804475815}
   - 114: {fileID: 804475817}
   - 114: {fileID: 804475818}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -4334,6 +4433,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &804475816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4398,7 +4500,7 @@ GameObject:
   - 114: {fileID: 815272741}
   - 114: {fileID: 815272742}
   - 114: {fileID: 815272743}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -4493,6 +4595,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &815272742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4539,7 +4644,7 @@ GameObject:
   - 114: {fileID: 819505721}
   - 114: {fileID: 819505720}
   - 114: {fileID: 819505719}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4705,6 +4810,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1802562691}
@@ -4725,7 +4834,7 @@ GameObject:
   - 114: {fileID: 853586191}
   - 114: {fileID: 853586192}
   - 114: {fileID: 853586193}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -4820,6 +4929,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &853586192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4907,6 +5019,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 140501941}
@@ -4927,7 +5043,7 @@ GameObject:
   - 114: {fileID: 869429375}
   - 114: {fileID: 869429376}
   - 114: {fileID: 869429377}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -5022,6 +5138,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &869429376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5068,7 +5187,7 @@ GameObject:
   - 114: {fileID: 870920682}
   - 114: {fileID: 870920681}
   - 114: {fileID: 870920680}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5190,7 +5309,7 @@ GameObject:
   - 33: {fileID: 872844378}
   - 65: {fileID: 872844379}
   - 23: {fileID: 872844377}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5260,7 +5379,7 @@ GameObject:
   - 114: {fileID: 890530067}
   - 114: {fileID: 890530066}
   - 114: {fileID: 890530065}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5386,7 +5505,7 @@ GameObject:
   - 114: {fileID: 907461796}
   - 114: {fileID: 907461797}
   - 114: {fileID: 907461798}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -5481,6 +5600,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &907461797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5522,7 +5644,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 926704059}
   - 108: {fileID: 926704060}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5590,7 +5712,7 @@ GameObject:
   - 114: {fileID: 928964454}
   - 114: {fileID: 928964453}
   - 114: {fileID: 928964452}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5789,7 +5911,7 @@ GameObject:
   - 33: {fileID: 978225371}
   - 65: {fileID: 978225372}
   - 23: {fileID: 978225370}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5900,6 +6022,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 804475810}
@@ -5920,7 +6046,7 @@ GameObject:
   - 114: {fileID: 997090274}
   - 114: {fileID: 997090275}
   - 114: {fileID: 997090276}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -6015,6 +6141,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &997090275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6061,7 +6190,7 @@ GameObject:
   - 114: {fileID: 1042447323}
   - 114: {fileID: 1042447322}
   - 114: {fileID: 1042447321}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6187,7 +6316,7 @@ GameObject:
   - 114: {fileID: 1051080734}
   - 114: {fileID: 1051080735}
   - 114: {fileID: 1051080736}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -6282,6 +6411,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1051080735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6329,7 +6461,7 @@ GameObject:
   - 114: {fileID: 1065378643}
   - 114: {fileID: 1065378645}
   - 114: {fileID: 1065378646}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -6407,6 +6539,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1065378644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6471,7 +6606,7 @@ GameObject:
   - 114: {fileID: 1093643176}
   - 114: {fileID: 1093643177}
   - 114: {fileID: 1093643178}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -6566,6 +6701,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1093643177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6612,7 +6750,7 @@ GameObject:
   - 114: {fileID: 1144919227}
   - 114: {fileID: 1144919226}
   - 114: {fileID: 1144919225}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6735,7 +6873,7 @@ GameObject:
   - 114: {fileID: 1147564153}
   - 114: {fileID: 1147564154}
   - 114: {fileID: 1147564155}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Machine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6824,7 +6962,7 @@ GameObject:
   - 114: {fileID: 1151057982}
   - 114: {fileID: 1151057981}
   - 114: {fileID: 1151057980}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6990,6 +7128,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1688670038}
@@ -7003,7 +7145,7 @@ GameObject:
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 1181280743}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CameraFollow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7077,6 +7219,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 907461790}
@@ -7137,6 +7283,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 429057103}
@@ -7197,6 +7347,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1737476277}
@@ -7211,7 +7365,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1322637729}
   - 108: {fileID: 1322637730}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Torch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7279,7 +7433,7 @@ GameObject:
   - 114: {fileID: 1340948586}
   - 114: {fileID: 1340948585}
   - 114: {fileID: 1340948584}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7445,6 +7599,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1936867109}
@@ -7464,7 +7622,7 @@ GameObject:
   - 114: {fileID: 1461273795}
   - 114: {fileID: 1461273794}
   - 114: {fileID: 1461273793}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7590,7 +7748,7 @@ GameObject:
   - 114: {fileID: 1462793561}
   - 114: {fileID: 1462793563}
   - 114: {fileID: 1462793564}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -7668,6 +7826,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1462793562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7799,6 +7960,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1051080728}
@@ -7819,7 +7984,7 @@ GameObject:
   - 114: {fileID: 1489395623}
   - 114: {fileID: 1489395625}
   - 114: {fileID: 1489395626}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -7897,6 +8062,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1489395624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7961,7 +8129,7 @@ GameObject:
   - 114: {fileID: 1501758196}
   - 114: {fileID: 1501758197}
   - 114: {fileID: 1501758198}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -8056,6 +8224,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1501758197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8102,7 +8273,7 @@ GameObject:
   - 114: {fileID: 1515287713}
   - 114: {fileID: 1515287712}
   - 114: {fileID: 1515287711}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8227,7 +8398,7 @@ GameObject:
   - 114: {fileID: 1543772292}
   - 114: {fileID: 1543772291}
   - 114: {fileID: 1543772290}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8350,7 +8521,7 @@ GameObject:
   - 114: {fileID: 1565615011}
   - 114: {fileID: 1565615010}
   - 114: {fileID: 1565615009}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Machine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8440,7 +8611,7 @@ GameObject:
   - 114: {fileID: 1591568562}
   - 114: {fileID: 1591568564}
   - 114: {fileID: 1591568565}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -8518,6 +8689,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1591568563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8581,7 +8755,7 @@ GameObject:
   - 114: {fileID: 1610474647}
   - 114: {fileID: 1610474646}
   - 114: {fileID: 1610474645}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8706,7 +8880,7 @@ GameObject:
   - 114: {fileID: 1643480739}
   - 114: {fileID: 1643480738}
   - 114: {fileID: 1643480737}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8831,7 +9005,7 @@ GameObject:
   - 114: {fileID: 1651303601}
   - 114: {fileID: 1651303600}
   - 114: {fileID: 1651303599}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8956,7 +9130,7 @@ GameObject:
   - 114: {fileID: 1656311780}
   - 114: {fileID: 1656311779}
   - 114: {fileID: 1656311778}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9082,7 +9256,7 @@ GameObject:
   - 114: {fileID: 1673585306}
   - 114: {fileID: 1673585307}
   - 114: {fileID: 1673585308}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -9177,6 +9351,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1673585307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9224,7 +9401,7 @@ GameObject:
   - 114: {fileID: 1679103364}
   - 114: {fileID: 1679103365}
   - 114: {fileID: 1679103366}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -9319,6 +9496,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1679103365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9366,7 +9546,7 @@ GameObject:
   - 114: {fileID: 1684069869}
   - 114: {fileID: 1684069870}
   - 114: {fileID: 1684069871}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -9461,6 +9641,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1684069870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9508,7 +9691,7 @@ GameObject:
   - 114: {fileID: 1688670043}
   - 114: {fileID: 1688670045}
   - 114: {fileID: 1688670046}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -9586,6 +9769,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1688670044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9639,7 +9825,7 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100002, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 1690992979}
@@ -9649,7 +9835,7 @@ GameObject:
   - 114: {fileID: 1690992982}
   - 114: {fileID: 1690992981}
   - 114: {fileID: 1690992985}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9660,7 +9846,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400002, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 1690992978}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.23641324, y: -1.96078849, z: 2.98306799}
@@ -9673,7 +9859,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400014, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 1690992978}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -9693,7 +9879,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400006, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 1690992978}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -9707,7 +9893,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400008, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 1690992978}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -9723,7 +9909,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400010, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 1690992978}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -9737,7 +9923,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400012, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 1690992978}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -9751,7 +9937,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400004, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 1690992978}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -9774,7 +9960,7 @@ GameObject:
   - 114: {fileID: 1707690389}
   - 114: {fileID: 1707690388}
   - 114: {fileID: 1707690387}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9899,7 +10085,7 @@ GameObject:
   - 114: {fileID: 1710459955}
   - 114: {fileID: 1710459954}
   - 114: {fileID: 1710459953}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10065,9 +10251,65 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1489395618}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
+--- !u!1001 &1718728605
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -8.81765079
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -5.38660669
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: allObjects
+      value: 
+      objectReference: {fileID: 43593648}
+    - target: {fileID: 11400002, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: boxes
+      value: 
+      objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+  m_RootGameObject: {fileID: 2009170541}
   m_IsPrefabParent: 0
   m_IsExploded: 1
 --- !u!1 &1733307163
@@ -10082,7 +10324,7 @@ GameObject:
   - 114: {fileID: 1733307165}
   - 114: {fileID: 1733307166}
   - 114: {fileID: 1733307167}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Machine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10172,7 +10414,7 @@ GameObject:
   - 114: {fileID: 1737476282}
   - 114: {fileID: 1737476284}
   - 114: {fileID: 1737476285}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -10250,6 +10492,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1737476283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10313,7 +10558,7 @@ GameObject:
   - 114: {fileID: 1751038879}
   - 114: {fileID: 1751038878}
   - 114: {fileID: 1751038877}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10439,7 +10684,7 @@ GameObject:
   - 114: {fileID: 1759927118}
   - 114: {fileID: 1759927120}
   - 114: {fileID: 1759927121}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -10517,6 +10762,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1759927119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10621,6 +10869,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1858531837}
@@ -10640,7 +10892,7 @@ GameObject:
   - 114: {fileID: 1782106684}
   - 114: {fileID: 1782106683}
   - 114: {fileID: 1782106682}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10766,7 +11018,7 @@ GameObject:
   - 114: {fileID: 1802562697}
   - 114: {fileID: 1802562698}
   - 114: {fileID: 1802562699}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -10861,6 +11113,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1802562698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10907,7 +11162,7 @@ GameObject:
   - 114: {fileID: 1808977654}
   - 114: {fileID: 1808977653}
   - 114: {fileID: 1808977652}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11029,7 +11284,7 @@ GameObject:
   - 33: {fileID: 1809958191}
   - 65: {fileID: 1809958192}
   - 23: {fileID: 1809958190}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11140,6 +11395,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 869429369}
@@ -11200,6 +11459,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 384145710}
@@ -11220,7 +11483,7 @@ GameObject:
   - 114: {fileID: 1858531843}
   - 114: {fileID: 1858531844}
   - 114: {fileID: 1858531845}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -11315,6 +11578,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1858531844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11360,7 +11626,7 @@ GameObject:
   - 23: {fileID: 1873256983}
   - 114: {fileID: 1873256987}
   - 114: {fileID: 1873256986}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -11418,7 +11684,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: .500000119
-  m_Center: {x: 5.96046448e-08, y: 0, z: -8.94069672e-08}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1873256986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11435,6 +11701,9 @@ MonoBehaviour:
   maxForce: 10
   equilibrium: 3
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &1873256987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11449,6 +11718,9 @@ MonoBehaviour:
   speed: 15
   allObjects: {fileID: 43593648}
   lookAt: {fileID: 951343023}
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!1 &1908015310
 GameObject:
   m_ObjectHideFlags: 0
@@ -11464,7 +11736,7 @@ GameObject:
   - 114: {fileID: 1908015315}
   - 114: {fileID: 1908015317}
   - 114: {fileID: 1908015318}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -11542,6 +11814,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1908015316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11605,7 +11880,7 @@ GameObject:
   - 114: {fileID: 1913478458}
   - 114: {fileID: 1913478457}
   - 114: {fileID: 1913478456}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11730,7 +12005,7 @@ GameObject:
   - 114: {fileID: 1915539580}
   - 114: {fileID: 1915539579}
   - 114: {fileID: 1915539578}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11856,7 +12131,7 @@ GameObject:
   - 114: {fileID: 1936867114}
   - 114: {fileID: 1936867116}
   - 114: {fileID: 1936867117}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -11934,6 +12209,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1936867115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11997,7 +12275,7 @@ GameObject:
   - 114: {fileID: 1962090157}
   - 114: {fileID: 1962090156}
   - 114: {fileID: 1962090155}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12163,6 +12441,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 815272735}
@@ -12183,7 +12465,7 @@ GameObject:
   - 114: {fileID: 1997882831}
   - 114: {fileID: 1997882833}
   - 114: {fileID: 1997882834}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -12261,6 +12543,9 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &1997882832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12365,6 +12650,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 636771313}
@@ -12374,7 +12663,7 @@ Prefab:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 2009170542}
@@ -12385,7 +12674,7 @@ GameObject:
   - 114: {fileID: 2009170547}
   - 114: {fileID: 2009170548}
   - 114: {fileID: 2009170549}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
   m_Icon: {fileID: 0}
@@ -12396,7 +12685,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.81765079, y: .5, z: -5.38660669}
@@ -12410,7 +12699,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300000, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_Enabled: 1
   m_CastShadows: 1
@@ -12429,7 +12718,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300000, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!136 &2009170545
@@ -12437,7 +12726,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600000, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -12451,7 +12740,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400002, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12468,7 +12757,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12480,12 +12769,15 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 4294960383
 --- !u!114 &2009170548
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400016, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12498,7 +12790,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400018, guid: cf1524c1e37484f58b45c3e6e1299e4a,
     type: 2}
-  m_PrefabInternal: {fileID: 2109303368}
+  m_PrefabInternal: {fileID: 1718728605}
   m_GameObject: {fileID: 2009170541}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12527,7 +12819,7 @@ GameObject:
   - 114: {fileID: 2015684856}
   - 114: {fileID: 2015684857}
   - 114: {fileID: 2015684858}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wolf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12628,6 +12920,9 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
+  collidesWith:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &2015684858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12701,69 +12996,13 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1673585300}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
---- !u!1001 &2109303368
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -8.81765079
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: .5
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -5.38660669
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400002, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: allObjects
-      value: 
-      objectReference: {fileID: 43593648}
-    - target: {fileID: 11400002, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: boxes
-      value: 
-      objectReference: {fileID: 349345288}
-    - target: {fileID: 100002, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-      propertyPath: boxes
-      value: 
-      objectReference: {fileID: 349345288}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
-  m_RootGameObject: {fileID: 2009170541}
   m_IsPrefabParent: 0
   m_IsExploded: 1
 --- !u!1001 &2113955760
@@ -12821,6 +13060,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 402599856}
@@ -12881,6 +13124,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1093643170}
@@ -12900,7 +13147,7 @@ GameObject:
   - 114: {fileID: 2122545179}
   - 114: {fileID: 2122545178}
   - 114: {fileID: 2122545177}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13025,7 +13272,7 @@ GameObject:
   - 114: {fileID: 2138245823}
   - 114: {fileID: 2138245822}
   - 114: {fileID: 2138245821}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13191,6 +13438,10 @@ Prefab:
       propertyPath: boxes
       value: 
       objectReference: {fileID: 349345288}
+    - target: {fileID: 11400000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
+      propertyPath: collidesWith.m_Bits
+      value: 4294960383
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   m_RootGameObject: {fileID: 1501758190}
@@ -13210,7 +13461,7 @@ GameObject:
   - 114: {fileID: 2141032154}
   - 114: {fileID: 2141032153}
   - 114: {fileID: 2141032152}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}

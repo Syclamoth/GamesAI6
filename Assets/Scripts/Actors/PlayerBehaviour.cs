@@ -6,8 +6,11 @@ public class PlayerBehaviour : MonoBehaviour {
 	public float speed = 5;
 	
 	public SensableObjects allObjects;
-	public BoxManager boxes;
 	public Transform lookAt;
+	
+	public LayerMask collidesWith;
+	
+	private Vector2 velocity = Vector2.zero;
 	
 	void Start() {
 		allObjects.RegisterObject(new SensableObject(gameObject, AgentClassification.Shepherd));
@@ -16,19 +19,22 @@ public class PlayerBehaviour : MonoBehaviour {
 	
 	void Update () {
 	    Vector2 direction = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"));
-		float transformDistance = Time.deltaTime * speed;
-		Ray moveRay = new Ray(transform.position, direction.ToWorldCoords() * transformDistance);
-		Vector3 normal;
-		float distance;
-		if(boxes.Raycast(moveRay, out distance, out normal)) {
-			if(Vector3.Dot(direction.ToWorldCoords(), normal) <= 0.2f) {
-				transformDistance = Mathf.Min (transformDistance, distance);
-			}
-		}
+		Vector2 desiredVelocity = direction * speed;
 		
-        legs.translate(direction * transformDistance);
+		Vector3 startPosition = transform.position;
+		float transformDistance = Time.deltaTime * velocity.magnitude;
+		
+		velocity = Vector2.Lerp(velocity, desiredVelocity, Time.deltaTime * 5);
+		
 		Vector3 lookDirection = lookAt.position - transform.position;
 		lookDirection.y = 0;
 		transform.rotation = Quaternion.LookRotation(lookDirection);
+		RaycastHit hit;
+		if(Physics.SphereCast(startPosition, 0.5f, direction.ToWorldCoords(), out hit, transformDistance + 0.1f, collidesWith)) {
+			Vector3 newWorldVelocity = Vector3.Reflect(velocity.ToWorldCoords(), hit.normal);
+			velocity = new Vector2(newWorldVelocity.x, newWorldVelocity.z);
+		}
+		
+        legs.translate(velocity * Time.deltaTime);
 	}
 }

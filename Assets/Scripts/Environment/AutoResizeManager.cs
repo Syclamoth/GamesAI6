@@ -5,7 +5,6 @@ public class AutoResizeManager : MonoBehaviour {
 
 	public Light lamp;
 	float baseLampRadius;
-	public ParticleSystem particles;
 	
 	private float currentScale;
 	

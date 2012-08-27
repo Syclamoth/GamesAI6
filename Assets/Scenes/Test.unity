@@ -167,7 +167,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1764992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,7 +378,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &11190593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -681,7 +679,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &101272928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -867,7 +864,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &140501947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1272,7 +1268,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &207014940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1678,7 +1673,6 @@ Transform:
   - {fileID: 595601866}
   - {fileID: 872844376}
   - {fileID: 1809958189}
-  - {fileID: 404157359}
   - {fileID: 978225369}
   m_Father: {fileID: 0}
 --- !u!23 &349345285
@@ -1730,15 +1724,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5abe87147bfc143f09c364848d5d1399, type: 1}
   m_Name: 
   startingBoxes:
-  - {fileID: 0}
   - {fileID: 595601869}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 872844379}
   - {fileID: 1809958192}
-  - {fileID: 404157362}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 978225372}
 --- !u!114 &349345289
 MonoBehaviour:
@@ -2155,7 +2143,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &384145716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2446,7 +2433,6 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
-  boxes: {fileID: 0}
 --- !u!114 &401400854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2558,7 +2544,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &402599862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2608,73 +2593,6 @@ MonoBehaviour:
   visibleLayers:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!1 &404157358
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 404157359}
-  - 33: {fileID: 404157361}
-  - 65: {fileID: 404157362}
-  - 23: {fileID: 404157360}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &404157359
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 404157358}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.0102478378, y: .0232670177, z: .0995520353}
-  m_LocalScale: {x: .0318233408, y: .0318233408, z: .0318233408}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 349345284}
---- !u!23 &404157360
-Renderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 404157358}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
---- !u!33 &404157361
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 404157358}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &404157362
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 404157358}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &409146976
 GameObject:
   m_ObjectHideFlags: 0
@@ -2872,7 +2790,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &429057110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3131,7 +3048,6 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
-  boxes: {fileID: 0}
 --- !u!114 &500498588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3326,7 +3242,6 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
-  boxes: {fileID: 0}
 --- !u!114 &579379157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3640,7 +3555,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &636771319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4153,7 +4067,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &762543940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4421,7 +4334,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &804475816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4581,7 +4493,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &815272742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4909,7 +4820,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &853586192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5112,7 +5022,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &869429376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5572,7 +5481,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &907461797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6107,7 +6015,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &997090275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6375,7 +6282,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1051080735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6501,7 +6407,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1065378644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6661,7 +6566,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1093643177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7764,7 +7668,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1462793562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7994,7 +7897,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1489395624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8154,7 +8056,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1501758197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8617,7 +8518,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1591568563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9277,7 +9177,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1673585307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9420,7 +9319,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1679103365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9563,7 +9461,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1684069870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9689,7 +9586,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1688670044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10354,7 +10250,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1737476283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10622,7 +10517,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1759927119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10967,7 +10861,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1802562698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11422,7 +11315,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1858531844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11543,7 +11435,6 @@ MonoBehaviour:
   maxForce: 10
   equilibrium: 3
   inspectSteering: 0
-  boxes: {fileID: 0}
 --- !u!114 &1873256987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11557,7 +11448,6 @@ MonoBehaviour:
   legs: {fileID: 1873256986}
   speed: 15
   allObjects: {fileID: 43593648}
-  boxes: {fileID: 349345288}
   lookAt: {fileID: 951343023}
 --- !u!1 &1908015310
 GameObject:
@@ -11652,7 +11542,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1908015316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12045,7 +11934,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1936867115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12373,7 +12261,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &1997882832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12593,7 +12480,6 @@ MonoBehaviour:
   maxForce: 1000
   equilibrium: 15
   inspectSteering: 0
-  boxes: {fileID: 349345288}
 --- !u!114 &2009170548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12742,7 +12628,6 @@ MonoBehaviour:
   maxForce: 200
   equilibrium: 3
   inspectSteering: 0
-  boxes: {fileID: 0}
 --- !u!114 &2015684858
 MonoBehaviour:
   m_ObjectHideFlags: 0

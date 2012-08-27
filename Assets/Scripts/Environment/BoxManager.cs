@@ -25,6 +25,14 @@ public class BoxManager : MonoBehaviour {
 		//Debug.DrawRay(input.origin, input.direction, Color.blue);
 		foreach(Bounds box in allBoxes) {
 			float curDistance;
+			if(box.Contains(input.origin)) {
+				curDistance = Vector3.Distance(box.center, input.origin);
+				if(curDistance < distance) {
+					distance = curDistance;
+				}
+				normal = (input.origin - box.center).normalized;
+				break;
+			}
 			if(box.IntersectRay(input, out curDistance)) {
 				if(curDistance < distance) {
 					normal = Vector3.zero;

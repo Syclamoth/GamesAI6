@@ -16,6 +16,8 @@ public class Legs : MonoBehaviour {
 	
 	public bool inspectSteering = false;
 	
+	public BoxManager boxes;
+	
 	private Vector2 velocity = new Vector2(0,0); //m s-1
 	private Vector2 acceleration = new Vector2(0,0); //m s-2
 	// Runtime data. Will never be saved.
@@ -79,8 +81,19 @@ public class Legs : MonoBehaviour {
 				return;
 			acceleration /= sum;
 			velocity = Vector2.ClampMagnitude(velocity + (acceleration * Time.deltaTime), maxSpeed);
+			Vector3 worldVelocity = new Vector3(velocity.x,0,velocity.y) * Time.deltaTime;
 			//Debug.Log (velocity);
-			myTrans.position += new Vector3(velocity.x,0,velocity.y) * Time.deltaTime;
+			if(boxes = null) {
+				float distance;
+				Vector3 normal;
+				if(boxes.Raycast(new Ray(myTrans.position, worldVelocity), out distance, out normal)) {
+					if(distance < worldVelocity.magnitude) {
+						worldVelocity = Vector3.Reflect(worldVelocity, normal);
+						
+					}
+				}
+			}
+			myTrans.position += worldVelocity;
 			if(velocity.sqrMagnitude > 0) {
 				myTrans.rotation = Quaternion.LookRotation(new Vector3(velocity.x,0,velocity.y));
 			}

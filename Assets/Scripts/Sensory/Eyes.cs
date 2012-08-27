@@ -63,6 +63,12 @@ public class Eyes : Sense {
 	
 	public void Update()
 	{
+		if(allObjects == null) {
+			allObjects = GetComponent<Brain>().allObjects;
+			if(allObjects == null) {
+				return;
+			}
+		}
 		foreach(SensableObject obj in allObjects.GetObjectsInRadius(transform.position, maxViewDistance))
 		{
 			if(!aggregates.ContainsKey(obj))

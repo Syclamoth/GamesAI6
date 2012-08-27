@@ -5,16 +5,36 @@ public class Grid : MonoBehaviour {
 
     public int width = 2;
     public int height = 2;
+	public GameObject cubePrefab;
+	public BoxManager boxManager;
+	
 	// Use this for initialization
     private GridSquare[,] grid;
 	void Start () {
 		uint i,j;
+		
+		Vector3 topLeft = this.collider.bounds.center - this.collider.bounds.extents;
+		Vector3 bottomRight= this.collider.bounds.center + this.collider.bounds.extents;
+		float y = this.collider.bounds.center.y;
+		
+		float x1 = topLeft.x;
+		float dWidth = bottomRight.x-x1;
+		float z1 = topLeft.z;
+		float dHeight = bottomRight.z-z1;
+		
 	    grid = new GridSquare[width,height];
 		
 		//Loop through the array to create the actual grid O(n)
-		for (j=0;j<height;++i) {
-			for (i=0;i<width;++j) {
+		for (j=0;j<height;++j) {
+			for (i=0;i<width;++i) {
 				grid[i,j] = new GridSquare(new Vector2(i,j),this);
+				if ((i % 4 == 0) && (j % 4 == 0)) {
+					GameObject instance = (GameObject) Instantiate(cubePrefab);
+					
+					instance.renderer.transform.position = new Vector3(x1+(i+0.5f)*(dWidth/width),y+0.5f,z1+(j+0.5f)*(dHeight/height));
+					instance.renderer.transform.localScale = new Vector3(3*dWidth/width,1.0f,3*dHeight/height);
+					boxManager.AddBox (instance.collider.bounds);
+				}
 			}
 		}
 	}

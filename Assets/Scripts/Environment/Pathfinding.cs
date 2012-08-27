@@ -32,12 +32,12 @@ public class Pathfinding {
 				{
 					temp = new AStarNode(null);
 					temp.setParent(current);
-					openSet.enqueue (temp,temp.getFScore());
+					openSet.enqueueWithPriority (temp,temp.getFScore());
 				}
 				else
 				{
 					if ((node.position - current.position).magnitude + current.gScore <
-						(node.position - node.getParent ().position).magnitude + node.getParent ().position)
+						(node.position - node.getParent ().position).magnitude + node.getParent ().position.magnitude)
 					{
 						openSet.Remove (node);
 						node.setParent (current);
@@ -56,7 +56,7 @@ public class Pathfinding {
 		
 		public float gScore = 0.0f;
 		public float hScore = 0.0f;
-		public Vector2 position = null;
+		public Vector2 position = default(Vector2);
 		
 		public AStarNode(object contents)
 		{
@@ -67,7 +67,7 @@ public class Pathfinding {
 			//hScore = 
 		}
 		
-		public object getParent() {
+		public AStarNode getParent() {
 			return parent;
 		}
 		

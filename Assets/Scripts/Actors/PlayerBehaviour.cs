@@ -22,15 +22,15 @@ public class PlayerBehaviour : MonoBehaviour {
 		Vector2 desiredVelocity = direction * speed;
 		
 		Vector3 startPosition = transform.position;
-		float transformDistance = Time.deltaTime * velocity.magnitude;
 		
 		velocity = Vector2.Lerp(velocity, desiredVelocity, Time.deltaTime * 5);
 		
+		float transformDistance = Time.deltaTime * velocity.magnitude;
 		Vector3 lookDirection = lookAt.position - transform.position;
 		lookDirection.y = 0;
 		transform.rotation = Quaternion.LookRotation(lookDirection);
 		RaycastHit hit;
-		if(Physics.SphereCast(startPosition, 0.5f, direction.ToWorldCoords(), out hit, transformDistance + 0.1f, collidesWith)) {
+		if(Physics.SphereCast(startPosition, 0.5f, velocity.ToWorldCoords(), out hit, transformDistance + 0.1f, collidesWith)) {
 			Vector3 newWorldVelocity = Vector3.Reflect(velocity.ToWorldCoords(), hit.normal);
 			velocity = new Vector2(newWorldVelocity.x, newWorldVelocity.z);
 		}

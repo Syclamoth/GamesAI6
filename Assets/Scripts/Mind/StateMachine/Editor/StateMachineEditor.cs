@@ -247,11 +247,17 @@ public class StateMachineEditor : EditorWindow {
 			}
 			
 		}
-		if(stMachine.startingState != null && stateInspectorPositions.ContainsKey(stMachine.startingState)) {
-			Handles.color = Color.white;
-			Handles.DrawSolidRectangleWithOutline(stateInspectorPositions[stMachine.startingState].OffsetBy(globalViewOffset).GetCorners(), Color.clear, Color.green);
+		if(EditorApplication.isPlaying) {
+			if(stMachine.GetCurrentState() != null) {
+				Handles.color = Color.white;
+				Handles.DrawSolidRectangleWithOutline(stateInspectorPositions[stMachine.GetCurrentState()].OffsetBy(globalViewOffset).GetCorners(), Color.clear, Color.red);
+			}
+		} else {
+			if(stMachine.startingState != null && stateInspectorPositions.ContainsKey(stMachine.startingState)) {
+				Handles.color = Color.white;
+				Handles.DrawSolidRectangleWithOutline(stateInspectorPositions[stMachine.startingState].OffsetBy(globalViewOffset).GetCorners(), Color.clear, Color.green);
+			}
 		}
-		
 		//foreach(
 		//GUILayout.Label ("BLUH BLAH");
 		

@@ -29,6 +29,10 @@ public class Machine : State {
 		}
 	}
 	
+	public State GetCurrentState() {
+		return currentState;
+	}
+	
 	public override IEnumerator Enter(Machine owner, Brain controller) {
 		yield return StartCoroutine(currentState.Enter(this, controller));
 	}

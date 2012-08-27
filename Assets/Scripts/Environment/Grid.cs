@@ -22,18 +22,108 @@ public class Grid : MonoBehaviour {
 		float z1 = topLeft.z;
 		float dHeight = bottomRight.z-z1;
 		
+		bool[,] usedGrid = new bool[3,3];
+		
 	    grid = new GridSquare[width,height];
+		
+		float blockX,blockY,blockWidth,blockHeight;
+		
+		int addedHeight;
+		
+		int bX,bY;
+		
+		System.Random rnd = new System.Random();
 		
 		//Loop through the array to create the actual grid O(n)
 		for (j=0;j<height;++j) {
 			for (i=0;i<width;++i) {
 				grid[i,j] = new GridSquare(new Vector2(i,j),this);
 				if ((i % 4 == 0) && (j % 4 == 0)) {
+					//Sidewalk
 					GameObject instance = (GameObject) Instantiate(cubePrefab);
+					instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+0.1f,z1+(j+1.5f)*(dHeight/height));
+					instance.transform.localScale = new Vector3(3*dWidth/width,0.2f,3*dHeight/height);
+					instance.transform.parent = this.transform;
+					instance.collider.enabled = false;
 					
-					instance.renderer.transform.position = new Vector3(x1+(i+0.5f)*(dWidth/width),y+0.5f,z1+(j+0.5f)*(dHeight/height));
-					instance.renderer.transform.localScale = new Vector3(3*dWidth/width,1.0f,3*dHeight/height);
+					//Collision Box
+					instance = (GameObject) Instantiate(cubePrefab);
+					instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+5.0f,z1+(j+1.5f)*(dHeight/height));
+					instance.transform.localScale = new Vector3(2.5f*dWidth/width,10.0f,2.5f*dHeight/height);
+					instance.renderer.enabled = false;
+					instance.transform.parent = this.transform;
 					boxManager.AddBox (instance.collider.bounds);
+					
+					
+					blockX = (x1+(i+1.5f)*(dWidth/width)) - (0.5f*2.5f*dWidth/width);
+					blockY = (z1+(j+1.5f)*(dHeight/height)) - (0.5f*2.5f*dHeight/height);
+					blockWidth  = 2.5f*dWidth/width;
+					blockHeight = 2.5f*dHeight/height;
+					
+					//Building Styles
+					
+					switch(rnd.Next (0,3)) {
+					case 0:
+						addedHeight = rnd.Next (-6,7);
+						if (addedHeight >= 4)
+						{
+							addedHeight += rnd.Next (50,100);
+						}
+						instance = (GameObject) Instantiate(cubePrefab);
+						instance.transform.position = new Vector3(blockX + 0.5f * blockWidth,y+15.0f+addedHeight*0.5f,blockY + 0.5f * blockHeight);
+						instance.transform.localScale = new Vector3(blockWidth,30.0f+addedHeight,blockHeight);
+						instance.transform.parent = this.transform;
+						instance.collider.enabled = false;
+						break;
+					case 1:
+						for (bX = 0;bX < 3;++bX) {
+							for (bY = 0; bY < 3; ++bY) {
+								usedGrid[bX,bY] = false;
+							}
+						}
+						
+						bX = rnd.Next (0,2);
+						bY = rnd.Next (0,2);
+						
+						instance = (GameObject) Instantiate(cubePrefab);
+						addedHeight = rnd.Next (1,8);
+						instance.transform.position = new Vector3(blockX + bX * (blockWidth/3.0f) + (blockWidth/3),y+5.0f+addedHeight*0.5f,blockY + bY * (blockHeight/3.0f)+ (blockHeight/3));
+						instance.transform.localScale = new Vector3(1.9f*(blockWidth/3),10.0f+addedHeight,1.9f*(blockHeight/3));
+						instance.transform.parent = this.transform;
+						instance.collider.enabled = false;
+						
+						usedGrid[bX,bY] = true;
+						usedGrid[bX+1,bY] = true;
+						usedGrid[bX,bY+1] = true;
+						usedGrid[bX+1,bY+1] = true;
+						
+						for (bX = 0;bX < 3;++bX) {
+							for (bY = 0; bY < 3; ++bY) {
+								if (usedGrid[bX,bY] == false)
+								{
+									instance = (GameObject) Instantiate(cubePrefab);
+									addedHeight = rnd.Next (2,6);
+									instance.transform.position = new Vector3(blockX + bX * (blockWidth/3.0f) + 0.5f * (blockWidth/3),y+2.5f+addedHeight*0.5f,blockY + bY * (blockHeight/3.0f)+ 0.5f * (blockHeight/3));
+									instance.transform.localScale = new Vector3(0.9f*(blockWidth/3),5.0f+addedHeight,0.9f*(blockHeight/3));
+									instance.transform.parent = this.transform;
+									instance.collider.enabled = false;
+								}
+							}
+						}
+						break;
+					default:
+						for (bX = 0;bX < 3;++bX) {
+							for (bY = 0; bY < 3; ++bY) {
+								instance = (GameObject) Instantiate(cubePrefab);
+								addedHeight = rnd.Next (2,6);
+								instance.transform.position = new Vector3(blockX + bX * (blockWidth/3.0f) + 0.5f * (blockWidth/3),y+2.5f+addedHeight*0.5f,blockY + bY * (blockHeight/3.0f)+ 0.5f * (blockHeight/3));
+								instance.transform.localScale = new Vector3(0.9f*(blockWidth/3),5.0f+addedHeight,0.9f*(blockHeight/3));
+								instance.transform.parent = this.transform;
+								instance.collider.enabled = false;
+							}
+						}
+						break;
+					}
 				}
 			}
 		}

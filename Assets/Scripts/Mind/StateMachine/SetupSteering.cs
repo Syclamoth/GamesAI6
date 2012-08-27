@@ -24,7 +24,6 @@ public class SetupSteering : State {
 		random.Init (myLegs);
 		avoidWalls = new BoxAvoidance(controller.boxes, 3);
 		avoidWalls.Init (myLegs);
-		avoidWalls.setWeight(100);
 		myLegs.addSteeringBehaviour(separation);
 		myLegs.addSteeringBehaviour(random);
 		myLegs.addSteeringBehaviour(avoidWalls);

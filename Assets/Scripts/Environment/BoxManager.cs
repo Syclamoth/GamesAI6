@@ -26,10 +26,10 @@ public class BoxManager : MonoBehaviour {
 		foreach(Bounds box in allBoxes) {
 			float curDistance;
 			if(box.Contains(input.origin)) {
-				curDistance = Vector3.Distance(box.center, input.origin);
-				if(curDistance < distance) {
+				curDistance = 0;
+				//if(curDistance < distance) {
 					distance = curDistance;
-				}
+				//}
 				normal = (input.origin - box.center).normalized;
 				break;
 			}

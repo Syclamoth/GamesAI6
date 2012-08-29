@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
+using System.Security.Cryptography;
 public static class Extensions {
 	public static bool IntersectLine(this Rect rectangle, Vector2 lineStart, Vector2 lineEnd, out Vector2 intersectPoint) {
 		float minX = lineStart.x < lineEnd.x ? lineStart.x : lineEnd.x;
@@ -113,6 +114,22 @@ public static class Extensions {
 		}
 		
 		return false;
+	}
+	
+	public static void Shuffle<T>(this IList<T> list)  
+	{  
+		var provider = new RNGCryptoServiceProvider();
+		int n = list.Count;  
+		while (n > 1) {
+			var box = new byte[1];
+			do provider.GetBytes(box);
+			while(!(box[0] < n * (byte.MaxValue / n)));
+			var k = (box[0] % n);
+			n--;  
+			var value = list[k];  
+			list[k] = list[n];  
+			list[n] = value;  
+		}  
 	}
 
 }

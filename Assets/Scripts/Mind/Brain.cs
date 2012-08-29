@@ -14,12 +14,25 @@ public class Brain : MonoBehaviour {
 	public BoxManager boxes;
 	
 	public Memory memory = new Memory();
-	
+
 	void Start() {
+		if(allObjects == null) {
+			return;
+		}
 		allObjects.RegisterObject(new SensableObject(gameObject, classification));
 		if(behaviour) {
 			StartCoroutine(RunStateMachine());
 		}
+	}
+	
+	public void Init(BoxManager boxes, SensableObjects objs) {
+		this.boxes = boxes;
+		this.allObjects = objs;
+		//allObjects.RegisterObject(new SensableObject(gameObject, classification));
+		//if(behaviour) {
+		//	StartCoroutine(RunStateMachine());
+		//}
+		
 	}
 	
 	IEnumerator RunStateMachine() {

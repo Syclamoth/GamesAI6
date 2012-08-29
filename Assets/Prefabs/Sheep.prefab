@@ -68,7 +68,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.81765079, y: .5, z: -5.38660669}
   m_LocalScale: {x: 1, y: .5, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400002}
   - {fileID: 400004}
@@ -82,7 +81,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.23641324, y: -1.96078849, z: 2.98306799}
   m_LocalScale: {x: 1, y: 2, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400000}
 --- !u!4 &400004
@@ -94,7 +92,6 @@ Transform:
   m_LocalRotation: {x: .329106718, y: 0, z: 0, w: .944292784}
   m_LocalPosition: {x: 0, y: 4.00104141, z: -.506307125}
   m_LocalScale: {x: 1, y: 1.61368048, z: 1.38631976}
-  m_LocalEulerAnglesHint: {x: 38.4291382, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400000}
 --- !u!23 &2300000
@@ -175,7 +172,7 @@ MonoBehaviour:
   inspectSteering: 0
   collidesWith:
     serializedVersion: 2
-    m_Bits: 4294960383
+    m_Bits: 1024
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

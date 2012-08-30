@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class Wolf_roaming : State {
 
-    public ExplicitStateReference alarm = new ExplicitStateReference(null);
+    public ExplicitStateReference hunting = new ExplicitStateReference(null);
 
     private float time;
     private SensedObject target;
+    private Flee fleeBehaviour;
+
     private float decayLeaderLevel = 0.2f;
     private float increaseLeaderLevel = 15f;
     private float decreaseLeaderLevel = 3f;
@@ -21,6 +23,13 @@ public class Wolf_roaming : State {
     {
         mainMachine = owner;
         myBrain = controller;
+        Legs myLeg = myBrain.legs;
+        fleeBehaviour = new Flee();
+        fleeBehaviour.Init(myLeg);
+
+        myLeg.addSteeringBehaviour(fleeBehaviour);
+        fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
+
         time = 0;
 		if(firstActivation)
 		{
@@ -38,17 +47,18 @@ public class Wolf_roaming : State {
 			firstActivation = false;
 		}
 
-        myBrain.legs.maxSpeed = 6.0f;
+        myLeg.maxSpeed = 6.0f;
 
         yield return null;
     }
     public override IEnumerator Exit()
     {
+        myBrain.legs.removeSteeringBehaviour(fleeBehaviour);
         yield return null;
     }
     public override IEnumerator Run(Brain controller)
     {
-        bool thereIsSheep = false;
+        bool thereIsShepherd = false;
         float highestLeaderLevel = 0f;
         List<SensedObject> seenSheep = new List<SensedObject>();
         List<SensedObject> seenWolf = new List<SensedObject>();
@@ -57,7 +67,6 @@ public class Wolf_roaming : State {
         {
             if (obj.getAgentType().Equals(AgentClassification.Sheep))
             {
-                thereIsSheep = true;
                 seenSheep.Add(obj);
             }
             else if (obj.getAgentType().Equals(AgentClassification.Wolf))
@@ -69,6 +78,27 @@ public class Wolf_roaming : State {
                     highestLeaderLevel = wolfMemory.GetValue<float>("leaderLevel");
                 }
                 seenWolf.Add(obj);
+            }
+            else if(obj.getAgentType().Equals(AgentClassification.Shepherd))
+            {
+                thereIsShepherd = true;
+            }
+        }
+
+        if(thereIsShepherd)
+        {
+            fleeBehaviour.setWeight(fleeBehaviour.getWeight() + Time.deltaTime);
+            if (fleeBehaviour.getWeight() > 15f)
+            {
+                fleeBehaviour.setWeight(15f);
+            }
+        }
+        else
+        {
+            fleeBehaviour.setWeight(fleeBehaviour.getWeight() - Time.deltaTime);
+            if(fleeBehaviour.getWeight() < 0f)
+            {
+                fleeBehaviour.setWeight(0f);
             }
         }
 
@@ -86,11 +116,11 @@ public class Wolf_roaming : State {
 
             //Change to hunting phase
             Debug.Log("I've received command. I'm hunting! Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
-            mainMachine.RequestStateTransition(alarm.GetTarget());
+            mainMachine.RequestStateTransition(hunting.GetTarget());
         }
         else
         {
-            if (thereIsSheep)
+            if (seenSheep.Count > 0)
             {
                 //choose the target
                 //if the wolf hasn't have his target, pick it\
@@ -98,6 +128,16 @@ public class Wolf_roaming : State {
 
                 //set the target for this wolf
                 controller.memory.SetValue("hasCommand", target);
+
+                //calling sheep that it is being targeted
+                Memory sheepMemory = target.getMemory();
+
+                //get a list of wolves that are chasing this sheep
+                List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+
+                //add itself in
+                wolvesChasing.Add(this.myBrain);
+                sheepMemory.SetValue("chasedBy", wolvesChasing);
 
                 //send signal to other wolf in its sensing radius, tell them to change to hunting phase
                 if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)
@@ -127,7 +167,7 @@ public class Wolf_roaming : State {
 
                 //Change to hunting phase
                 Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
-                mainMachine.RequestStateTransition(alarm.GetTarget());
+                mainMachine.RequestStateTransition(hunting.GetTarget());
             }
             else
             {
@@ -154,72 +194,6 @@ public class Wolf_roaming : State {
             }
         }
 
-        /*
-        //if it hasn't been given command, keep roaming until it see a target
-        else
-        {
-            if (controller.senses.isContainAgent(AgentClassification.Sheep))
-            {
-                //choose the target
-                //if the wolf hasn't have his target, pick it\
-                target = controller.senses.GetSensedSheep()[(int)Random.Range(0, controller.senses.GetSensedSheep().Count)];
-
-                //set the target for this wolf
-                controller.memory.SetValue("hasCommand", target);
-
-                //send signal to other wolf in its sensing radius, tell them to change to hunting phase
-                if (controller.memory.GetValue<float>("leaderLevel") >= controller.senses.getHighestLeaderLevel(controller))
-                {
-                    //increase its leaderLevel whenever it issue a decision to hunt
-                    if (controller.memory.GetValue<float>("leaderLevel") < 100f)
-                    {
-                        controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") + increaseLeaderLevel);
-                    }
-
-                    //set the maximum leaderLevel for wolf
-                    if (controller.memory.GetValue<float>("leaderLevel") > 100f)
-                    {
-                        controller.memory.SetValue("leaderLevel", 100f);
-                    }
-
-                    //call other to change to hunting phase
-                    foreach (SensedObject objWolf in controller.senses.GetSensedWolf())
-                    {
-                        //give out command to attack the same target
-                        objWolf.getMemory().SetValue("hasCommand", target);
-                        Debug.Log("I'm the leader! I sent command!");
-                    }
-                }
-
-                //Change to hunting phase
-                Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
-                mainMachine.RequestStateTransition(alarm.GetTarget());
-            } 
-			else
-            {
-                if (time >= 8f) //wait for 8 sec
-                {
-                    //decrease its leaderLevel if it can't find any sheep or cant issue and command
-                    if (controller.memory.GetValue<float>("leaderLevel") > 10f)
-                    {
-                        controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") - decayLeaderLevel);
-                    }
-
-                    //set the minimum leaderLevel for wolf
-                    if (controller.memory.GetValue<float>("leaderLevel") < 10f)
-                    {
-                        controller.memory.SetValue("leaderLevel", 10f);
-                    }
-
-                    Debug.Log("I'm hungry: " + controller.memory.GetValue<float>("leaderLevel"));
-                }
-                else
-                {
-                    time += Time.deltaTime;
-                }
-            }
-        }
-        */
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()
@@ -232,7 +206,7 @@ public class Wolf_roaming : State {
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Attack"));
+        retV.Add(new LinkedStateReference(hunting, "Attack"));
         return retV;
     }
 

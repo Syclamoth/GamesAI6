@@ -5,15 +5,22 @@ using System.Collections.Generic;
 public class Wolf_hunting : State
 {
 
-    public ExplicitStateReference alarm = new ExplicitStateReference(null);
+    public ExplicitStateReference roam = new ExplicitStateReference(null);
+    public ExplicitStateReference eating = new ExplicitStateReference(null);
 
     private float time;
 
     Machine mainMachine;
     Brain myBrain;
 
+    private SensedObject sheepTarget;
+    private Memory sheepMemory;
+    private Brain sheepBrain;
+
 	private Arrive arriveBehaviour;
     private Seek seekBehaviour;
+    private Flee fleeBehaviour;
+
     private float ferocityRate;
     private Vector2 oldTargetPosition;
     private float rateShepherd = 1f;
@@ -26,33 +33,53 @@ public class Wolf_hunting : State
 		Legs myLeg = myBrain.legs;
 		arriveBehaviour = new Arrive();
         seekBehaviour = new Seek();
+        fleeBehaviour = new Flee();
 
+     
+        fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
 		arriveBehaviour.setTarget(controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+
 		arriveBehaviour.Init(myLeg);
         seekBehaviour.Init(myLeg);
+        fleeBehaviour.Init(myLeg);
 
 		myLeg.addSteeringBehaviour(arriveBehaviour);
         myLeg.addSteeringBehaviour(seekBehaviour);
+        myLeg.addSteeringBehaviour(fleeBehaviour);
 
         myLeg.maxSpeed = 10f;
         time = 0f;
         ferocityRate = controller.memory.GetValue<float>("ferocity");
 
+        sheepTarget = myBrain.memory.GetValue<SensedObject>("hasCommand");
+        sheepMemory = sheepTarget.getMemory();
+        sheepBrain = (Brain)sheepTarget.getObject().GetComponent("Brain");
         yield return null;
     }
     public override IEnumerator Exit()
     {
 		myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
         myBrain.legs.removeSteeringBehaviour(seekBehaviour);
+        myBrain.legs.removeSteeringBehaviour(fleeBehaviour);
+
+        //delete itself in sheepTarget memory
+        List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+
+        if(wolvesChasing.Count > 0)
+        {
+            wolvesChasing.Remove(this.myBrain);
+            sheepMemory.SetValue("chasedBy", wolvesChasing);
+        }      
 
         //delete its target
-        myBrain.memory.SetValue("hasCommand", null);   
+        myBrain.memory.SetValue("hasCommand", null);
+
         yield return null;
     }
     public override IEnumerator Run(Brain controller)
     {
         bool stillSeeTarget = false;
-        bool thereIsSheperd = false;
+        bool thereIsShepherd = false;
 
         foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
@@ -62,29 +89,39 @@ public class Wolf_hunting : State
             }
             if(obj.getAgentType().Equals(AgentClassification.Shepherd))
             {
-                thereIsSheperd = true;
+                thereIsShepherd = true;
             }
+        }
+
+        if (thereIsShepherd)
+        {
+            fleeBehaviour.setWeight(fleeBehaviour.getWeight() + Time.deltaTime);
+            if (fleeBehaviour.getWeight() > 15f)
+            {
+                fleeBehaviour.setWeight(15f);
+            }
+            rateShepherd = 0.5f;
+        }
+        else
+        {
+            fleeBehaviour.setWeight(fleeBehaviour.getWeight() - Time.deltaTime);
+            if (fleeBehaviour.getWeight() < 0f)
+            {
+                fleeBehaviour.setWeight(0f);
+            }
+            rateShepherd = 1f;
         }
 
         if (stillSeeTarget)
         {
-            if(thereIsSheperd)
-            {
-                rateShepherd = 0.7f;
-            }
-            else
-            {
-                rateShepherd = 1f;
-            }
-
             //increase weight based on ferocityRate and rateShepherd. If the wolf see the Sheperd, the thought to chase the sheep will be suppressed
             arriveBehaviour.setWeight(arriveBehaviour.getWeight() + (Time.deltaTime * ferocityRate * rateShepherd));
 
             seekBehaviour.setWeight(seekBehaviour.getWeight() - (Time.deltaTime * ferocityRate * rateShepherd));
 
-            if (arriveBehaviour.getWeight() > 20f)
+            if (arriveBehaviour.getWeight() > 10f)
             {
-                arriveBehaviour.setWeight(20f);
+                arriveBehaviour.setWeight(10f);
             }
             if (seekBehaviour.getWeight() < 0f)
             {
@@ -118,61 +155,21 @@ public class Wolf_hunting : State
             {
                 //change to roaming state
                 Debug.Log("Give up finding");
-                mainMachine.RequestStateTransition(alarm.GetTarget());
+                mainMachine.RequestStateTransition(roam.GetTarget());
             }
         }
 
-        /*
-        //if the wolf can't see his target anymore, chase it for 10sec to gain vision, if it still can't find the sheep, change to roaming state.
-        if (controller.senses.GetSensedObjects().Contains(controller.memory.GetValue<SensedObject>("hasCommand")))
+        //if the wolf catches the sheep
+        Vector2 currentHunterPos = myBrain.legs.getPosition();
+        Vector2 currentSheepPos = sheepBrain.legs.getPosition();
+
+        float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
+
+        if (distance <= 1.5f)
         {
-            //increase weight based on ferocityRate
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * ferocityRate);
-
-            if (arriveBehaviour.getWeight() > 20f)
-            {
-                arriveBehaviour.setWeight(20f);
-            }
-
-            seekBehaviour.setWeight(seekBehaviour.getWeight() - Time.deltaTime * ferocityRate);
-
-            if (seekBehaviour.getWeight() < 0f)
-            {
-                seekBehaviour.setWeight(0f);
-            }
-            Debug.Log("still seeing sheep");
-            oldTargetPosition = arriveBehaviour.getTarget();
+            mainMachine.RequestStateTransition(eating.GetTarget());
         }
-        else
-        {
-            Debug.Log("cant see sheep");
-            time += Time.deltaTime;
-            if (time > 7f)
-            {
-                //keep chasing
-                seekBehaviour.setTarget(oldTargetPosition);
-                seekBehaviour.setWeight(seekBehaviour.getWeight() + Time.deltaTime * ferocityRate);
 
-                //arrive's weight decreases
-                arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * (5f - ferocityRate)));
-
-                if (seekBehaviour.getWeight() > 10f)
-                {
-                    seekBehaviour.setWeight(10f);
-                }
-                if(arriveBehaviour.getWeight() < 0f)
-                {
-                    arriveBehaviour.setWeight(0f);
-                }
-            }
-
-            if (arriveBehaviour.getWeight() == 0f)
-            {
-                //change to roaming state
-                mainMachine.RequestStateTransition(alarm.GetTarget());
-            }
-        }
-        */
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()
@@ -185,7 +182,8 @@ public class Wolf_hunting : State
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Lost Target"));
+        retV.Add(new LinkedStateReference(roam, "Lost Target"));
+        retV.Add(new LinkedStateReference(eating, "Eating"));
         return retV;
     }
 

@@ -12,9 +12,10 @@ public class SheepSpawn : MonoBehaviour {
 	public SensableObjects allObjects;
 	public BoxManager boxes;
 	
-	void Awake () {
+	//The level generator will handle this.
+	/*void Awake () {
 		SpawnSheep();
-	}
+	}*/
 	
 	public void SpawnSheep() {
 		

@@ -243,7 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1829a9a33dce640bcb084a192e38e5bf, type: 1}
   m_Name: 
   followThese:
-  - {fileID: 1464121900}
   - {fileID: 1181280743}
 --- !u!1 &288718468
 GameObject:
@@ -456,7 +455,13 @@ MonoBehaviour:
   m_Name: 
   width: 30
   height: 30
+  mazeLength: 50
+  numberOfBranches: 10
   cubePrefab: {fileID: 100000, guid: 227991b0e400349c4b35221a32265293, type: 2}
+  debrisPrefab: {fileID: 100032, guid: b5ed404aa7720416da2261658d6d5f09, type: 2}
+  streetlampPrefab: {fileID: 100004, guid: a7d9fd474dbe24f1085b58bd4ad23726, type: 2}
+  playerObject: {fileID: 1873256981}
+  sheepSpawner: {fileID: 904708951}
   boxManager: {fileID: 349345288}
 --- !u!1 &373261110
 GameObject:
@@ -1213,7 +1218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfe06b33347ed4b32b8e981a29d1d65e, type: 1}
   m_Name: 
   spawnRadius: 5
-  numberToSpawn: 30
+  numberToSpawn: 6
   sheepPrefab: {fileID: 100000, guid: cf1524c1e37484f58b45c3e6e1299e4a, type: 2}
   allObjects: {fileID: 43593648}
   boxes: {fileID: 349345288}

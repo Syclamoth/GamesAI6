@@ -13,6 +13,7 @@ public class Grid : MonoBehaviour {
 	public GameObject streetlampPrefab;
 	
 	public GameObject playerObject;
+	public GameObject sheepSpawner;
 	
 	public BoxManager boxManager;
 	
@@ -50,8 +51,9 @@ public class Grid : MonoBehaviour {
 		
 		int startX = rnd.Next (1,width/4);
 		int startY = rnd.Next (1,height/4);
+		int endX=0,endY=0;
 		
-		GridSquare current;
+		GridSquare current,safeEntrance = null;
 		
 		
 		//Loop through the array to create the actual grid O(n)
@@ -69,6 +71,21 @@ public class Grid : MonoBehaviour {
 			maze = generateMaze(startX,startY);
 		}
 		
+		LinkedListNode<GridSquare> node = maze.Last;
+		
+		while (node != null) {
+			current = node.Value.getAdjacentBlock(startX,startY);
+			if (current == null) {
+				node = node.Previous;
+				continue;
+			}
+			
+			safeEntrance = node.Value;
+			endX = (int)current.Position.x/4;
+			endY = (int)current.Position.y/4;
+			break;
+		}
+		
 		for (j=0;j<height;++j) {
 			for (i=0;i<width;++i) {
 				if ((i % 4 == 0) && (j % 4 == 0)) {
@@ -79,14 +96,21 @@ public class Grid : MonoBehaviour {
 					instance.transform.localScale = new Vector3(3*dWidth/width,0.2f,3*dHeight/height);
 					instance.transform.parent = this.transform;
 					instance.collider.enabled = false;
-					
+					if (endX*4 == i && endY*4 == j) {
+						instantiateEnclave(endX,endY,safeEntrance);
+						continue;
+					}
 					if (startX*4 == i && startY*4 == j) {
 						//Starting block
 						current = grid[startX*4+1,startY*4+1];
 						
-						playerObject.transform.position = current.toVector3 ();
+						instantiateEnclave(startX,startY,maze.First.Value);
 						
-						if (current.Bottom.Bottom != maze.First.Value) {
+						playerObject.transform.position = current.toVector3 ();
+						sheepSpawner.transform.position = current.toVector3();
+						sheepSpawner.GetComponent<SheepSpawn>().SpawnSheep();
+						
+						/*if (current.Bottom.Bottom != maze.First.Value) {
 							instance = (GameObject) Instantiate(cubePrefab);
 							instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+2.5f,z1+(j+2.8f)*(dHeight/height));
 							instance.transform.localScale = new Vector3(2.6f*dWidth/width,5.0f,0.1f*dHeight/height);
@@ -172,7 +196,7 @@ public class Grid : MonoBehaviour {
 							instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
 							instance.transform.parent = this.transform;
 							boxManager.AddBox(instance.collider.bounds);
-						}
+						}*/
 						continue;
 					}
 					
@@ -330,6 +354,113 @@ public class Grid : MonoBehaviour {
 					}
 				}
 			}
+		}
+	}
+	
+	private void instantiateEnclave(int blockX, int blockY, GridSquare entrance) {
+		//Starting block
+		GridSquare current = grid[blockX*4+1,blockY*4+1];
+		
+		width = Mathf.Max (Mathf.CeilToInt((float)width/4.0f),2)*4-1;
+		height = Mathf.Max (Mathf.CeilToInt((float)height/4.0f),2)*4-1;
+		Vector3 topLeft = this.collider.bounds.center - this.collider.bounds.extents;
+		Vector3 bottomRight= this.collider.bounds.center + this.collider.bounds.extents;
+		float y = this.collider.bounds.center.y;
+		
+		float x1 = topLeft.x;
+		float dWidth = bottomRight.x-x1;
+		float z1 = topLeft.z;
+		float dHeight = bottomRight.z-z1;
+		int i = blockX*4,j = blockY*4;
+		
+		GameObject instance;
+		
+		if (current.Bottom.Bottom != entrance) {
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+2.5f,z1+(j+2.8f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(2.6f*dWidth/width,5.0f,0.1f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+		}
+		else
+		{
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+0.6f)*(dWidth/width),y+2.5f,z1+(j+2.8f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+			
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+2.4f)*(dWidth/width),y+2.5f,z1+(j+2.8f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+		}
+		
+		if (current.Top.Top != entrance) {
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+2.5f,z1+(j+0.2f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(2.6f*dWidth/width,5.0f,0.1f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+		}
+		else
+		{
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+0.6f)*(dWidth/width),y+2.5f,z1+(j+0.2f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+			
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+2.4f)*(dWidth/width),y+2.5f,z1+(j+0.2f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+		}
+		
+		if (current.Left.Left != entrance) {
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+0.2f)*(dWidth/width),y+2.5f,z1+(j+1.5f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,2.6f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+		}
+		else
+		{
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+0.2f)*(dWidth/width),y+2.5f,z1+(j+0.6f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+			
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+0.2f)*(dWidth/width),y+2.5f,z1+(j+2.4f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+		}
+		
+		if (current.Right.Right != entrance) {
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+2.8f)*(dWidth/width),y+2.5f,z1+(j+1.5f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,2.6f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+		}
+		else
+		{
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+2.8f)*(dWidth/width),y+2.5f,z1+(j+0.6f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
+			
+			instance = (GameObject) Instantiate(cubePrefab);
+			instance.transform.position = new Vector3(x1+(i+2.8f)*(dWidth/width),y+2.5f,z1+(j+2.4f)*(dHeight/height));
+			instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
+			instance.transform.parent = this.transform;
+			boxManager.AddBox(instance.collider.bounds);
 		}
 	}
 	
@@ -624,6 +755,57 @@ public class GridSquare {
 			}
 		}
 		
+		return false;
+	}
+	
+	/* getAdjacentBlock()
+	 * if and only if the square is on the road and infront of the middle of a
+	 * block will this return a gridsquare.
+	 * 
+	 * Fig. 24601
+	 * BBB| |BBB
+	 * BBB|*|BBB
+	 * BBB| |BBB
+	 * 
+	 * If there is more than one accessible block, one will be chosen at random
+	 * Will never return the starting block
+	 * Returns null if no match found
+	 */
+	public GridSquare getAdjacentBlock(int startX,int startY)
+	{
+		if (!isRoad ())
+			return null;
+		List<GridSquare> squares = new List<GridSquare>();
+		
+		if (Position.x % 4 == 1) {
+			if (this.Top != null && !this.Top.isInStartBlock(startX,startY))
+				squares.Add (this.Top.Top);
+			if (this.Bottom != null && !this.Bottom.isInStartBlock(startX,startY))
+				squares.Add (this.Bottom.Bottom);
+		}
+		else if (Position.y % 4 == 1) {
+			if (this.Left != null && !this.Left.isInStartBlock(startX,startY))
+				squares.Add (this.Left.Left);
+			if (this.Right != null && !this.Right.isInStartBlock(startX,startY))
+				squares.Add (this.Right.Right);
+		}
+		else {
+			return null;
+		}
+		
+		if (squares.Count == 0)
+			return null;
+		
+		return (squares[parent.rnd.Next (squares.Count)]);
+	}
+	
+	/* isInStartBlock()
+	 * returns true if square is in the starting block. obviously.
+	 */
+	public bool isInStartBlock(int startX, int startY)
+	{
+		if (((int)Position.x)/4 == startX && ((int)Position.y)/4 == startY && !isRoad ())
+			return true;
 		return false;
 	}
 	

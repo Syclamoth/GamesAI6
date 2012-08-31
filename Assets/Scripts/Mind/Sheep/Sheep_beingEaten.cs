@@ -14,7 +14,7 @@ public class Sheep_beingeaten : State
     private float increaseFollowRate = 3f;
 
     private float decayPanicRate = 0.75f;
-    private float increasePanicRate = 4f;
+    private float increasePanicRate = 2f;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -24,7 +24,7 @@ public class Sheep_beingeaten : State
 
         //speed is zero
         myBrain.legs.maxSpeed = 0f;
-        controller.memory.SetValue("Panic", 50f);
+        controller.memory.SetValue("Panic", 55f);
 
         yield return null;
     }
@@ -46,15 +46,15 @@ public class Sheep_beingeaten : State
 
         if (thereIsSheperd)
         {
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * 2f * (1 - controller.memory.GetValue<float>("cowardLevel"))));
         }
         else
         {
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * (increasePanicRate) * controller.memory.GetValue<float>("cowardLevel")));
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
 
-            if (controller.memory.GetValue<float>("Panic") > 55f)
+            if (controller.memory.GetValue<float>("Panic") > 70f)
             {
-                controller.memory.SetValue("Panic", 55f);
+                controller.memory.SetValue("Panic", 70f);
             }
         }
 

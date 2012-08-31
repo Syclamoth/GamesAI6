@@ -113,7 +113,7 @@ public class Wolf_eating : State
             }
         }
 
-        if (sheepMemory.GetValue<float>("Panic") >= 55f)
+        if (sheepMemory.GetValue<float>("Panic") >= 70f)
         {
             sheepTarget.getObject().active = false;
             mainMachine.RequestStateTransition(roam.GetTarget());
@@ -135,7 +135,7 @@ public class Wolf_eating : State
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(roam, "Roaming"));
+        retV.Add(new LinkedStateReference(roam, "Lost Target"));
         return retV;
     }
 

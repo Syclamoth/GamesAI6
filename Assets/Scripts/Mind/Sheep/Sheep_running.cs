@@ -97,9 +97,9 @@ public class Sheep_running : State {
             //set the weight, this is top priority
             arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
             //set maximum weight
-            if (arriveBehaviour.getWeight() > 20f)
+            if (arriveBehaviour.getWeight() > 15f)
             {
-                arriveBehaviour.setWeight(20f);
+                arriveBehaviour.setWeight(15f);
             }
         }
         else

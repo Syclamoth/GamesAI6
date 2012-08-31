@@ -119,9 +119,9 @@ public class Wolf_hunting : State
 
             seekBehaviour.setWeight(seekBehaviour.getWeight() - (Time.deltaTime * ferocityRate * rateShepherd));
 
-            if (arriveBehaviour.getWeight() > 10f)
+            if (arriveBehaviour.getWeight() > 15f)
             {
-                arriveBehaviour.setWeight(10f);
+                arriveBehaviour.setWeight(15f);
             }
             if (seekBehaviour.getWeight() < 0f)
             {
@@ -141,9 +141,9 @@ public class Wolf_hunting : State
                 //arrive's weight decreases
                 arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * (5f - ferocityRate)));
 
-                if (seekBehaviour.getWeight() > 10f)
+                if (seekBehaviour.getWeight() > 15f)
                 {
-                    seekBehaviour.setWeight(10f);
+                    seekBehaviour.setWeight(15f);
                 }
                 if (arriveBehaviour.getWeight() < 0f)
                 {

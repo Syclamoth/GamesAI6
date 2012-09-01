@@ -17,7 +17,7 @@ public class Wolf_hunting : State
     private Memory sheepMemory;
     private Brain sheepBrain;
 
-	private Arrive arriveBehaviour;
+	private Pathfind arriveBehaviour;
     private Seek seekBehaviour;
     private Flee fleeBehaviour;
 
@@ -31,7 +31,7 @@ public class Wolf_hunting : State
         mainMachine = owner;
         myBrain = controller;
 		Legs myLeg = myBrain.legs;
-		arriveBehaviour = new Arrive();
+		arriveBehaviour = new Pathfind();
         seekBehaviour = new Seek();
         fleeBehaviour = new Flee();
 
@@ -39,7 +39,7 @@ public class Wolf_hunting : State
         fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
 		arriveBehaviour.setTarget(controller.memory.GetValue<SensedObject>("hasCommand").getObject());
 
-		arriveBehaviour.Init(myLeg);
+		arriveBehaviour.Init(myLeg, myBrain.levelGrid);
         seekBehaviour.Init(myLeg);
         fleeBehaviour.Init(myLeg);
 
@@ -47,7 +47,7 @@ public class Wolf_hunting : State
         myLeg.addSteeringBehaviour(seekBehaviour);
         myLeg.addSteeringBehaviour(fleeBehaviour);
 
-        myLeg.maxSpeed = 10f;
+        myLeg.maxSpeed = 11f;
         time = 0f;
         ferocityRate = controller.memory.GetValue<float>("ferocity");
 

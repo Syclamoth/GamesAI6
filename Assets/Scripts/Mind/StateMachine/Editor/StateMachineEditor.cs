@@ -55,7 +55,9 @@ public class StateMachineEditor : EditorWindow {
 		new StateMenuItem("Sheep Roaming", typeof(Sheep_roaming)),
 		new StateMenuItem("Sheep Nuts", typeof(Sheep_gonenut)),
 		new StateMenuItem("Sheep Running", typeof(Sheep_running)),
+		new StateMenuItem("Sheep Being Eaten", typeof(Sheep_beingeaten)),
 		new StateMenuItem("Wolf Roaming", typeof(Wolf_roaming)),
+		new StateMenuItem("Wolf Eating", typeof(Wolf_eating)),
 		new StateMenuItem("Wolf Hunting", typeof(Wolf_hunting))
 	};
 	

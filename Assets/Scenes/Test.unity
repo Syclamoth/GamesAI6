@@ -309,7 +309,7 @@ MonoBehaviour:
   cubePrefab: {fileID: 100000, guid: 227991b0e400349c4b35221a32265293, type: 2}
   debrisPrefab: {fileID: 100032, guid: b5ed404aa7720416da2261658d6d5f09, type: 2}
   streetlampPrefab: {fileID: 100004, guid: a7d9fd474dbe24f1085b58bd4ad23726, type: 2}
-  wolfPrefab: {fileID: 100000, guid: 055f7dd5512964e0fb8b03b499c16afb, type: 2}
+  wolfPrefab: {fileID: 100002, guid: 055f7dd5512964e0fb8b03b499c16afb, type: 2}
   playerObject: {fileID: 1873256981}
   sheepSpawner: {fileID: 904708951}
   boxManager: {fileID: 349345288}
@@ -1021,7 +1021,7 @@ MonoBehaviour:
   inspectSteering: 0
   collidesWith:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
 --- !u!114 &1873256987
 MonoBehaviour:
   m_ObjectHideFlags: 0

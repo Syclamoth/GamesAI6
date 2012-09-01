@@ -166,7 +166,7 @@ public class Wolf_roaming : State {
                 }
 
                 //Change to hunting phase
-                //Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+                Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
                 mainMachine.RequestStateTransition(hunting.GetTarget());
             }
             else
@@ -185,7 +185,7 @@ public class Wolf_roaming : State {
                         controller.memory.SetValue("leaderLevel", 10f);
                     }
 
-                    Debug.Log("I'm hungry: " + controller.memory.GetValue<float>("leaderLevel"));
+                    //Debug.Log("I'm hungry: " + controller.memory.GetValue<float>("leaderLevel"));
                 }
                 else
                 {

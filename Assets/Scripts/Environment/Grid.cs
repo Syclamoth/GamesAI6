@@ -1039,6 +1039,8 @@ class AStarNode
 	public List<GridSquare> neighbors;
 	
 	public AStarNode(GridSquare square, GridSquare target) {
+		if (square == null)
+			return;
 		parent = null;
 		this.square = square;
 		this.target = target;
@@ -1050,6 +1052,8 @@ class AStarNode
 		
 		foreach (GridSquare s in potentialNeighbors) {
 			//Complicated logic so that squares inside an enclave are accessible
+			if (s == null)
+				continue;
 			if ((s != null && !s.isBlocked () && (!(square.isInStartBlock () || square.isInEndBlock()) || (!square.isBlocked () || square.isEnclaveEntrance()))) 
 				|| (square.isInStartBlock () && s.isInStartBlock())
 				|| (square.isInEndBlock () && s.isInEndBlock())

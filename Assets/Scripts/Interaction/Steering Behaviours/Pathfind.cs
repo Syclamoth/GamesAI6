@@ -31,6 +31,7 @@ public class Pathfind : TargetableSteeringBehaviour {
 	}
 	
 	public override Vector2 _getDesiredVelocity() {
+		onTarget ();
 		
 		if (current == null)
 		{
@@ -41,7 +42,7 @@ public class Pathfind : TargetableSteeringBehaviour {
 		if (grid.gridSquareFromVector3(this.getLegs ().transform.position) == current.Value) {
 			if (current.Next == null) {
 				current = null;
-				this.setInternalWeight(0.0f);
+				this.setInternalWeight(1.0f);
 				return Vector2.zero;
 			}
 			current = current.Next;

@@ -33,7 +33,7 @@ public class Sheep_roaming : State {
 
         seekBehaviour = new Seek();
         
-        arriveBehaviour.Init(myLeg);
+        arriveBehaviour.Init(myLeg,myBrain.levelGrid);
         seekBehaviour.Init(myLeg);
 
         myLeg.addSteeringBehaviour(arriveBehaviour);

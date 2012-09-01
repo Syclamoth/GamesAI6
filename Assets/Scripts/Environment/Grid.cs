@@ -14,7 +14,7 @@ public class Grid : MonoBehaviour {
 	public GameObject wolfPrefab;
 	
 	public GameObject playerObject;
-	public SheepSpawn sheepSpawner;
+	public GameObject sheepSpawner;
 	
 	public BoxManager boxManager;
 	
@@ -534,10 +534,11 @@ public class Grid : MonoBehaviour {
 				}
 				
 				instance = (GameObject) Instantiate(wolfPrefab);
-				Brain wolfBrain = instance.GetComponent<Brain>();
-				wolfBrain.Init(boxManager, sheepSpawner.allObjects);
+				
 				instance.transform.position = current.toVector3();
 				instance.transform.parent = this.transform;
+				Brain wolfBrain = instance.GetComponent<Brain>();
+				wolfBrain.Init(boxManager, sheepSpawner.GetComponent<SheepSpawn>().allObjects);
 				
 				mazeBranches.AddLast (new LinkedListNode<LinkedList<GridSquare>>(newBranch));
 			}

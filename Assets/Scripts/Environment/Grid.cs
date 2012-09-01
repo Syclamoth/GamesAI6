@@ -23,6 +23,8 @@ public class Grid : MonoBehaviour {
 	private LinkedList<GridSquare> maze;
 	private LinkedList<LinkedList<GridSquare>> mazeBranches;
 	
+	private GridSquare startBlock = null,endBlock = null;
+	public GridSquare SafeEntrance = null, StartEntrance = null;
 	public System.Random rnd = new System.Random();
 	
 	void Start () {
@@ -72,6 +74,11 @@ public class Grid : MonoBehaviour {
 			maze = generateMaze(startX,startY);
 		}
 		
+		this.startBlock = grid[startX*4+1, startY*4+1];
+		
+		Vector2 entranceVec = (maze.First.Value.Position + this.startBlock.Position) / 2;
+		this.StartEntrance = grid[(int)entranceVec.x,(int)entranceVec.y];
+		
 		LinkedListNode<GridSquare> node = maze.Last;
 		
 		while (node != null) {
@@ -84,6 +91,12 @@ public class Grid : MonoBehaviour {
 			safeEntrance = node.Value;
 			endX = (int)current.Position.x/4;
 			endY = (int)current.Position.y/4;
+			
+			this.endBlock = grid[endX*4+1, endY*4+1];
+			
+			entranceVec = (safeEntrance.Position + this.endBlock.Position) / 2;
+			this.SafeEntrance = grid[(int)entranceVec.x,(int)entranceVec.y];
+			
 			break;
 		}
 		
@@ -275,7 +288,7 @@ public class Grid : MonoBehaviour {
 			
 			/* Uses A* algorithm to determine path from player to finish */
 			GameObject player = GameObject.Find("Player");
-			LinkedList<GridSquare> path = this.findPath(player.transform.position,maze.Last.Value.toVector3());
+			LinkedList<GridSquare> path = this.findPath(player.transform.position,this.endBlock.toVector3());
 			if (path != null) {
 				node = path.First;
 				if (node != null) {
@@ -721,6 +734,14 @@ public class Grid : MonoBehaviour {
 		
 		return getGridSquare(x,y);
 	}
+	
+	public GridSquare getStartBlock() {
+		return this.startBlock;
+	}
+	
+	public GridSquare getEndBlock() {
+		return this.endBlock;
+	}
 }
 
 public class GridSquare {
@@ -849,6 +870,22 @@ public class GridSquare {
 		if (((int)Position.x)/4 == startX && ((int)Position.y)/4 == startY && !isRoad ())
 			return true;
 		return false;
+	}
+	
+	public bool isInStartBlock()
+	{
+		return (1 >= Mathf.Max(Mathf.Abs (this.parent.getStartBlock().Position.x - this.Position.x),
+			                   Mathf.Abs (this.parent.getStartBlock().Position.y - this.Position.y)));
+	}
+	
+	public bool isInEndBlock()
+	{
+		return (1 >= Mathf.Max(Mathf.Abs (this.parent.getEndBlock().Position.x - this.Position.x),
+			                   Mathf.Abs (this.parent.getEndBlock().Position.y - this.Position.y)));
+	}
+	
+	public bool isEnclaveEntrance() {
+		return (this == parent.SafeEntrance || this == parent.StartEntrance);
 	}
 	
 	public Junction Junction {
@@ -1012,7 +1049,12 @@ class AStarNode
 		GridSquare[] potentialNeighbors = {square.Top, square.Bottom, square.Left, square.Right};
 		
 		foreach (GridSquare s in potentialNeighbors) {
-			if (s != null && !s.isBlocked ()) {
+			//Complicated logic so that squares inside an enclave are accessible
+			if ((s != null && !s.isBlocked () && (!(square.isInStartBlock () || square.isInEndBlock()) || (!square.isBlocked () || square.isEnclaveEntrance()))) 
+				|| (square.isInStartBlock () && s.isInStartBlock())
+				|| (square.isInEndBlock () && s.isInEndBlock())
+				|| (s.isEnclaveEntrance())
+				) {
 				neighbors.Add (s);
 			}
 		}

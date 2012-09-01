@@ -8,7 +8,8 @@ public class Sheep_roaming : State {
 
     Machine mainMachine;
     Brain myBrain;
-    private Arrive arriveBehaviour;
+    //private Arrive arriveBehaviour;
+    private Pathfind arriveBehaviour;
     private Seek seekBehaviour;
 
     private Vector2 oldPlayerPosition;
@@ -26,11 +27,15 @@ public class Sheep_roaming : State {
         mainMachine = owner;
         myBrain = controller;
         Legs myLeg = myBrain.legs;
-        arriveBehaviour = new Arrive();
-        seekBehaviour = new Seek();
+        
+        //arriveBehaviour = new Arrive();
+        arriveBehaviour = new Pathfind();
 
+        seekBehaviour = new Seek();
+        
         arriveBehaviour.Init(myLeg);
         seekBehaviour.Init(myLeg);
+
         myLeg.addSteeringBehaviour(arriveBehaviour);
         myLeg.addSteeringBehaviour(seekBehaviour);
 
@@ -102,12 +107,14 @@ public class Sheep_roaming : State {
 
             //set the weight, this is top priority
             arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
+
             //set maximum weight
             if (arriveBehaviour.getWeight() > 15f)
             {
                 arriveBehaviour.setWeight(15f);
             }
 
+            //oldPlayerPosition = arriveBehaviour.getTarget();
             oldPlayerPosition = arriveBehaviour.getTarget();
 
             //if the sheep sees the shephered, it stops seeking

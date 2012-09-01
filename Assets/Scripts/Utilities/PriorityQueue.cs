@@ -144,11 +144,11 @@ public class PriorityQueue<T> : ICollection<T> {
 		
 		//Edge case for empty queue or out of bounds
 		if (count == 0) {
-			throw new System.InvalidOperationException("Queue is empty.");
+			return default(T);
 		}
 		
 		if (index >= count) {
-			throw new System.InvalidOperationException("Out of bounds.");
+			return default(T);
 		}
 		
 		//Edge case for queue with 1 node

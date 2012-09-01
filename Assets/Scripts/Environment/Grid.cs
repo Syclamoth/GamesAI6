@@ -11,6 +11,7 @@ public class Grid : MonoBehaviour {
 	public GameObject cubePrefab;
 	public GameObject debrisPrefab;
 	public GameObject streetlampPrefab;
+	public GameObject wolfPrefab;
 	
 	public GameObject playerObject;
 	public GameObject sheepSpawner;
@@ -110,93 +111,6 @@ public class Grid : MonoBehaviour {
 						sheepSpawner.transform.position = current.toVector3();
 						sheepSpawner.GetComponent<SheepSpawn>().SpawnSheep();
 						
-						/*if (current.Bottom.Bottom != maze.First.Value) {
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+2.5f,z1+(j+2.8f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(2.6f*dWidth/width,5.0f,0.1f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}
-						else
-						{
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+0.6f)*(dWidth/width),y+2.5f,z1+(j+2.8f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-							
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+2.4f)*(dWidth/width),y+2.5f,z1+(j+2.8f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}
-						
-						if (current.Top.Top != maze.First.Value) {
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+2.5f,z1+(j+0.2f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(2.6f*dWidth/width,5.0f,0.1f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}
-						else
-						{
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+0.6f)*(dWidth/width),y+2.5f,z1+(j+0.2f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-							
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+2.4f)*(dWidth/width),y+2.5f,z1+(j+0.2f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.8f*dWidth/width,5.0f,0.1f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}
-						
-						if (current.Left.Left != maze.First.Value) {
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+0.2f)*(dWidth/width),y+2.5f,z1+(j+1.5f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,2.6f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}
-						else
-						{
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+0.2f)*(dWidth/width),y+2.5f,z1+(j+0.6f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-							
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+0.2f)*(dWidth/width),y+2.5f,z1+(j+2.4f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}
-						
-						if (current.Right.Right != maze.First.Value) {
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+2.8f)*(dWidth/width),y+2.5f,z1+(j+1.5f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,2.6f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}
-						else
-						{
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+2.8f)*(dWidth/width),y+2.5f,z1+(j+0.6f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-							
-							instance = (GameObject) Instantiate(cubePrefab);
-							instance.transform.position = new Vector3(x1+(i+2.8f)*(dWidth/width),y+2.5f,z1+(j+2.4f)*(dHeight/height));
-							instance.transform.localScale = new Vector3(0.1f*dWidth/width,5.0f,0.8f*dHeight/height);
-							instance.transform.parent = this.transform;
-							boxManager.AddBox(instance.collider.bounds);
-						}*/
 						continue;
 					}
 					
@@ -330,8 +244,12 @@ public class Grid : MonoBehaviour {
 			Debug.DrawLine (lineFrom,lineTo,Color.blue);
 		}
 		//Debug.DrawLine (topLeft,bottomRight,Color.blue);
+		LinkedListNode<GridSquare> node;
 		if (maze != null)
 		{
+			
+			
+			/*
 			LinkedListNode<GridSquare> node = maze.First;
 			if (node != null) {
 				while (node.Next != null) {
@@ -340,7 +258,7 @@ public class Grid : MonoBehaviour {
 					lineTo = node.Value.toVector3 ();
 					Debug.DrawLine (lineFrom,lineTo,Color.green);
 				}
-			}
+			}*/
 			
 			foreach (LinkedList<GridSquare> branch in mazeBranches)
 			{
@@ -354,15 +272,31 @@ public class Grid : MonoBehaviour {
 					}
 				}
 			}
+			
+			/* Uses A* algorithm to determine path from player to finish */
+			GameObject player = GameObject.Find("Player");
+			LinkedList<GridSquare> path = this.findPath(player.transform.position,maze.Last.Value.toVector3());
+			if (path != null) {
+				node = path.First;
+				if (node != null) {
+					while (node.Next != null) {
+						lineFrom = node.Value.toVector3 ();
+						node = node.Next;
+						lineTo = node.Value.toVector3 ();
+						Debug.DrawLine (lineFrom,lineTo,Color.cyan);
+					}
+				}
+			}
 		}
 	}
 	
+	/**
+	 * Creates a walled off block using cube prefabs, with an opening facing the given gridsquare.
+	 */
 	private void instantiateEnclave(int blockX, int blockY, GridSquare entrance) {
 		//Starting block
 		GridSquare current = grid[blockX*4+1,blockY*4+1];
 		
-		width = Mathf.Max (Mathf.CeilToInt((float)width/4.0f),2)*4-1;
-		height = Mathf.Max (Mathf.CeilToInt((float)height/4.0f),2)*4-1;
 		Vector3 topLeft = this.collider.bounds.center - this.collider.bounds.extents;
 		Vector3 bottomRight= this.collider.bounds.center + this.collider.bounds.extents;
 		float y = this.collider.bounds.center.y;
@@ -475,6 +409,9 @@ public class Grid : MonoBehaviour {
 
 		//Pick a starting gridsquare (around the starting block)
 		GridSquare current, starting;
+		
+		GameObject instance;
+		
 		bool[] visited = new bool[width*height];
 		bool[] explored = new bool[width*height];
 		uint left = (uint)mazeLength-1;
@@ -596,6 +533,10 @@ public class Grid : MonoBehaviour {
 					newBranch.AddLast (new LinkedListNode<GridSquare>(current));
 				}
 				
+				instance = (GameObject) Instantiate(wolfPrefab);
+				instance.transform.position = current.toVector3();
+				instance.transform.parent = this.transform;
+				
 				mazeBranches.AddLast (new LinkedListNode<LinkedList<GridSquare>>(newBranch));
 			}
 		}
@@ -678,6 +619,104 @@ public class Grid : MonoBehaviour {
 		}
 		
 		return neighbors;
+	}
+	
+	/*!!! PATHFINDING ALGORITHM IS HIDDEN HERE !!!*/
+	public LinkedList<GridSquare> findPath(Vector3 pathFrom,Vector3 pathTo)
+	{
+		AStarNode[] aStarNodes = new AStarNode[width*height];
+		bool[] closedSet = new bool[width*height];
+		PriorityQueue<GridSquare> openSet = new PriorityQueue<GridSquare>(false);
+		
+		GridSquare target = this.gridSquareFromVector3(pathTo);
+		GridSquare currentSquare;
+		
+		AStarNode current;
+		
+		//Initialize with path beginning
+		AStarNode temp = new AStarNode(this.gridSquareFromVector3(pathFrom),target);
+		aStarNodes[temp.getSquare().getHash()] = temp;
+		openSet.enqueueWithPriority(temp.getSquare(),temp.getFScore());
+		
+		//While there's still items in the open set
+		while ((currentSquare = openSet.dequeue()) != null) {
+			//openSet stores gridsquares for efficiency reasons, so get the relevant A* node
+			current = aStarNodes[currentSquare.getHash()];
+			
+			//Add node to the closed set
+			closedSet[current.getSquare().getHash()] = true;
+			
+			//If the current square is the target, we have found a path and
+			//can return
+			if (current.getSquare () == target) {
+				break;
+			}
+			
+			//For every neighbor
+			foreach (GridSquare s in current.getNeighbors())
+			{
+				//If the square is already processed, skip it
+				if (closedSet[s.getHash()] == true) {
+					continue;
+				}
+				//This is why the open set stores GridSquares instead of AStarNodes
+				if (!openSet.Contains(s)) {
+					temp = new AStarNode(s,target);
+					aStarNodes[temp.getSquare().getHash()] = temp;
+					openSet.enqueueWithPriority(temp.getSquare(),temp.getFScore());
+				} else {
+					//if already in the open set, if this is a worse path, skip it.
+					temp = aStarNodes[s.getHash ()];
+					if (current.gScore + 1 >= temp.gScore) {
+						continue;
+					}
+				}
+				//setParent sets the g score automatically.
+				temp.setParent(current);
+			}
+		}
+		
+		//No path was found
+		if (currentSquare == null) {
+			return default(LinkedList<GridSquare>);
+		}
+		
+		
+		//Reconstruct the path
+		LinkedList<GridSquare> path = new LinkedList<GridSquare>();
+		current = aStarNodes[target.getHash()];
+		
+		if (current == null) {
+			return null;
+		}
+		
+		do {
+			//Add the current square to the beginning of the path
+			path.AddFirst(current.getSquare());
+			//Set the current node to the parent
+			current = current.getParent ();
+		} while (current != null);
+		
+		return path;
+	}
+	
+	/* Gets a gridsquare from a given Vector3 */
+	public GridSquare gridSquareFromVector3(Vector3 vector)
+	{
+		Vector3 topLeft = this.collider.bounds.center - this.collider.bounds.extents;
+		Vector3 bottomRight= this.collider.bounds.center + this.collider.bounds.extents;
+		
+		float x1 = topLeft.x;
+		float dWidth = bottomRight.x-x1;
+		float z1 = topLeft.z;
+		float dHeight = bottomRight.z-z1;
+		
+		int x,y;
+		
+		x = (int)Mathf.Min (width - 1, Mathf.Max(0, width * ((vector.x - x1) / dWidth)));
+		y = (int)Mathf.Min (height - 1, Mathf.Max(0, height * ((vector.z - z1) / dHeight)));
+		
+		return getGridSquare(x,y);
 	}
 }
 
@@ -832,8 +871,8 @@ public class GridSquare {
 		return false;
 	}
 	
-	public uint getHash() {
-		return (uint)Position.y * (uint)parent.width + (uint)Position.x;
+	public int getHash() {
+		return (int)((uint)Position.y * (uint)parent.width + (uint)Position.x);
 	}
 					
 	public Vector3 toVector3() {
@@ -896,6 +935,10 @@ public class GridSquare {
 		
 		blocked = true;
 	}
+	
+	public float manhattanDistanceTo(GridSquare target) {
+		return Mathf.Abs (target.Position.x - Position.x) + Mathf.Abs (target.Position.y - Position.y);
+	}
 }
 
 public class Junction {
@@ -940,5 +983,58 @@ public class Junction {
 			right = true;
 			return;
 		}
+	}
+}
+
+
+class AStarNode
+{
+	private GridSquare square;
+	private GridSquare target;
+	private AStarNode parent;
+	
+	public float gScore = 0.0f;
+	public float hScore = 0.0f;
+	
+	public List<GridSquare> neighbors;
+	
+	public AStarNode(GridSquare square, GridSquare target) {
+		parent = null;
+		this.square = square;
+		this.target = target;
+		neighbors = new List<GridSquare>();
+		
+		hScore = square.manhattanDistanceTo(target);
+		
+		GridSquare[] potentialNeighbors = {square.Top, square.Bottom, square.Left, square.Right};
+		
+		foreach (GridSquare s in potentialNeighbors) {
+			if (s != null && !s.isBlocked ()) {
+				neighbors.Add (s);
+			}
+		}
+	}
+	
+	public AStarNode getParent() {
+		return parent;
+	}
+	
+	public void setParent(AStarNode newParent)
+	{
+		gScore = newParent.gScore + 1.0f;
+		parent = newParent;
+	}
+	
+	public float getFScore()
+	{
+		return gScore + hScore;
+	}
+	
+	public List<GridSquare> getNeighbors() {
+		return neighbors;
+	}
+	
+	public GridSquare getSquare() {
+		return square;
 	}
 }

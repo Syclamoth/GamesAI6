@@ -14,10 +14,19 @@ public class Brain : MonoBehaviour {
 	public BoxManager boxes;
 	
 	public Memory memory = new Memory();
+	
+	private GameObject terrainBase;
+	
+	public Grid levelGrid = null;
 
 	void Start() {
 		if(allObjects == null) {
 			return;
+		}
+		//Don't give a toss about best practices frankly.
+		terrainBase = GameObject.Find("TerrainBase");
+		if (terrainBase != null) {
+			levelGrid = terrainBase.GetComponent<Grid>();
 		}
 		allObjects.RegisterObject(new SensableObject(gameObject, classification));
 		if(behaviour) {

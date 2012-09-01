@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Pathfinding {
 
-	void calculatePath(Vector2 pathFrom,Vector2 pathTo)
+	/*void calculatePath(Vector2 pathFrom,Vector2 pathTo)
 	{
 		AStarNode targetNode = null; // = Quadtree.getNodeFromVector(pathTo);
 		List<AStarNode> closedSet = new List<AStarNode>();
@@ -24,7 +24,7 @@ public class Pathfinding {
 				return;
 			foreach (AStarNode node in current.getNeighbors())
 			{
-				if (closedSet.Contains (node) /* || !node.isWalkable */)
+				if (closedSet.Contains (node) /* || !node.isWalkable )
 				{
 					continue; //ignore this node...
 				}
@@ -89,5 +89,5 @@ public class Pathfinding {
 		public List<AStarNode> getNeighbors() {
 			return neighbors;
 		}
-	}
+	}*/
 }

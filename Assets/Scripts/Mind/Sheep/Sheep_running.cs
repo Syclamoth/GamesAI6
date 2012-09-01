@@ -10,7 +10,8 @@ public class Sheep_running : State {
 
     Machine mainMachine;
     Brain myBrain;
-    private Arrive arriveBehaviour;
+    private Pathfind arriveBehaviour;
+
     private Flee fleeBehaviour;
 
     private float decayFollowRate = 0.5f;
@@ -24,10 +25,11 @@ public class Sheep_running : State {
         mainMachine = owner;
         myBrain = controller;
         Legs myLeg = myBrain.legs;
-        arriveBehaviour = new Arrive();
+        //arriveBehaviour = new Arrive();
+        arriveBehaviour = new Pathfind();
         fleeBehaviour = new Flee();
 
-        arriveBehaviour.Init(myLeg);
+        arriveBehaviour.Init(myLeg, myBrain.levelGrid);
         fleeBehaviour.Init(myLeg);
         myLeg.addSteeringBehaviour(arriveBehaviour);
         myLeg.addSteeringBehaviour(fleeBehaviour);

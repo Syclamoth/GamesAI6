@@ -679,16 +679,25 @@ public class Grid : MonoBehaviour {
 				if (!openSet.Contains(s)) {
 					temp = new AStarNode(s,target);
 					aStarNodes[temp.getSquare().getHash()] = temp;
+					
+					//setParent sets the g score automatically.
+					temp.setParent(current);
+					
 					openSet.enqueueWithPriority(temp.getSquare(),temp.getFScore());
 				} else {
-					//if already in the open set, if this is a worse path, skip it.
+					//if this is a worse path, skip it.
 					temp = aStarNodes[s.getHash ()];
 					if (current.gScore + 1 >= temp.gScore) {
 						continue;
 					}
+					//setParent sets the g score automatically.
+					temp.setParent(current);
+					
+					//Re add to the open set.
+					openSet.Remove (temp.getSquare());
+					openSet.enqueueWithPriority(temp.getSquare(),temp.getFScore());
 				}
-				//setParent sets the g score automatically.
-				temp.setParent(current);
+				
 			}
 		}
 		

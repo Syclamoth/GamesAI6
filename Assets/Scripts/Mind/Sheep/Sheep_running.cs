@@ -155,7 +155,7 @@ public class Sheep_running : State {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
         retV.Add(new LinkedStateReference(calmed, "Calmed"));
         retV.Add(new LinkedStateReference(nuts, "Insane"));
-        retV.Add(new LinkedStateReference(eaten, "Eaten"));
+        retV.Add(new LinkedStateReference(eaten, "Being Eaten"));
         return retV;
     }
 

@@ -166,7 +166,7 @@ public class Wolf_roaming : State {
                 }
 
                 //Change to hunting phase
-                Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+                //Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
                 mainMachine.RequestStateTransition(hunting.GetTarget());
             }
             else

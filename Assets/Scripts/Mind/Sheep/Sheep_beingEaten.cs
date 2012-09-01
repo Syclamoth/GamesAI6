@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Sheep_beingeaten : State
+public class Sheep_beingEaten : State
 {
 
     public ExplicitStateReference nuts = new ExplicitStateReference(null);

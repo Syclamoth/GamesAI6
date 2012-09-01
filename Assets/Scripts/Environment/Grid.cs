@@ -14,7 +14,7 @@ public class Grid : MonoBehaviour {
 	public GameObject wolfPrefab;
 	
 	public GameObject playerObject;
-	public GameObject sheepSpawner;
+	public SheepSpawn sheepSpawner;
 	
 	public BoxManager boxManager;
 	
@@ -534,6 +534,8 @@ public class Grid : MonoBehaviour {
 				}
 				
 				instance = (GameObject) Instantiate(wolfPrefab);
+				Brain wolfBrain = instance.GetComponent<Brain>();
+				wolfBrain.Init(boxManager, sheepSpawner.allObjects);
 				instance.transform.position = current.toVector3();
 				instance.transform.parent = this.transform;
 				

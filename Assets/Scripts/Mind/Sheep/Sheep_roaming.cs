@@ -8,8 +8,8 @@ public class Sheep_roaming : State {
 
     Machine mainMachine;
     Brain myBrain;
-    private Arrive arriveBehaviour;
-    //private Pathfind arriveBehaviour;
+    //private Arrive arriveBehaviour;
+    private Pathfind arriveBehaviour;
     private Seek seekBehaviour;
 
     private Vector2 oldPlayerPosition;
@@ -28,12 +28,12 @@ public class Sheep_roaming : State {
         myBrain = controller;
         Legs myLeg = myBrain.legs;
         
-        arriveBehaviour = new Arrive();
-        //arriveBehaviour = new Pathfind();
-
+        //arriveBehaviour = new Arrive();
+        arriveBehaviour = new Pathfind();
         seekBehaviour = new Seek();
-        
-        arriveBehaviour.Init(myLeg);
+
+        //arriveBehaviour.Init(myLeg);
+        arriveBehaviour.Init(myLeg, myBrain.levelGrid);
         seekBehaviour.Init(myLeg);
 
         myLeg.addSteeringBehaviour(arriveBehaviour);

@@ -18,7 +18,7 @@ public class TargetableSteeringBehaviour : SteeringBehaviour {
 	}
 	public Vector2 getTarget() {
 		if (this.targetObject != null)
-			this.setTarget(targetObject.transform.position);
+			this.target = new Vector2(targetObject.transform.position.x,targetObject.transform.position.y);
 		return this.target;
 	}
 	public virtual void onTarget() {

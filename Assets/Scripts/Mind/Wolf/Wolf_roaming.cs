@@ -39,9 +39,9 @@ public class Wolf_roaming : State {
 
             myBrain.memory.SetValue("ferocity", Random.value * 4);
 
-            if (myBrain.memory.GetValue<float>("ferocity") < 0.2f)
+            if (myBrain.memory.GetValue<float>("ferocity") < 0.8f)
             {
-                myBrain.memory.SetValue("ferocity", 0.2f);
+                myBrain.memory.SetValue("ferocity", 0.8f);
             }
 
 			firstActivation = false;
@@ -123,7 +123,7 @@ public class Wolf_roaming : State {
             if (seenSheep.Count > 0)
             {
                 //choose the target
-                //if the wolf hasn't have his target, pick it\
+                //if the wolf hasn't have his target, pick it
                 target = seenSheep[(int)Random.Range(0, seenSheep.Count)];
 
                 //set the target for this wolf

@@ -1167,7 +1167,7 @@ ParticleSystem:
   ShapeModule:
     enabled: 1
     type: 4
-    radius: .370054245
+    radius: 5
     angle: 25
     boxX: 1
     boxY: 1
@@ -1179,7 +1179,7 @@ ParticleSystem:
     enabled: 1
     m_Type: 0
     rate:
-      scalar: 10
+      scalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:

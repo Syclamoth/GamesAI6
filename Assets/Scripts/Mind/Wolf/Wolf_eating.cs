@@ -24,9 +24,11 @@ public class Wolf_eating : State
         Legs myLeg = myBrain.legs;
 
         //get sheep target
-        sheepTarget = controller.memory.GetValue<SensedObject>("hasCommand");
-        sheepMemory = sheepTarget.getMemory();
+        sheepTarget = myBrain.memory.GetValue<SensedObject>("hasCommand");
+        Debug.Log("I'm eating:" + sheepTarget.getObject());
+
         sheepBrain = (Brain)sheepTarget.getObject().GetComponent("Brain");
+        sheepMemory = sheepBrain.memory;
 
         fleeBehaviour = new Flee();
         arriveBehaviour = new Arrive();
@@ -107,18 +109,18 @@ public class Wolf_eating : State
 
             float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
 
-            if (distance <= 1.5f)
+            if (distance <= 1f)
             {
                 myBrain.legs.maxSpeed = 0f;
             }
         }
 
-        if (sheepMemory.GetValue<float>("Panic") >= 70f)
+        if (sheepMemory.GetValue<float>("Panic") >= 65f)
         {
             sheepTarget.getObject().active = false;
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
-        else if (controller.memory.GetValue<float>("Panic") < 40f)
+        else if (controller.memory.GetValue<float>("Panic") < 50f)
         {
             mainMachine.RequestStateTransition(roam.GetTarget());
         }

@@ -95,7 +95,7 @@ public class Sheep_gonenut : State {
 
                 float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
 
-                if (distance <= 1.5f)
+                if (distance <= 1f)
                 {
                     mainMachine.RequestStateTransition(eaten.GetTarget());
                 }

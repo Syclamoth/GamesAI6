@@ -31,10 +31,10 @@ public class Wolf_roaming : State {
         fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
 
         time = 0;
-		if(firstActivation)
-		{
-        	target = null;//set leaderLevel for wolf
-        	myBrain.memory.SetValue("leaderLevel", Random.value * 100);
+        if (firstActivation)
+        {
+            target = null;//set leaderLevel for wolf
+            myBrain.memory.SetValue("leaderLevel", Random.value * 100);
             myBrain.memory.SetValue("hasCommand", null);
 
             myBrain.memory.SetValue("ferocity", Random.value * 4);
@@ -44,10 +44,18 @@ public class Wolf_roaming : State {
                 myBrain.memory.SetValue("ferocity", 0.8f);
             }
 
-			firstActivation = false;
-		}
+            firstActivation = false;
+        }
+        else
+        {
+            Debug.Log("I'm roaming");
+        }
 
         myLeg.maxSpeed = 6.0f;
+
+        //delete its target
+        myBrain.memory.SetValue("hasCommand", null);
+        
 
         yield return null;
     }

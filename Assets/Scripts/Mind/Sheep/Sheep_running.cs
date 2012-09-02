@@ -25,7 +25,7 @@ public class Sheep_running : State {
         mainMachine = owner;
         myBrain = controller;
         Legs myLeg = myBrain.legs;
-        //arriveBehaviour = new Arrive();
+        
         arriveBehaviour = new Pathfind();
         fleeBehaviour = new Flee();
 
@@ -124,7 +124,7 @@ public class Sheep_running : State {
 
                 float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
 
-                if (distance <= 1.5f)
+                if (distance <= 1f)
                 {
                     mainMachine.RequestStateTransition(eaten.GetTarget());
                 }

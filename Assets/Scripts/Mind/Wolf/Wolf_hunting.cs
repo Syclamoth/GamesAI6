@@ -35,10 +35,6 @@ public class Wolf_hunting : State
         seekBehaviour = new Seek();
         fleeBehaviour = new Flee();
 
-     
-        fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
-		arriveBehaviour.setTarget(controller.memory.GetValue<SensedObject>("hasCommand").getObject());
-
 		arriveBehaviour.Init(myLeg, myBrain.levelGrid);
         seekBehaviour.Init(myLeg);
         fleeBehaviour.Init(myLeg);
@@ -54,6 +50,10 @@ public class Wolf_hunting : State
         sheepTarget = myBrain.memory.GetValue<SensedObject>("hasCommand");
         sheepMemory = sheepTarget.getMemory();
         sheepBrain = (Brain)sheepTarget.getObject().GetComponent("Brain");
+
+        fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
+        arriveBehaviour.setTarget(sheepTarget.getObject());
+
         yield return null;
     }
     public override IEnumerator Exit()
@@ -61,18 +61,6 @@ public class Wolf_hunting : State
 		myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
         myBrain.legs.removeSteeringBehaviour(seekBehaviour);
         myBrain.legs.removeSteeringBehaviour(fleeBehaviour);
-
-        //delete itself in sheepTarget memory
-        List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
-
-        if(wolvesChasing.Count > 0)
-        {
-            wolvesChasing.Remove(this.myBrain);
-            sheepMemory.SetValue("chasedBy", wolvesChasing);
-        }      
-
-        //delete its target
-        myBrain.memory.SetValue("hasCommand", null);
 
         yield return null;
     }
@@ -155,6 +143,16 @@ public class Wolf_hunting : State
             {
                 //change to roaming state
                 Debug.Log("Give up finding");
+
+                //delete itself in sheepTarget memory
+                List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+
+                if (wolvesChasing.Count > 0)
+                {
+                    wolvesChasing.Remove(this.myBrain);
+                    sheepMemory.SetValue("chasedBy", wolvesChasing);
+                }
+
                 mainMachine.RequestStateTransition(roam.GetTarget());
             }
         }
@@ -165,7 +163,7 @@ public class Wolf_hunting : State
 
         float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
 
-        if (distance <= 1.5f)
+        if (distance <= 1f)
         {
             mainMachine.RequestStateTransition(eating.GetTarget());
         }

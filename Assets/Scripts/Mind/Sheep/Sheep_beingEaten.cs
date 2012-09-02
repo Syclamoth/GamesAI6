@@ -52,14 +52,14 @@ public class Sheep_beingEaten : State
         {
             controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
 
-            if (controller.memory.GetValue<float>("Panic") > 70f)
+            if (controller.memory.GetValue<float>("Panic") > 65f)
             {
-                controller.memory.SetValue("Panic", 70f);
+                controller.memory.SetValue("Panic", 65f);
             }
         }
 
         //back to gonenut state
-        if (controller.memory.GetValue<float>("Panic") < 40f)
+        if (controller.memory.GetValue<float>("Panic") < 50f)
         {
             mainMachine.RequestStateTransition(nuts.GetTarget());
         }

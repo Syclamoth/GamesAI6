@@ -14,6 +14,8 @@ public class Eyes : Sense {
 	
 	public float attentiveness = 0.7f;
 	
+	public bool debugMode = false;
+	
 	public LayerMask visibleLayers;
 	private SensableObjects allObjects;
 	
@@ -81,10 +83,13 @@ public class Eyes : Sense {
 		}
 	}
 	
-	/*
+	///*
 	//Delete this when I'm done
 	void OnGUI()
 	{
+		if(!debugMode) {
+			return;
+		}
 		foreach(StringAtPoint str in debugStrings)
 		{
 			Vector2 wordCentre = Camera.main.WorldToScreenPoint(str.point);
@@ -92,7 +97,7 @@ public class Eyes : Sense {
 			GUI.color = Color.red;
 			GUI.Label (new Rect(wordCentre.x - 20, wordCentre.y - 10, 40, 20), str.word);
 		}
-	}*/
+	}//*/
 }
 
 
@@ -127,8 +132,7 @@ public class RaycastAggregate {
 		raycasts.Enqueue(new TimedBool(queueThis));
 		
 		// This line shows how occluded an object is.
-		
-		//Debug.DrawLine(startTrans.position, endPoint, queueThis ? Color.green : Color.red);
+		Debug.DrawLine(startTrans.position, endPoint, queueThis ? Color.green : Color.red);
 	}
 	
 	public bool ContainsData()

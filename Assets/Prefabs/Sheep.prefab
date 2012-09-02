@@ -310,10 +310,10 @@ MonoBehaviour:
   focusedFOV: 2.5
   peripheralFOV: 100
   maxViewDistance: 15
-  attentiveness: .699999988
+  attentiveness: .850000024
   visibleLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1536
 --- !u!114 &11400020
 MonoBehaviour:
   m_ObjectHideFlags: 1

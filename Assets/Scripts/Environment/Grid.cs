@@ -230,8 +230,7 @@ public class Grid : MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	void OnDrawGizmos () {
 		Vector3 topLeft = this.collider.bounds.center - this.collider.bounds.extents;
 		Vector3 bottomRight= this.collider.bounds.center + this.collider.bounds.extents;
 		float y = this.collider.bounds.center.y;

@@ -594,7 +594,6 @@ public class Grid : MonoBehaviour {
 	{
 		List<GridSquare> neighbors = new List<GridSquare>();
 		GridSquare[] squares = {current.Top,current.Left,current.Bottom,current.Right};
-		GridSquare evaluating;
 		
 		foreach (GridSquare s in squares)
 		{
@@ -615,7 +614,6 @@ public class Grid : MonoBehaviour {
 	{
 		List<GridSquare> neighbors = new List<GridSquare>();
 		GridSquare[] squares = {current.Top,current.Left,current.Bottom,current.Right};
-		GridSquare evaluating;
 		
 		foreach (GridSquare s in squares)
 		{
@@ -788,7 +786,7 @@ public class GridSquare {
 	}
 	
 	public GridSquare(Vector2 position, Grid parent) {
-		if (position == null || parent == null)
+		if (parent == null)
 			throw new UnassignedReferenceException();
 		
 		Position = position;
@@ -1054,7 +1052,7 @@ class AStarNode
 		this.target = target;
 		neighbors = new List<GridSquare>();
 		
-		hScore = square.manhattanDistanceTo(target);
+		hScore = square.manhattanDistanceTo(this.target);
 		
 		GridSquare[] potentialNeighbors = {square.Top, square.Bottom, square.Left, square.Right};
 		

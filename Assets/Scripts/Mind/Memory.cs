@@ -27,6 +27,7 @@ public class Memory {
 		try{
 			retV = (T)objectRegistry[key];
 		} catch (System.InvalidCastException e) {
+			Debug.LogError (e.Message);
 			retV = default(T);
 		}
 		return retV;

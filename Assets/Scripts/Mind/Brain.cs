@@ -15,11 +15,33 @@ public class Brain : MonoBehaviour {
 	
 	public Memory memory = new Memory();
 	
+	private GameObject terrainBase;
+	
+	public Grid levelGrid = null;
+
 	void Start() {
+		if(allObjects == null) {
+			return;
+		}
+		//Don't give a toss about best practices frankly.
+		terrainBase = GameObject.Find("TerrainBase");
+		if (terrainBase != null) {
+			levelGrid = terrainBase.GetComponent<Grid>();
+		}
 		allObjects.RegisterObject(new SensableObject(gameObject, classification));
 		if(behaviour) {
 			StartCoroutine(RunStateMachine());
 		}
+	}
+	
+	public void Init(BoxManager boxes, SensableObjects objs) {
+		this.boxes = boxes;
+		this.allObjects = objs;
+		//allObjects.RegisterObject(new SensableObject(gameObject, classification));
+		//if(behaviour) {
+		//	StartCoroutine(RunStateMachine());
+		//}
+		
 	}
 	
 	IEnumerator RunStateMachine() {

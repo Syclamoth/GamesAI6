@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class Sheep_gonenut : State {
 
-    public ExplicitStateReference alarm = new ExplicitStateReference(null);
+    public ExplicitStateReference roaming = new ExplicitStateReference(null);
+    public ExplicitStateReference eaten = new ExplicitStateReference(null);
 
     //public SheepCharacteristics stats;
 
@@ -50,10 +51,10 @@ public class Sheep_gonenut : State {
         {
             //the less cowardLevel is, the less Panic increases. However, in this state, the sheep has its panic level increased by 1.25
             controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * (increasePanicRate * 1.25f) * controller.memory.GetValue<float>("cowardLevel")));
-
-            if (controller.memory.GetValue<float>("Panic") > 90f)
+            
+            if (controller.memory.GetValue<float>("Panic") > 55f)
             {
-                controller.memory.SetValue("Panic", 90f);
+                controller.memory.SetValue("Panic", 55f);
             }
         }
         else
@@ -77,44 +78,30 @@ public class Sheep_gonenut : State {
             }
         }
 
-        /*
-        if (controller.senses.isContainAgent(AgentClassification.Wolf))
-        {
-            //the less cowardLevel is, the less Panic increases
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
-
-            if (controller.memory.GetValue<float>("Panic") > 90f)
-            {
-                controller.memory.SetValue("Panic", 90f);
-            }
-        }
-        else
-        {
-            //if there is no wolf around and it can see the Sheperd, the recover rate from Panic is doubled.
-            if (controller.senses.isContainAgent(AgentClassification.Shepherd))
-            {
-                //the less cowardLevel is, the more Panic decreases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * 2 * (1 - controller.memory.GetValue<float>("cowardLevel"))));
-            }
-            else
-            {
-                //the less cowardLevel is, the more Panic decreases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
-            }
-
-            //set the minimum Panic level for sheep
-            if (controller.memory.GetValue<float>("Panic") < 0f)
-            {
-                controller.memory.SetValue("Panic", 0f);
-            }
-        }*/
-
         // if can't see wolf and panic level has decreased, change to roaming state
         if (controller.memory.GetValue<float>("Panic") < 7f)
         {
             Debug.Log("Wolf's gone and I'm calm now!");
-            mainMachine.RequestStateTransition(alarm.GetTarget());
+            mainMachine.RequestStateTransition(roaming.GetTarget());
         }
+
+        //if the sheep get caught
+        if (controller.memory.GetValue<List<Brain>>("chasedBy").Count > 0)
+        {
+            foreach (Brain wolvesBrain in controller.memory.GetValue<List<Brain>>("chasedBy"))
+            {
+                Vector2 currentHunterPos = wolvesBrain.legs.getPosition();
+                Vector2 currentSheepPos = myBrain.legs.getPosition();
+
+                float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
+
+                if (distance <= 1f)
+                {
+                    mainMachine.RequestStateTransition(eaten.GetTarget());
+                }
+            }
+        }
+
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()
@@ -127,7 +114,8 @@ public class Sheep_gonenut : State {
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Alarm"));
+        retV.Add(new LinkedStateReference(roaming, "Roaming"));
+        retV.Add(new LinkedStateReference(eaten, "Being Eaten"));
         return retV;
     }
 

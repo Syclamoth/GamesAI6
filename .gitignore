@@ -10,3 +10,5 @@ Temp/
 OldAssets/
 test-results/
 *.DS_Store
+project.sln
+project-csharp.sln

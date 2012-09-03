@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Sheep_roaming : State {
-    public ExplicitStateReference alarm = new ExplicitStateReference(null);
-
-    //public SheepCharacteristics stats;
+    public ExplicitStateReference running = new ExplicitStateReference(null);
+    public ExplicitStateReference eaten = new ExplicitStateReference(null);
 
     Machine mainMachine;
     Brain myBrain;
-    private Arrive arriveBehaviour;
+    //private Arrive arriveBehaviour;
+    private Pathfind arriveBehaviour;
     private Seek seekBehaviour;
 
     private Vector2 oldPlayerPosition;
@@ -27,11 +27,16 @@ public class Sheep_roaming : State {
         mainMachine = owner;
         myBrain = controller;
         Legs myLeg = myBrain.legs;
-        arriveBehaviour = new Arrive();
-        seekBehaviour = new Seek();
+        
+        //arriveBehaviour = new Arrive();
+        arriveBehaviour = new Pathfind();
 
-        arriveBehaviour.Init(myLeg);
+        seekBehaviour = new Seek();
+        
+        arriveBehaviour.Init(myLeg,myBrain.levelGrid);
+        //arriveBehaviour.Init(myLeg);
         seekBehaviour.Init(myLeg);
+
         myLeg.addSteeringBehaviour(arriveBehaviour);
         myLeg.addSteeringBehaviour(seekBehaviour);
 
@@ -49,6 +54,8 @@ public class Sheep_roaming : State {
             }
 
         	myBrain.memory.SetValue("cowardLevel", coward);
+            myBrain.memory.SetValue("chasedBy", new List<Brain>());
+
 			firstActivation = false;
 		}
         yield return null;
@@ -101,12 +108,14 @@ public class Sheep_roaming : State {
 
             //set the weight, this is top priority
             arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
+
             //set maximum weight
-            if (arriveBehaviour.getWeight() > 20f)
+            if (arriveBehaviour.getWeight() > 15f)
             {
-                arriveBehaviour.setWeight(20f);
+                arriveBehaviour.setWeight(15f);
             }
 
+            //oldPlayerPosition = arriveBehaviour.getTarget();
             oldPlayerPosition = arriveBehaviour.getTarget();
 
             //if the sheep sees the shephered, it stops seeking
@@ -145,82 +154,30 @@ public class Sheep_roaming : State {
             }
         }
 
-        /*
-        if(controller.senses.isContainAgent(AgentClassification.Shepherd))
-        {
-            //set the target
-            arriveBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
-
-            //set the weight, this is top priority
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
-            //set maximum weight
-            if (arriveBehaviour.getWeight() > 20f)
-            {
-                arriveBehaviour.setWeight(20f);
-            }
-
-            oldPlayerPosition = arriveBehaviour.getTarget();
-
-            //if the sheep sees the shephered, it stops seeking
-            seekBehaviour.setWeight(seekBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
-
-            //minimum 0 weight
-            if (seekBehaviour.getWeight() < 0f)
-            {
-                seekBehaviour.setWeight(0f);
-            }
-        }
-        else
-        {
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
-
-            //get last player's location so the sheep will seek around that
-            seekBehaviour.setTarget(oldPlayerPosition);
-            seekBehaviour.setWeight(seekBehaviour.getWeight() + (Time.deltaTime * decayFollowRate));
-
-            //maximum 10 weight
-            if (seekBehaviour.getWeight() > 10f)
-            {
-                seekBehaviour.setWeight(10f);
-            }
-
-            //set minimum weight
-            if (arriveBehaviour.getWeight() < 0f)
-            {
-                arriveBehaviour.setWeight(0f);
-                seekBehaviour.setWeight(seekBehaviour.getWeight() - Time.deltaTime);
-
-                if (seekBehaviour.getWeight() < 0f)
-                {
-                    seekBehaviour.setWeight(0f);
-                }
-            }
-        }
-
-        if (controller.senses.isContainAgent(AgentClassification.Wolf))
-        {
-            
-            //the less cowardLevel is, the less Panic increases
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
-        }
-        else
-        {
-            //the less cowardLevel is, the more Panic decreases
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
-
-            //set the minimum Panic level for sheep
-            if (controller.memory.GetValue<float>("Panic") < 0f)
-            {
-                controller.memory.SetValue("Panic", 0f);
-            }
-        }
-        */
         // if panic level larger than 7, change to running state.
         if (controller.memory.GetValue<float>("Panic") >= 7f)
         {
             Debug.Log("I saw wolf. RUN!");
-            mainMachine.RequestStateTransition(alarm.GetTarget());
+            mainMachine.RequestStateTransition(running.GetTarget());
         }
+
+        //if the sheep get caught
+        if (controller.memory.GetValue<List<Brain>>("chasedBy").Count > 0)
+        {
+            foreach (Brain wolvesBrain in controller.memory.GetValue<List<Brain>>("chasedBy"))
+            {
+                Vector2 currentHunterPos = wolvesBrain.legs.getPosition();
+                Vector2 currentSheepPos = myBrain.legs.getPosition();
+
+                float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
+
+                if (distance <= 1f)
+                {
+                    mainMachine.RequestStateTransition(eaten.GetTarget());
+                }
+            }
+        }
+
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()
@@ -233,7 +190,8 @@ public class Sheep_roaming : State {
     override public List<LinkedStateReference> GetStateTransitions()
     {
         List<LinkedStateReference> retV = new List<LinkedStateReference>();
-        retV.Add(new LinkedStateReference(alarm, "Alarm"));
+        retV.Add(new LinkedStateReference(running, "Running"));
+        retV.Add(new LinkedStateReference(eaten, "Being Eaten"));
         return retV;
     }
 

@@ -4,55 +4,50 @@ using System.Collections.Generic;
 using System.Threading;
 using System;
 using System.Linq;
-public class Eyes : Sense {
-    
+
+public class Eyes : Sense
+{
     public float fOV = 47.5f; //degrees
-    public float focusedFOV = 2.5f;
-    public float peripheralFOV = 100.0f;
-	
+	public float focusedFOV = 2.5f;
+	public float peripheralFOV = 100.0f;
 	public float maxViewDistance = 100;
-	
 	public float attentiveness = 0.7f;
-	
+	public bool debugMode = false;
 	public LayerMask visibleLayers;
 	private SensableObjects allObjects;
-	
 	private Dictionary<SensableObject, RaycastAggregate> aggregates;
+	private List<StringAtPoint> debugStrings = new List<StringAtPoint> ();
 	
-	private List<StringAtPoint> debugStrings = new List<StringAtPoint>();
-	
-	
-	void Awake() {
-		aggregates = new Dictionary<SensableObject, RaycastAggregate>();
-		allObjects = GetComponent<Brain>().allObjects;
+	void Awake ()
+	{
+		aggregates = new Dictionary<SensableObject, RaycastAggregate> ();
+		allObjects = GetComponent<Brain> ().allObjects;
 	}
 	
-    public override List<SensedObject> SensedObjects()
-    {
-		List<SensedObject> retV = new List<SensedObject>();
-		debugStrings = new List<StringAtPoint>();
-		foreach (SensableObject obj in aggregates.Keys)
-		{
-			float totalAggregate = GetTotalAggregate(obj);
-			debugStrings.Add(new StringAtPoint(totalAggregate.ToString(), obj.obj.transform.position));
-			if(totalAggregate > attentiveness) {
-				retV.Add(new SensedObject(obj.obj, obj.classification));
-				Debug.DrawLine(transform.position, obj.obj.transform.position, Color.blue);
+	public override List<SensedObject> SensedObjects ()
+	{
+		List<SensedObject> retV = new List<SensedObject> ();
+		debugStrings = new List<StringAtPoint> ();
+		foreach (SensableObject obj in aggregates.Keys) {
+			float totalAggregate = GetTotalAggregate (obj);
+			debugStrings.Add (new StringAtPoint (totalAggregate.ToString (), obj.obj.transform.position));
+			if (totalAggregate > attentiveness) {
+				retV.Add (new SensedObject (obj.obj, obj.classification));
+				Debug.DrawLine (transform.position, obj.obj.transform.position, Color.blue);
 			}
 		}
 		return retV;
-    }
+	}
 	
-	private float GetTotalAggregate(SensableObject obj)
+	private float GetTotalAggregate (SensableObject obj)
 	{
-		float baseAggregate = aggregates[obj].GetAggregate(1); // This number determines how quickly the eyes can pick up new targets
-		float angle = Vector3.Angle(obj.obj.transform.position - transform.position, transform.forward);
-		if(angle < focusedFOV) {
+		float baseAggregate = aggregates [obj].GetAggregate (1); // This number determines how quickly the eyes can pick up new targets
+		float angle = Vector3.Angle (obj.obj.transform.position - transform.position, transform.forward);
+		if (angle < focusedFOV) {
 			//Debug.Log ("Focused");
 			return baseAggregate * 1.5f;
 		}
-		if(angle < fOV)
-		{
+		if (angle < fOV) {
 			//Debug.Log ("Visible");
 			return baseAggregate;
 		}
@@ -61,100 +56,101 @@ public class Eyes : Sense {
 		return baseAggregate * (1 - ((fOV - angle) / (fOV - peripheralFOV)));
 	}
 	
-	public void Update()
+	public void Update ()
 	{
-		foreach(SensableObject obj in allObjects.GetObjectsInRadius(transform.position, maxViewDistance))
-		{
-			if(!aggregates.ContainsKey(obj))
-			{
-				aggregates.Add(obj, new RaycastAggregate(transform, obj.obj.GetComponentInChildren<MeshFilter>(), visibleLayers));
+		if (allObjects == null) {
+			allObjects = GetComponent<Brain> ().allObjects;
+			if (allObjects == null) {
+				return;
 			}
-			if(Vector3.Angle(obj.obj.transform.position - transform.position, transform.forward) < peripheralFOV) {
-				aggregates[obj].QueueRaycast();
+		}
+		foreach (SensableObject obj in allObjects.GetObjectsInRadius(transform.position, maxViewDistance)) {
+			if (!aggregates.ContainsKey (obj)) {
+				aggregates.Add (obj, new RaycastAggregate (transform, obj.obj.GetComponentInChildren<MeshFilter> (), visibleLayers));
+			}
+			if (Vector3.Angle (obj.obj.transform.position - transform.position, transform.forward) < peripheralFOV) {
+				aggregates [obj].QueueRaycast ();
 			}
 		}
 	}
 	
-	/*
+	///*
 	//Delete this when I'm done
-	void OnGUI()
+	void OnGUI ()
 	{
-		foreach(StringAtPoint str in debugStrings)
-		{
-			Vector2 wordCentre = Camera.main.WorldToScreenPoint(str.point);
+		if (!debugMode) {
+			return;
+		}
+		foreach (StringAtPoint str in debugStrings) {
+			Vector2 wordCentre = Camera.main.WorldToScreenPoint (str.point);
 			wordCentre.y = Screen.height - wordCentre.y;
 			GUI.color = Color.red;
-			GUI.Label (new Rect(wordCentre.x - 20, wordCentre.y - 10, 40, 20), str.word);
+			GUI.Label (new Rect (wordCentre.x - 20, wordCentre.y - 10, 40, 20), str.word);
 		}
-	}*/
+	}//*/
 }
 
-
-
-public class RaycastAggregate {
+public class RaycastAggregate
+{
 	private Transform startTrans;
 	private MeshFilter targetFilter;
 	private LayerMask occludingLayers;
+	private Queue<TimedBool> raycasts = new Queue<TimedBool> ();
 	
-	private Queue<TimedBool> raycasts = new Queue<TimedBool>();
-	
-	public RaycastAggregate(Transform startTransform, MeshFilter targettedFilter, LayerMask visibleLayers)
+	public RaycastAggregate (Transform startTransform, MeshFilter targettedFilter, LayerMask visibleLayers)
 	{
 		startTrans = startTransform;
 		targetFilter = targettedFilter;
 		occludingLayers = visibleLayers;
 	}
 	
-	public void QueueRaycast()
+	public void QueueRaycast ()
 	{
 		// Randomly select a point in the target mesh:
-		Vector3 endPoint = targetFilter.transform.TransformPoint(targetFilter.mesh.vertices[UnityEngine.Random.Range (0, targetFilter.mesh.vertexCount)]);
+		Vector3 endPoint = targetFilter.transform.TransformPoint (targetFilter.mesh.vertices [UnityEngine.Random.Range (0, targetFilter.mesh.vertexCount)]);
 		RaycastHit hit;
 		// The boolean to be added to the queue is determined by the result of a raycast between the eye, and the target point.
 		// queueThis is true if the object is not obstructed, and false otherwise.
-		bool queueThis = !Physics.Linecast(startTrans.position, endPoint, out hit, occludingLayers);
-		if(hit.transform == targetFilter.transform) {
+		bool queueThis = !Physics.Linecast (startTrans.position, endPoint, out hit, occludingLayers);
+		if (hit.transform == targetFilter.transform) {
 			// If the object obstructing the raycast is actually the same object, fix the value.
 			queueThis = true;
 		}
 		//Add a new timed boolean to the queue of timed booleans. TimeBool class
-		raycasts.Enqueue(new TimedBool(queueThis));
+		raycasts.Enqueue (new TimedBool (queueThis));
 		
 		// This line shows how occluded an object is.
-		
-		//Debug.DrawLine(startTrans.position, endPoint, queueThis ? Color.green : Color.red);
+		Debug.DrawLine (startTrans.position, endPoint, queueThis ? Color.green : Color.red);
 	}
 	
-	public bool ContainsData()
+	public bool ContainsData ()
 	{
 		return raycasts.Count > 0;
 	}
 	
 	// Gets the aggregete over 'timeout' seconds of the number of raycasts which are not obstructed.
 	// The value shows what percentage of the object is obstructed by other colliders.
-	public float GetAggregate(float timeout)
+	public float GetAggregate (float timeout)
 	{
 		// First, cull the queue:
 		try {
-			while(raycasts.Peek().ShouldRemove(timeout))
-			{
-				raycasts.Dequeue();
+			while (raycasts.Peek().ShouldRemove(timeout)) {
+				raycasts.Dequeue ();
 			}
-		} catch (InvalidOperationException e) {
+		} catch (InvalidOperationException) {
 			// If the queue is empty
 			return 0;
 		}
 		// now, get the average!
 		float total = 0;
 		
-		foreach(TimedBool curBool in raycasts)
-		{
+		foreach (TimedBool curBool in raycasts) {
 			total += curBool.flag ? 1 : 0;
 		}
 		total = total / raycasts.Count;
 		
 		// Now, apply adjustments for small amounts of data:
-		float gap = raycasts.Peek().TimeGap(raycasts.ElementAt(raycasts.Count - 1)); // VERIFY THIS
+		float gap = raycasts.Peek ().TimeGap (raycasts.ElementAt (raycasts.Count - 1)); // VERIFY THIS
 		// This artificially decreases the total if the object has not been seen for long enough.
 		gap = gap / timeout;
 		total = total * gap;
@@ -167,19 +163,20 @@ public struct TimedBool
 	public bool flag;
 	private float timeSet;
 	
-	public TimedBool(bool value)
+	public TimedBool (bool value)
 	{
 		flag = value;
 		timeSet = Time.time;
 	}
-	public bool ShouldRemove(float timer)
+
+	public bool ShouldRemove (float timer)
 	{
 		return (Time.time - timeSet) > timer;
 	}
 	
-	public float TimeGap(TimedBool other)
+	public float TimeGap (TimedBool other)
 	{
-		return Mathf.Abs(other.timeSet - timeSet);
+		return Mathf.Abs (other.timeSet - timeSet);
 	}
 }
 
@@ -188,7 +185,8 @@ public struct StringAtPoint
 	// Used for Gizmo debugging!
 	public string word;
 	public Vector3 point;
-	public StringAtPoint(string newWord, Vector3 newPoint)
+
+	public StringAtPoint (string newWord, Vector3 newPoint)
 	{
 		word = newWord;
 		point = newPoint;

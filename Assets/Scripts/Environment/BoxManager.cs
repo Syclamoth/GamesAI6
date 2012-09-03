@@ -26,7 +26,7 @@ public class BoxManager : MonoBehaviour {
 		foreach(Bounds box in allBoxes) {
 			float curDistance;
 			if(box.Contains(input.origin)) {
-				curDistance = 0;
+				curDistance = 0; //Vector3.Distance(box.center, input.origin);
 				//if(curDistance < distance) {
 					distance = curDistance;
 				//}

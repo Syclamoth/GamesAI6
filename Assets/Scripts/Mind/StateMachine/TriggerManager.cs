@@ -64,6 +64,7 @@ public class TriggerManager {
 			retV = (System.IComparable)watchedBrain.memory.GetValue(memoryKey);
 		} catch (System.InvalidCastException e) {
 			Debug.LogWarning("The data stored in " + memoryKey + " is not compatible with triggers! Make sure you are using the correct key.");
+			Debug.LogError (e);
 			retV = 0;
 		}
 		return retV;

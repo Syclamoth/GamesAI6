@@ -15,6 +15,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400016}
   - 114: {fileID: 11400018}
+  - 114: {fileID: 11400022}
   m_Layer: 9
   m_Name: Sheep
   m_TagString: Sheep
@@ -69,6 +70,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.81765079, y: .5, z: -5.38660669}
   m_LocalScale: {x: 1, y: .5, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400002}
   - {fileID: 400004}
@@ -82,6 +84,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.23641324, y: -1.96078849, z: 2.98306799}
   m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400000}
 --- !u!4 &400004
@@ -93,6 +96,7 @@ Transform:
   m_LocalRotation: {x: .329106718, y: 0, z: 0, w: .944292784}
   m_LocalPosition: {x: 0, y: 4.00104141, z: -.506307125}
   m_LocalScale: {x: 1, y: 1.61368048, z: 1.38631976}
+  m_LocalEulerAnglesHint: {x: 38.4291382, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400000}
 --- !u!23 &2300000
@@ -296,6 +300,7 @@ MonoBehaviour:
   m_Name: 
   senses:
   - {fileID: 11400018}
+  - {fileID: 11400022}
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -311,6 +316,7 @@ MonoBehaviour:
   peripheralFOV: 100
   maxViewDistance: 15
   attentiveness: .850000024
+  debugMode: 0
   visibleLayers:
     serializedVersion: 2
     m_Bits: 1536
@@ -327,6 +333,17 @@ MonoBehaviour:
   inspectorCorner: {x: 377, y: 462}
   nuts:
     target: {fileID: 11400006}
+--- !u!114 &11400022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c78d54d0fa44befad2e96e946e3666, type: 1}
+  m_Name: 
+  hearingThreshold: 0
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

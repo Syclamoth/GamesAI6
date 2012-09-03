@@ -33,12 +33,12 @@ public class Ears : Sense, IHearing {
 	{
 		List<SensedObject> sensed = new List<SensedObject>();
 		PriorityQueue<IHearable> queue = soundManager.getObjectsObservableBy(this);
-		Debug.Log("Hearing stuff, " + queue.Count);
+		//Debug.Log("Hearing stuff, " + queue.Count);
 		while (queue.Count > 0) {
 			IHearable curObj = queue.dequeue ();
 			sensed.Add (new SensedObject(curObj.getGameObject(), curObj.getClassification()));
+			//Debug.Log (curObj.getClassification());
 		}
-		
 		return sensed;
 	}
 	
@@ -47,6 +47,6 @@ public class Ears : Sense, IHearing {
 	}
 	
 	public Vector2 getLocation() {
-		return myTrans.position;
+		return new Vector2(myTrans.position.x, myTrans.position.z);
 	}
 }

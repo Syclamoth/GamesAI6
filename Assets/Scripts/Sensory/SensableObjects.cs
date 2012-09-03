@@ -28,11 +28,14 @@ public class SensableObjects : MonoBehaviour {
 	private HashSet<SensableObject> objects = new HashSet<SensableObject>();
 	
 	private QuadTree<SensableObject> objectTree;
+	public SoundManager soundManager;
 	
 	void Awake() {
+		soundManager = new SoundManager();
+	}
+	void Start() {
 		objectTree = RebuildQuadTree(20, 8);
 	}
-	
 	void Update() {
 		if(usingQuadtree) {
 			objectTree = RebuildQuadTree(20, 8);
@@ -74,7 +77,10 @@ public class SensableObjects : MonoBehaviour {
 		
 		return objectTree.GetElementsInCircle(new Vector2(position.x, position.z), radius);
 	}
-	
+	public void RegisterObject(SensableObject obj, IHearable hearable) {
+		RegisterObject(obj);
+		soundManager.registerHearable(hearable);
+	}
 	public void RegisterObject(SensableObject obj)
 	{
 		if(!objects.Add (obj))

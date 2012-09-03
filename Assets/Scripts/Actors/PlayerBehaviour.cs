@@ -12,8 +12,7 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 	
 	void Start ()
 	{
-		allObjects.RegisterObject (new SensableObject (gameObject, AgentClassification.Shepherd));
-		allObjects.soundManager.registerHearable(this);
+		allObjects.RegisterObject (new SensableObject (gameObject, AgentClassification.Shepherd), this);
 	}
 	
 	void Update ()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
  * SoundManager, which can then be observed by any object implementing the
  * IHearing interface. */
 
+
 public class SoundManager {
 	/* Make sure only 1 of these is active at a time. I didn't use the
 	 * singleton pattern becuase we'll probably need a different SoundManager
@@ -16,6 +17,7 @@ public class SoundManager {
 	
 	
 	public SoundManager() {
+		Debug.Log ("Creating SoundManager");
 		hearableObjects = new List<IHearable>();
 	}
 	
@@ -24,6 +26,7 @@ public class SoundManager {
 	public void registerHearable(IHearable hearableObject) {
 		if (!hearableObjects.Contains (hearableObject)) {
 			hearableObjects.Add (hearableObject);
+			Debug.Log ("Adding " + hearableObject.getGameObject().name);
 		}
 	}
 	
@@ -47,8 +50,10 @@ public class SoundManager {
 			priority = target.getVolume().volumeFromDistanceSquared(distanceSquared).Intensity;
 			
 			//Put in queue if louder than hearing threshold.
+			//Debug.Log(Volume.fromIntensity(priority).Decibels + " " + target.getGameObject().name);
 			if (priority >= listener.getHearingThreshold().Intensity)
 			{
+				Debug.Log(Volume.fromIntensity(priority).Decibels + " " + target.getGameObject().name);
 				queue.enqueueWithPriority(target,priority);
 			}
 		}

@@ -28,8 +28,7 @@ public class Brain : MonoBehaviour, IHearable {
 		if (terrainBase != null) {
 			levelGrid = terrainBase.GetComponent<Grid>();
 		}
-		allObjects.soundManager.registerHearable(this);
-		allObjects.RegisterObject(new SensableObject(gameObject, classification));
+		allObjects.RegisterObject(new SensableObject(gameObject, classification), this);
 		if(behaviour) {
 			StartCoroutine(RunStateMachine());
 		}

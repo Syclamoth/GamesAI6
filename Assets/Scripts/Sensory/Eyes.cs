@@ -33,7 +33,6 @@ public class Eyes : Sense
 			debugStrings.Add (new StringAtPoint (totalAggregate.ToString (), obj.obj.transform.position));
 			if (totalAggregate > attentiveness) {
 				retV.Add (new SensedObject (obj.obj, obj.classification));
-				Debug.DrawLine (transform.position, obj.obj.transform.position, Color.blue);
 			}
 		}
 		return retV;

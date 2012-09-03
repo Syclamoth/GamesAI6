@@ -27,9 +27,7 @@ public class Grid : MonoBehaviour {
 	public GridSquare SafeEntrance = null, StartEntrance = null;
 	public System.Random rnd = new System.Random();
 	
-	public SoundManager soundManager = new SoundManager();
-	
-	void Start () {
+	void Awake () {
 		uint i,j;
 		
 		width = Mathf.Max (Mathf.CeilToInt((float)width/4.0f),2)*4-1;
@@ -124,7 +122,7 @@ public class Grid : MonoBehaviour {
 						
 						playerObject.transform.position = current.toVector3 ();
 						sheepSpawner.transform.position = current.toVector3();
-						sheepSpawner.GetComponent<SheepSpawn>().SpawnSheep();
+						
 						
 						continue;
 					}
@@ -232,6 +230,9 @@ public class Grid : MonoBehaviour {
 		}
 	}
 	
+	public void Start() {
+		sheepSpawner.GetComponent<SheepSpawn>().SpawnSheep();
+	}
 	void OnDrawGizmos () {
 		Vector3 topLeft = this.collider.bounds.center - this.collider.bounds.extents;
 		Vector3 bottomRight= this.collider.bounds.center + this.collider.bounds.extents;

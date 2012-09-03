@@ -144,8 +144,11 @@ public class Wolf_roaming : State {
                 List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
 
                 //add itself in
-                wolvesChasing.Add(this.myBrain);
-                sheepMemory.SetValue("chasedBy", wolvesChasing);
+				if(wolvesChasing != null)
+				{
+                	wolvesChasing.Add(this.myBrain);
+                	sheepMemory.SetValue("chasedBy", wolvesChasing);
+				}
 
                 //send signal to other wolf in its sensing radius, tell them to change to hunting phase
                 if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)

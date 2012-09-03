@@ -18,6 +18,12 @@ public class SensoryCortex : MonoBehaviour {
         {
             seenObjects.UnionWith(senses[i].SensedObjects());
         }
+		///* Comment this shit out later because it's slow as fuck
+		foreach(SensedObject obj in seenObjects) {
+			Debug.DrawLine (transform.position, obj.getObject().transform.position, Color.blue);
+		}
+		
+		//*/
 		thisFrameObjects = seenObjects;
         return seenObjects;
     }

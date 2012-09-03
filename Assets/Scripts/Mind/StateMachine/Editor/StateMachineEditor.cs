@@ -144,6 +144,7 @@ public class StateMachineEditor : EditorWindow {
 		if(stMachine != null && stMachine.startingState == null && stMachine.controlledStates.Count > 0) {
 			stMachine.startingState = stMachine.controlledStates[0];
 		}
+		Repaint ();
 	}
 	
 	void AddTrigger() {

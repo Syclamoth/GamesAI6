@@ -117,11 +117,13 @@ public class Wolf_eating : State
 
         if (sheepMemory.GetValue<float>("Panic") >= 65f)
         {
-            sheepTarget.getObject().active = false;
+            sheepTarget.getObject().SetActiveRecursively(false);
+	    Debug.Log("I ate the sheep");
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
-        else if (controller.memory.GetValue<float>("Panic") < 50f)
+        else if (sheepMemory.GetValue<float>("Panic") < 50f)
         {
+            Debug.Log("I can't eat the sheep");
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
 

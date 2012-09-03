@@ -53,7 +53,7 @@ public class SoundManager {
 			//Debug.Log(Volume.fromIntensity(priority).Decibels + " " + target.getGameObject().name);
 			if (priority >= listener.getHearingThreshold().Intensity)
 			{
-				Debug.Log(Volume.fromIntensity(priority).Decibels + " " + target.getGameObject().name);
+				//Debug.Log(Volume.fromIntensity(priority).Decibels + " " + target.getGameObject().name);
 				queue.enqueueWithPriority(target,priority);
 			}
 		}

@@ -16,8 +16,8 @@ public class Ears : Sense, IHearing {
 		}
 	}
 	
-	public void Awake() {
-		enabled = false;
+	void Start() {
+		Init(GetComponent<Brain> ().allObjects.soundManager);
 	}
 	
 	public void Init(SoundManager manager) {
@@ -33,9 +33,12 @@ public class Ears : Sense, IHearing {
 	{
 		List<SensedObject> sensed = new List<SensedObject>();
 		PriorityQueue<IHearable> queue = soundManager.getObjectsObservableBy(this);
+		Debug.Log("Hearing stuff, " + queue.Count);
 		while (queue.Count > 0) {
-			sensed.Add (new SensedObject(queue.dequeue ().getGameObject()));
+			IHearable curObj = queue.dequeue ();
+			sensed.Add (new SensedObject(curObj.getGameObject(), curObj.getClassification()));
 		}
+		
 		return sensed;
 	}
 	

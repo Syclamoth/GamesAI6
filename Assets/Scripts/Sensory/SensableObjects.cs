@@ -26,7 +26,7 @@ public class SensableObjects : MonoBehaviour {
 	
 	public bool usingQuadtree = false;
 	private HashSet<SensableObject> objects = new HashSet<SensableObject>();
-	
+	public SoundManager soundManager = new SoundManager();
 	private QuadTree<SensableObject> objectTree;
 	
 	void Awake() {

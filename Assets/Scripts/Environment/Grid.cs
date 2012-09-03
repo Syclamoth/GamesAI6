@@ -27,6 +27,8 @@ public class Grid : MonoBehaviour {
 	public GridSquare SafeEntrance = null, StartEntrance = null;
 	public System.Random rnd = new System.Random();
 	
+	public SoundManager soundManager = new SoundManager();
+	
 	void Start () {
 		uint i,j;
 		

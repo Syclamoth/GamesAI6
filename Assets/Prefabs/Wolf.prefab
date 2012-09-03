@@ -51,6 +51,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400002}
 --- !u!4 &400002
@@ -62,6 +63,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: .32648468, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400000}
   m_Father: {fileID: 0}
@@ -140,7 +142,7 @@ MonoBehaviour:
   fOV: 47.5
   focusedFOV: 2.5
   peripheralFOV: 100
-  maxViewDistance: 100
+  maxViewDistance: 50
   attentiveness: .699999988
   debugMode: 0
   visibleLayers:

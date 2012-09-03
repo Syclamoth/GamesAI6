@@ -46,7 +46,7 @@ public class Sheep_beingEaten : State
 
         if (thereIsSheperd)
         {
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * 2f * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * 3f * (1 - controller.memory.GetValue<float>("cowardLevel"))));
         }
         else
         {

@@ -45,7 +45,10 @@ public class SensableObjects : MonoBehaviour {
 		QuadTree<SensableObject> tree = new QuadTree<SensableObject>(treeScale, maxDepth);
 		
 		foreach(SensableObject obj in objects) {
-			tree.AddElement(new QuadtreeEntry<SensableObject>(obj, new Vector2(obj.obj.transform.position.x, obj.obj.transform.position.z)));
+			if(obj.obj.active)
+			{
+				tree.AddElement(new QuadtreeEntry<SensableObject>(obj, new Vector2(obj.obj.transform.position.x, obj.obj.transform.position.z)));
+			}
 		}
 		return tree;
 	}

@@ -25,10 +25,11 @@ public class Wolf_eating : State
 
         //get sheep target
         sheepTarget = myBrain.memory.GetValue<SensedObject>("hasCommand");
-        Debug.Log("I'm eating:" + sheepTarget.getObject());
 
         sheepBrain = (Brain)sheepTarget.getObject().GetComponent("Brain");
         sheepMemory = sheepBrain.memory;
+		sheepMemory.SetValue("Panic", 55f);
+		Debug.Log("I'm eating:" + sheepTarget.getObject() + " panic: " + sheepMemory.GetValue<float>("Panic"));
 
         fleeBehaviour = new Flee();
         arriveBehaviour = new Arrive();
@@ -117,11 +118,13 @@ public class Wolf_eating : State
 
         if (sheepMemory.GetValue<float>("Panic") >= 65f)
         {
-            sheepTarget.getObject().active = false;
+            sheepTarget.getObject().SetActiveRecursively(false);
+			Debug.Log("I ate the sheep");
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
-        else if (controller.memory.GetValue<float>("Panic") < 50f)
+        else if (sheepMemory.GetValue<float>("Panic") < 50f)
         {
+			Debug.Log("I can't eat the sheep");
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
 

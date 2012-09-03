@@ -69,7 +69,11 @@ public class Eyes : Sense
 				aggregates.Add (obj, new RaycastAggregate (transform, obj.obj.GetComponentInChildren<MeshFilter> (), visibleLayers));
 			}
 			if (Vector3.Angle (obj.obj.transform.position - transform.position, transform.forward) < peripheralFOV) {
-				aggregates [obj].QueueRaycast ();
+				if(aggregates[obj].IsValid()) {
+					aggregates [obj].QueueRaycast ();
+				} else {
+					aggregates.Remove(obj);
+				}
 			}
 		}
 	}
@@ -102,6 +106,10 @@ public class RaycastAggregate
 		startTrans = startTransform;
 		targetFilter = targettedFilter;
 		occludingLayers = visibleLayers;
+	}
+	
+	public bool IsValid() {
+		return(startTrans != null) && (targetFilter != null);
 	}
 	
 	public void QueueRaycast ()

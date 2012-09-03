@@ -121,6 +121,9 @@ public class Grid : MonoBehaviour {
 						instantiateEnclave(startX,startY,maze.First.Value);
 						
 						playerObject.transform.position = current.toVector3 ();
+						playerObject.transform.position = new Vector3(playerObject.transform.position.x,
+								0.5f,
+								playerObject.transform.position.z);
 						sheepSpawner.transform.position = current.toVector3();
 						
 						
@@ -516,6 +519,7 @@ public class Grid : MonoBehaviour {
 		
 		LinkedList<GridSquare> newBranch;
 		GridSquare firstJunction;
+		Vector3 wolfPos;
 		for (branchesDone = 0;branchesDone < numberOfBranches; branchesDone++)
 		{
 			newBranch = new LinkedList<GridSquare>();
@@ -550,7 +554,9 @@ public class Grid : MonoBehaviour {
 				
 				instance = (GameObject) Instantiate(wolfPrefab);
 				
-				instance.transform.position = current.toVector3();
+				wolfPos = current.toVector3();
+				wolfPos.y += 0.5f;
+				instance.transform.position = wolfPos;
 				instance.transform.parent = this.transform;
 				Brain wolfBrain = instance.GetComponent<Brain>();
 				wolfBrain.Init(boxManager, sheepSpawner.GetComponent<SheepSpawn>().allObjects);
@@ -558,7 +564,6 @@ public class Grid : MonoBehaviour {
 				mazeBranches.AddLast (new LinkedListNode<LinkedList<GridSquare>>(newBranch));
 			}
 		}
-		
 		Debug.Log ("Maze generated...");
 		
 		foreach (GridSquare node in junctions)

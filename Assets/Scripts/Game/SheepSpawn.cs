@@ -22,7 +22,7 @@ public class SheepSpawn : MonoBehaviour {
 		List<string> names = NameList.GetRandomisedNameList();
 		for(int i = 0; i < numberToSpawn; ++i) {
 			Vector2 spawnOffset = Random.insideUnitCircle;
-			Vector3 curSpawnPoint = transform.position + new Vector3(spawnOffset.x, 0, spawnOffset.y);
+			Vector3 curSpawnPoint = transform.position + new Vector3(spawnOffset.x, 0.5f, spawnOffset.y);
 			GameObject newSheep = (GameObject)Instantiate(sheepPrefab, curSpawnPoint, Quaternion.identity);
 			newSheep.name = names[i % names.Count];
 			Brain sheepBrain = newSheep.GetComponent<Brain>();

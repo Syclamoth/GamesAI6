@@ -24,7 +24,6 @@ public class Sheep_beingEaten : State
 
         //speed is zero
         myBrain.legs.maxSpeed = 0f;
-        controller.memory.SetValue("Panic", 55f);
 
         yield return null;
     }

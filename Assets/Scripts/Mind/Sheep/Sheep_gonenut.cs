@@ -49,12 +49,22 @@ public class Sheep_gonenut : State {
 
         if (thereIsWolf)
         {
-            //the less cowardLevel is, the less Panic increases. However, in this state, the sheep has its panic level increased by 1.25
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * (increasePanicRate * 1.25f) * controller.memory.GetValue<float>("cowardLevel")));
-            
-            if (controller.memory.GetValue<float>("Panic") > 55f)
+            //if there is wolf around and it can see the Sheperd, the recover rate from Panic is doubled.
+            if (thereIsSheperd)
             {
-                controller.memory.SetValue("Panic", 55f);
+                //the less cowardLevel is, the more Panic decreases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * (increasePanicRate * 0.75f) * controller.memory.GetValue<float>("cowardLevel")));
+            }
+            else
+            {
+                //the less cowardLevel is, the less Panic increases. However, in this state, the sheep has its panic level increased by 1.5
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * (increasePanicRate * 1.5f) * controller.memory.GetValue<float>("cowardLevel")));
+            }
+
+
+            if (controller.memory.GetValue<float>("Panic") >= 50f)
+            {
+                controller.memory.SetValue("Panic", 50f);
             }
         }
         else
@@ -86,20 +96,9 @@ public class Sheep_gonenut : State {
         }
 
         //if the sheep get caught
-        if (controller.memory.GetValue<List<Brain>>("chasedBy").Count > 0)
+        if (controller.memory.GetValue<float>("Panic") >= 55f)
         {
-            foreach (Brain wolvesBrain in controller.memory.GetValue<List<Brain>>("chasedBy"))
-            {
-                Vector2 currentHunterPos = wolvesBrain.legs.getPosition();
-                Vector2 currentSheepPos = myBrain.legs.getPosition();
-
-                float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
-
-                if (distance <= 1f)
-                {
-                    mainMachine.RequestStateTransition(eaten.GetTarget());
-                }
-            }
+            mainMachine.RequestStateTransition(eaten.GetTarget());
         }
 
         yield return null;

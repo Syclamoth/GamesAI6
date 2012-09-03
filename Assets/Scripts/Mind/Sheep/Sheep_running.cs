@@ -20,6 +20,8 @@ public class Sheep_running : State {
     private float decayPanicRate = 0.75f;
     private float increasePanicRate = 4f;
 
+    private float shepherdInfluence = 1f;
+
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
@@ -64,33 +66,6 @@ public class Sheep_running : State {
             }
         }
 
-        if (sensedWolf.Count > 0)
-        {
-            //the less cowardLevel is, the less Panic increases
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
-
-            foreach(SensedObject obj in sensedWolf)
-            {
-                fleeBehaviour.setTarget(obj.getObject());
-                fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic"));
-            }
-        }
-        else
-        {
-            //the less cowardLevel is, the more Panic decreases
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
-            
-            //set the minimum Panic level for sheep
-            if (controller.memory.GetValue<float>("Panic") < 0f)
-            {
-                controller.memory.SetValue("Panic", 0f);
-                fleeBehaviour.setTarget(null);
-            }
-
-            //decrease flee weight
-            fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic"));
-        }
-
         if (thereIsShepherd)
         {
             //set the target
@@ -103,6 +78,7 @@ public class Sheep_running : State {
             {
                 arriveBehaviour.setWeight(15f);
             }
+            shepherdInfluence = 2f;
         }
         else
         {
@@ -112,23 +88,47 @@ public class Sheep_running : State {
             {
                 arriveBehaviour.setWeight(0f);
             }
+            shepherdInfluence = 1f;
         }
 
-        //if the sheep get caught
-        if(controller.memory.GetValue<List<Brain>>("chasedBy").Count > 0)
+        if (sensedWolf.Count > 0)
         {
-            foreach (Brain wolvesBrain in controller.memory.GetValue<List<Brain>>("chasedBy"))
+            //the less cowardLevel is, the less Panic increases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * (1 - increasePanicRate) * controller.memory.GetValue<float>("cowardLevel")));
+
+            foreach(SensedObject obj in sensedWolf)
             {
-                Vector2 currentHunterPos = wolvesBrain.legs.getPosition();
-                Vector2 currentSheepPos = myBrain.legs.getPosition();
-
-                float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
-
-                if (distance <= 1f)
-                {
-                    mainMachine.RequestStateTransition(eaten.GetTarget());
-                }
+                fleeBehaviour.setTarget(obj.getObject());
+                fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic"));
             }
+
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+                fleeBehaviour.setTarget(null);
+            }
+        }
+        else
+        {
+            //the less cowardLevel is, the more Panic decreases
+            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * shepherdInfluence * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            
+            //set the minimum Panic level for sheep
+            if (controller.memory.GetValue<float>("Panic") < 0f)
+            {
+                controller.memory.SetValue("Panic", 0f);
+                fleeBehaviour.setTarget(null);
+            }
+
+            //decrease flee weight
+            fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic"));
+        }        
+
+        //if the sheep get caught
+        if (controller.memory.GetValue<float>("Panic") >= 55f)
+        {
+            mainMachine.RequestStateTransition(eaten.GetTarget());
         }
         
         // if panic level larger than 30, change to gonenuts state.

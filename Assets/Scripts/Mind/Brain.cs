@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Brain : MonoBehaviour {
+public class Brain : MonoBehaviour, IHearable {
 
 	public SensoryCortex senses;
 	public Legs legs;
@@ -28,6 +28,7 @@ public class Brain : MonoBehaviour {
 		if (terrainBase != null) {
 			levelGrid = terrainBase.GetComponent<Grid>();
 		}
+		allObjects.soundManager.registerHearable(this);
 		allObjects.RegisterObject(new SensableObject(gameObject, classification));
 		if(behaviour) {
 			StartCoroutine(RunStateMachine());
@@ -59,5 +60,19 @@ public class Brain : MonoBehaviour {
 		{
 			Debug.DrawLine (transform.position, obj.getObject().transform.position, Color.blue);
 		}
+	}
+	
+	public Volume getVolume() {
+		return Volume.fromDecibels(40.0);
+	}
+	public GameObject getGameObject() {
+		return gameObject;
+	}
+	public Vector2 getLocation() {
+		return new Vector2(transform.position.x, transform.position.z);
+	}
+	
+	public AgentClassification getClassification() {
+		return classification;
 	}
 }

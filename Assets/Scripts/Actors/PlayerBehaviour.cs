@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerBehaviour : MonoBehaviour
+public class PlayerBehaviour : MonoBehaviour, IHearable
 {
 	public PlayerLegs legs;
 	public float speed = 5;
@@ -13,6 +13,7 @@ public class PlayerBehaviour : MonoBehaviour
 	void Start ()
 	{
 		allObjects.RegisterObject (new SensableObject (gameObject, AgentClassification.Shepherd));
+		allObjects.soundManager.registerHearable(this);
 	}
 	
 	void Update ()
@@ -35,5 +36,19 @@ public class PlayerBehaviour : MonoBehaviour
 		}
 		
 		legs.translate (velocity * Time.deltaTime);
+	}
+	
+	public Volume getVolume() {
+		return Volume.fromDecibels (50.0);
+	}
+	
+	public GameObject getGameObject() {
+		return gameObject;
+	}
+	public Vector2 getLocation() {
+		return new Vector2(transform.position.x, transform.position.z);
+	}
+	public AgentClassification getClassification() {
+		return AgentClassification.Shepherd;
 	}
 }

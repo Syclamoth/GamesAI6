@@ -162,20 +162,9 @@ public class Sheep_roaming : State {
         }
 
         //if the sheep get caught
-        if (controller.memory.GetValue<List<Brain>>("chasedBy").Count > 0)
+        if (controller.memory.GetValue<float>("Panic") >= 55f)
         {
-            foreach (Brain wolvesBrain in controller.memory.GetValue<List<Brain>>("chasedBy"))
-            {
-                Vector2 currentHunterPos = wolvesBrain.legs.getPosition();
-                Vector2 currentSheepPos = myBrain.legs.getPosition();
-
-                float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
-
-                if (distance <= 1f)
-                {
-                    mainMachine.RequestStateTransition(eaten.GetTarget());
-                }
-            }
+            mainMachine.RequestStateTransition(eaten.GetTarget());
         }
 
         yield return null;

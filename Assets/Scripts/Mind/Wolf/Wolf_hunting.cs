@@ -163,8 +163,14 @@ public class Wolf_hunting : State
 
         float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
 
+        if (distance < 0f)
+        {
+            distance = distance * (-1); //distance can't be negative
+        }
+
         if (distance <= 1f)
         {
+            sheepMemory.SetValue("Panic", 55f);
             mainMachine.RequestStateTransition(eating.GetTarget());
         }
 

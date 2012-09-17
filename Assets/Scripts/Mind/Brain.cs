@@ -15,6 +15,8 @@ public class Brain : MonoBehaviour, IHearable {
 	
 	public Memory memory = new Memory();
 	
+	public float volume = 30.0f;
+	
 	private GameObject terrainBase;
 	
 	public Grid levelGrid = null;
@@ -62,7 +64,7 @@ public class Brain : MonoBehaviour, IHearable {
 	}
 	
 	public Volume getVolume() {
-		return Volume.fromDecibels(40.0);
+		return Volume.fromDecibels(volume);
 	}
 	public GameObject getGameObject() {
 		return gameObject;

@@ -18,9 +18,11 @@ public class SetupSheepSteering : State {
         myBrain = controller;
 		Legs myLegs = myBrain.legs;
 		cohesion = new Cohesion(controller.allObjects);
+		cohesion.setWeight (0.8f);
 		cohesion.Init (myLegs);
 		alignment = new Alignment(controller.allObjects);
 		alignment.Init (myLegs);
+		alignment.setWeight(0.2f);
 		myLegs.addSteeringBehaviour(cohesion);
 		myLegs.addSteeringBehaviour(alignment);
         yield return null;

@@ -970,7 +970,8 @@ public class GridSquare {
 	public void placeDebris() {
 		if (isBlocked())
 			return;
-		
+		if (Random.value > 0.6f)
+			return;
 		
 		GameObject instance = (GameObject) Object.Instantiate(parent.cubePrefab);
 		

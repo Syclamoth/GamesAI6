@@ -10,7 +10,8 @@ Deadlines
 
 What should we do to improve our game
 -------------
-- Overlord system: spawn Wolves when they die, cache the Alpha Wolf (the one who catches the most Sheep or has the most success)
+- Overlord system: spawn Wolves when they die, cache the Alpha Wolf (the one who catches the most Sheep or has the most success).
+- The Overlord can learn and sgenerate interesting mazes each time it runs!?!?!
 - Evolutionary learning: the Wolves know how to hunt. Increase or decrease their intensity overtime depends on their success.
 - Pathfinding system: Decision tree to choose suitable path. Wolves work together to catch Sheep. Learn from previous mistakes to choose their decisions.
 

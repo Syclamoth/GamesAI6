@@ -1,6 +1,20 @@
 Games AI Techniques - Group 6
 =============================
 
+
+Deadlines
+-------------
+- 07/10/2012 - Submission: source code and report file.
+- Presentation: might be the week after submission.
+
+
+What should we do to improve our game
+-------------
+- Overlord system: spawn Wolves when they die, cache the Alpha Wolf (the one who catches the most Sheep or has the most success)
+- Evolutionary learning: the Wolves know how to hunt. Increase or decrease their intensity overtime depends on their success.
+- Pathfinding system: Decision tree to choose suitable path. Wolves work together to catch Sheep. Learn from previous mistakes to choose their decisions.
+
+
 Group Members
 -------------
 * Andrew Dunn - s3332747

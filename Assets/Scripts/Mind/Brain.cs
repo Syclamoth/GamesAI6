@@ -76,4 +76,8 @@ public class Brain : MonoBehaviour, IHearable {
 	public AgentClassification getClassification() {
 		return classification;
 	}
+	
+	void ImplantMemory(MemoryEntry input) {
+		memory.SetValue(input);
+	}
 }

@@ -1036,6 +1036,9 @@ MonoBehaviour:
   speed: 15
   allObjects: {fileID: 43593648}
   lookAt: {fileID: 951343023}
+  beaconRange: 3
+  beaconCooldown: 10
   collidesWith:
     serializedVersion: 2
     m_Bits: 1024
+  beaconGFX: {fileID: 100000, guid: a0c0db11024c9454d900bbff09a70cd3, type: 2}

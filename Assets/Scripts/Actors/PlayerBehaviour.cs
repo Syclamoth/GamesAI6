@@ -7,8 +7,14 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 	public float speed = 5;
 	public SensableObjects allObjects;
 	public Transform lookAt;
+	public float beaconRange = 5;
+	public float beaconCooldown = 10;
 	public LayerMask collidesWith;
+	public GameObject beaconGFX;
+	
 	private Vector2 velocity = Vector2.zero;
+	
+	private float curCooldown = 0;
 	
 	void Start ()
 	{
@@ -17,6 +23,17 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 	
 	void Update ()
 	{
+		if(curCooldown <= 0 && (Input.GetMouseButtonDown(0) || Input.GetButtonDown("Beacon"))) {
+			foreach(SensableObject obj in allObjects.GetObjectsInRadius(transform.position, beaconRange)) {
+				obj.obj.SendMessage("ImplantMemory",
+					new MemoryEntry("LastBeacon", new BeaconInfo(Time.time, legs.getPosition())),
+					SendMessageOptions.DontRequireReceiver);
+			}
+			GameObject beacon = (GameObject)Instantiate(beaconGFX, transform.position, Quaternion.identity);
+			beacon.SendMessage("ExpandRing", beaconRange);
+			StartCoroutine(ResetBeacon());
+		}
+		
 		Vector2 direction = new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"));
 		Vector2 desiredVelocity = direction * speed;
 		
@@ -37,6 +54,15 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 		legs.translate (velocity * Time.deltaTime);
 	}
 	
+	IEnumerator ResetBeacon() {
+		curCooldown = beaconCooldown;
+		while(curCooldown > 0) {
+			curCooldown -= Time.deltaTime;
+			yield return null;
+		}
+		curCooldown = 0;
+	}
+	
 	public Volume getVolume() {
 		return Volume.fromDecibels (50.0);
 	}
@@ -49,5 +75,22 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 	}
 	public AgentClassification getClassification() {
 		return AgentClassification.Shepherd;
+	}
+}
+
+public class BeaconInfo {
+	private float timeStamp;
+	private Vector2 position;
+	
+	public BeaconInfo(float curTime, Vector2 position) {
+		this.position = position;
+		this.timeStamp = curTime;
+	}
+	
+	public float GetTime() {
+		return timeStamp;
+	}
+	public Vector2 GetPos() {
+		return position;
 	}
 }

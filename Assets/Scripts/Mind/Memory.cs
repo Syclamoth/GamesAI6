@@ -2,6 +2,23 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+public class MemoryEntry {
+	private string key;
+	private object value;
+	
+	public string GetKey() {
+		return key;
+	}
+	
+	public object GetValue() {
+		return value;
+	}
+	
+	public MemoryEntry(string key, object value) {
+		this.key = key;
+		this.value = value;
+	}
+}
 
 public class Memory {
 	private Dictionary<string, object> objectRegistry = new Dictionary<string, object>();
@@ -39,6 +56,10 @@ public class Memory {
 		} else {
 			objectRegistry.Add(key, value);
 		}
+	}
+	
+	public void SetValue(MemoryEntry input) {
+		SetValue (input.GetKey(), input.GetValue());
 	}
 	
 }

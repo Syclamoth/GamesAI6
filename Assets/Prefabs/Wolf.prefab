@@ -120,10 +120,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08a90ac2870764e5dbbf5a4a33d36c6a, type: 1}
   m_Name: 
   maxStam: 10
-  mass: 15
-  maxSpeed: 9
+  mass: .5
+  maxSpeed: 60
   maxForce: 1000
-  equilibrium: 15
+  equilibrium: 50
   inspectSteering: 0
   collidesWith:
     serializedVersion: 2

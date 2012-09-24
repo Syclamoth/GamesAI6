@@ -10,7 +10,7 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 	public float beaconRange = 5;
 	public float beaconCooldown = 10;
 	public LayerMask collidesWith;
-	
+	public GameObject beaconGFX;
 	
 	private Vector2 velocity = Vector2.zero;
 	
@@ -23,12 +23,14 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 	
 	void Update ()
 	{
-		if(curCooldown <= 0 && Input.GetMouseButtonDown(0)) {
+		if(curCooldown <= 0 && (Input.GetMouseButtonDown(0) || Input.GetButtonDown("Beacon"))) {
 			foreach(SensableObject obj in allObjects.GetObjectsInRadius(transform.position, beaconRange)) {
 				obj.obj.SendMessage("ImplantMemory",
 					new MemoryEntry("LastBeacon", new BeaconInfo(Time.time, legs.getPosition())),
 					SendMessageOptions.DontRequireReceiver);
 			}
+			GameObject beacon = (GameObject)Instantiate(beaconGFX, transform.position, Quaternion.identity);
+			beacon.SendMessage("ExpandRing", beaconRange);
 			StartCoroutine(ResetBeacon());
 		}
 		

@@ -131,26 +131,34 @@ public class Grid : MonoBehaviour {
 					}
 					
 					//Streelamps
-					instance = (GameObject) Instantiate(streetlampPrefab);
-					instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)-1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)-1.4f*dHeight/height);
-					instance.transform.parent = this.transform;
-					instance.transform.Rotate(new Vector3(0,-135.0f,0));
+					if(Random.value < 0.3f) {
+						instance = (GameObject) Instantiate(streetlampPrefab);
+						instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)-1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)-1.4f*dHeight/height);
+						instance.transform.parent = this.transform;
+						instance.transform.Rotate(new Vector3(0,-135.0f,0));
+					}
 					
-					instance = (GameObject) Instantiate(streetlampPrefab);
-					instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)+1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)-1.4f*dHeight/height);
-					instance.transform.parent = this.transform;
-					instance.transform.Rotate(new Vector3(0,135.0f,0));
+					if(Random.value < 0.3f) {
+						instance = (GameObject) Instantiate(streetlampPrefab);
+						instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)+1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)-1.4f*dHeight/height);
+						instance.transform.parent = this.transform;
+						instance.transform.Rotate(new Vector3(0,135.0f,0));
+					}
 					
-					instance = (GameObject) Instantiate(streetlampPrefab);
-					instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)-1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)+1.4f*dHeight/height);
-					instance.transform.parent = this.transform;
-					instance.transform.Rotate(new Vector3(0,-45.0f,0));
+					if(Random.value < 0.3f) {
+						instance = (GameObject) Instantiate(streetlampPrefab);
+						instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)-1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)+1.4f*dHeight/height);
+						instance.transform.parent = this.transform;
+						instance.transform.Rotate(new Vector3(0,-45.0f,0));
+					}
 					
-					instance = (GameObject) Instantiate(streetlampPrefab);
-					instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)+1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)+1.4f*dHeight/height);
-					instance.transform.parent = this.transform;
-					instance.transform.Rotate(new Vector3(0,+45.0f,0));
-					
+					if(Random.value < 0.3f) {
+						instance = (GameObject) Instantiate(streetlampPrefab);
+						instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width)+1.4f*dWidth/width,y+0.1f,z1+(j+1.5f)*(dHeight/height)+1.4f*dHeight/height);
+						instance.transform.parent = this.transform;
+						instance.transform.Rotate(new Vector3(0,+45.0f,0));
+					}
+						
 					//Collision Box
 					instance = (GameObject) Instantiate(cubePrefab);
 					instance.transform.position = new Vector3(x1+(i+1.5f)*(dWidth/width),y+5.0f,z1+(j+1.5f)*(dHeight/height));

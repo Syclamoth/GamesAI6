@@ -30,6 +30,7 @@ public class PlayerBehaviour : MonoBehaviour, IHearable
 					SendMessageOptions.DontRequireReceiver);
 			}
 			GameObject beacon = (GameObject)Instantiate(beaconGFX, transform.position, Quaternion.identity);
+			beacon.transform.parent = transform;
 			beacon.SendMessage("ExpandRing", beaconRange);
 			StartCoroutine(ResetBeacon());
 		}

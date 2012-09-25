@@ -20,7 +20,11 @@ public class Brain : MonoBehaviour, IHearable {
 	private GameObject terrainBase;
 	
 	public Grid levelGrid = null;
-
+	
+	private bool drawGUI = false;
+	private string curStateDescription;
+	
+	
 	void Start() {
 		if(allObjects == null) {
 			return;
@@ -79,5 +83,16 @@ public class Brain : MonoBehaviour, IHearable {
 	
 	void ImplantMemory(MemoryEntry input) {
 		memory.SetValue(input);
+	}
+	
+	void EnableGUI(bool setEnabled) {
+		drawGUI = setEnabled;
+	}
+	
+	void OnGUI() {
+		if(drawGUI) {
+			GUILayout.Label("Name: " + gameObject.name);
+			legs.InspectSteering();
+		}
 	}
 }

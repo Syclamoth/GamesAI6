@@ -30,8 +30,8 @@ public class PathfindToPoint : TargetableSteeringBehaviour {
 			mask.AddToMask("Buildings");
 			while(current != null && !Physics.Linecast(getLegs().transform.position, current.Value.toVector3()))
 			{
-				Debug.Log("BLAH");
-				Debug.DrawLine(getLegs().transform.position, current.Value.toVector3(), Color.green);
+				//Debug.Log("BLAH");
+				//Debug.DrawLine(getLegs().transform.position, current.Value.toVector3(), Color.green);
 				current = current.Next;
 			}
 		} else {

@@ -9,7 +9,7 @@ public class Sheep_roaming : State {
     Machine mainMachine;
     Brain myBrain;
     //private Arrive arriveBehaviour;
-    private Pathfind arriveBehaviour;
+    private PathfindToPoint arriveBehaviour;
     private Seek seekBehaviour;
 
     private Vector2 oldPlayerPosition;
@@ -29,7 +29,7 @@ public class Sheep_roaming : State {
         Legs myLeg = myBrain.legs;
         
         //arriveBehaviour = new Arrive();
-        arriveBehaviour = new Pathfind();
+        arriveBehaviour = new PathfindToPoint();
 
         seekBehaviour = new Seek();
         

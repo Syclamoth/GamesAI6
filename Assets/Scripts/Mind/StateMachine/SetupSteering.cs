@@ -20,7 +20,7 @@ public class SetupSteering : State {
 		Legs myLegs = myBrain.legs;
 		separation = new Separation(controller.allObjects);
 		separation.Init(myLegs);
-		random = new RandomWalk(0.6f, 1, 20);
+		random = new RandomWalk(1f, 1, 20);
 		random.Init (myLegs);
 		avoidWalls = new BoxAvoidance(controller.boxes, 3);
 		avoidWalls.Init (myLegs);

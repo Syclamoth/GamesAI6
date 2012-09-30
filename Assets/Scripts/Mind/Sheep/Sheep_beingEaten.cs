@@ -10,17 +10,10 @@ public class Sheep_beingEaten : State
     Machine mainMachine;
     Brain myBrain;
 
-    private float decayFollowRate = 0.5f;
-    private float increaseFollowRate = 3f;
-
-    private float decayPanicRate = 0.75f;
-    private float increasePanicRate = 2f;
-
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
         myBrain = controller;
-        Legs myLeg = myBrain.legs;
 
         //speed is zero
         myBrain.legs.maxSpeed = 0f;
@@ -33,33 +26,10 @@ public class Sheep_beingEaten : State
     }
     public override IEnumerator Run(Brain controller)
     {
-        bool thereIsSheperd = false;
-
-        foreach (SensedObject obj in controller.senses.GetSensedObjects())
-        {
-            if (obj.getAgentType().Equals(AgentClassification.Shepherd))
-            {
-                thereIsSheperd = true;
-            }
-        }
-
-        if (thereIsSheperd)
-        {
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * 3f * (1 - controller.memory.GetValue<float>("cowardLevel"))));
-        }
-        else
-        {
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
-
-            if (controller.memory.GetValue<float>("Panic") > 65f)
-            {
-                controller.memory.SetValue("Panic", 65f);
-            }
-        }
-
         //back to gonenut state
-        if (controller.memory.GetValue<float>("Panic") < 50f)
+        if (controller.memory.GetValue<bool>("BeingEaten") == false)
         {
+            controller.memory.SetValue("HP", 100f);
             mainMachine.RequestStateTransition(nuts.GetTarget());
         }
         

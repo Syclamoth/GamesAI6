@@ -28,6 +28,7 @@ public class Wolf_eating : State
 
         sheepBrain = (Brain)sheepTarget.getObject().GetComponent("Brain");
         sheepMemory = sheepBrain.memory;
+        sheepMemory.SetValue("BeingEaten", true);
 
         fleeBehaviour = new Flee();
         arriveBehaviour = new Arrive();
@@ -42,7 +43,7 @@ public class Wolf_eating : State
         //speed is zero
         myBrain.legs.maxSpeed = 0f;
 
-        Debug.Log("I'm eating:" + sheepTarget.getObject() + " panic: " + sheepMemory.GetValue<float>("Panic"));
+        Debug.Log("I'm eating:" + sheepTarget.getObject() + " HP: " + sheepMemory.GetValue<float>("HP"));
 
         yield return null;
     }
@@ -77,62 +78,76 @@ public class Wolf_eating : State
         {
             if (obj.getAgentType().Equals(AgentClassification.Shepherd))
             {
-                thereIsShepherd = true;
+                PlayerLegs playerLeg = (PlayerLegs)obj.getObject().GetComponent<PlayerLegs>();
+                Vector2 playerPos = playerLeg.getPosition();
+                Vector2 wolfPos = myBrain.legs.getPosition();
+                Vector2 playerFacing = new Vector2(playerLeg.transform.forward.x, playerLeg.transform.forward.z);
+
+                float dot = Vector2.Dot(playerFacing, wolfPos - playerPos);
+
+                if (dot > 0)
+                {
+                    thereIsShepherd = true;
+                }
             }
         }
 
         if (thereIsShepherd)
         {
-            fleeBehaviour.setWeight(fleeBehaviour.getWeight() + Time.deltaTime);
-            myBrain.legs.maxSpeed = 6f;
+            fleeBehaviour.setWeight(fleeBehaviour.getWeight() + Time.deltaTime / myBrain.memory.GetValue<float>("ferocity"));
+            myBrain.legs.maxSpeed = 8f;
             if (fleeBehaviour.getWeight() > 15f)
             {
                 fleeBehaviour.setWeight(15f);
             }
+            else
+            {
+                sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage") / 4));
+            }
+            Debug.Log("Flee away from Sheperd: " + fleeBehaviour.getWeight());
         }
         else
         {
-            fleeBehaviour.setWeight(fleeBehaviour.getWeight() - Time.deltaTime);
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime);
+            fleeBehaviour.setWeight(0f);
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * myBrain.memory.GetValue<float>("ferocity"));
 
-            if (fleeBehaviour.getWeight() < 0f)
+            if (arriveBehaviour.getWeight() > 20f)
             {
-                fleeBehaviour.setWeight(0f);
-            }
-            if (arriveBehaviour.getWeight() > 7f)
-            {
-                arriveBehaviour.setWeight(7f);
+                arriveBehaviour.setWeight(20f);
             }
 
             //if the wolf catches the sheep again
-            Vector2 currentHunterPos = myBrain.legs.getPosition();
-            Vector2 currentSheepPos = sheepBrain.legs.getPosition();
-
-            float distance = Vector2.Distance(currentHunterPos, currentSheepPos);
+            float distance = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
 
             if (distance < 0f)
             {
                 distance = distance * (-1); //distance can't be negative
             }
 
-            if (distance <= 1f)
+            if (distance <= 2f)
             {
                 myBrain.legs.maxSpeed = 0f;
+                sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage")));
+                //Debug.Log("Sheep's HP is: " +  sheepMemory.GetValue<float>("HP"));
             }
         }
 
-        if (sheepMemory.GetValue<float>("Panic") >= 65f)
+        if (sheepMemory.GetValue<float>("HP") <= 0f)
         {
             sheepTarget.getObject().SetActiveRecursively(false);
+
 	        Debug.Log("I ate the sheep");
+            myBrain.memory.SetValue("hungryLevel", myBrain.memory.GetValue<float>("hungryLevel") + 10f);
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
-        else if (sheepMemory.GetValue<float>("Panic") < 50f)
+        
+        float dist = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
+        
+        if (dist >= 8f)
         {
             Debug.Log("I can't eat the sheep");
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
-
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()

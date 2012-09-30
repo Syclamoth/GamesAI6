@@ -8,7 +8,7 @@ public class Sheep_roaming : State {
 
     Machine mainMachine;
     Brain myBrain;
-    //private Arrive arriveBehaviour;
+
     private PathfindToPoint arriveBehaviour;
     private Seek seekBehaviour;
 
@@ -20,21 +20,22 @@ public class Sheep_roaming : State {
     private float increaseFollowRate = 3f;
     
     private float decayPanicRate = 0.75f;
-    private float increasePanicRate = 4f;
+    private float increasePanicRate = 6f;
+
+    private float shepherdInfluence = 3f;
+    private float time = 0f;
+    private float seekingTime = 0f;
 	
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
         mainMachine = owner;
         myBrain = controller;
         Legs myLeg = myBrain.legs;
-        
-        //arriveBehaviour = new Arrive();
-        arriveBehaviour = new PathfindToPoint();
 
+        arriveBehaviour = new PathfindToPoint();
         seekBehaviour = new Seek();
         
         arriveBehaviour.Init(myLeg,myBrain.levelGrid);
-        //arriveBehaviour.Init(myLeg);
         seekBehaviour.Init(myLeg);
 
         myLeg.addSteeringBehaviour(arriveBehaviour);
@@ -55,9 +56,14 @@ public class Sheep_roaming : State {
 
         	myBrain.memory.SetValue("cowardLevel", coward);
             myBrain.memory.SetValue("chasedBy", new List<Brain>());
+            myBrain.memory.SetValue("BeingEaten", false);
+            myBrain.memory.SetValue("HP", 100f);
 
 			firstActivation = false;
 		}
+
+        time = 0f;
+        seekingTime = 0f;
         yield return null;
     }
     public override IEnumerator Exit()
@@ -69,13 +75,32 @@ public class Sheep_roaming : State {
     public override IEnumerator Run(Brain controller)
     {
         bool thereIsSheperd = false;
-        bool thereIsWolf = false;
+        List<SensedObject> seenWolf = new List<SensedObject>();
 
         foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
             if (obj.getAgentType().Equals(AgentClassification.Wolf))
             {
-                thereIsWolf = true;
+                Legs wolfLeg = (Legs)obj.getObject().GetComponent<Legs>();
+                Vector2 wolfFacing = new Vector2(wolfLeg.transform.forward.x, wolfLeg.transform.forward.z);
+                Vector2 sheepPos = myBrain.legs.getPosition();
+                Vector2 wolfPos = wolfLeg.getPosition();
+
+                float dot = Vector2.Dot(wolfFacing, sheepPos - wolfPos);
+                if (dot > 0)
+                {
+                    seenWolf.Add(obj);
+                }
+                if (controller.memory.GetValue<List<Brain>>("chasedBy") != null)
+                {
+                    List<Brain> chaseByList = (List<Brain>)controller.memory.GetValue<List<Brain>>("chasedBy");
+                    Brain objBrain = (Brain)obj.getObject().GetComponent<Brain>();
+
+                    if (chaseByList.Contains(objBrain))
+                    {
+                        seenWolf.Add(obj);
+                    }
+                }
             }
 
             if (obj.getAgentType().Equals(AgentClassification.Shepherd))
@@ -84,15 +109,39 @@ public class Sheep_roaming : State {
             }
         }
 
-        if (thereIsWolf)
+        if (seenWolf.Count > 0)
         {
-            //the less cowardLevel is, the less Panic increases
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+            if (thereIsSheperd)
+            {
+                //the less cowardLevel is, the less Panic increases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * seenWolf.Count * increasePanicRate / shepherdInfluence * controller.memory.GetValue<float>("cowardLevel")));
+            }
+            else
+            {
+                //the less cowardLevel is, the less Panic increases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * seenWolf.Count * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+            }
         }
         else
         {
-            //the less cowardLevel is, the more Panic decreases
-            controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+            if (thereIsSheperd)
+            {
+                //the less cowardLevel is, the more Panic decreases
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * shepherdInfluence * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+                time = 0f;
+            }
+            else
+            {
+                if (time > 7f)
+                {
+                    //the less cowardLevel is, the more Panic decreases
+                    controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+                }
+                else
+                {
+                    time += Time.deltaTime;
+                }
+            }
 
             //set the minimum Panic level for sheep
             if (controller.memory.GetValue<float>("Panic") < 0f)
@@ -115,7 +164,6 @@ public class Sheep_roaming : State {
                 arriveBehaviour.setWeight(30f);
             }
 
-            //oldPlayerPosition = arriveBehaviour.getTarget();
             oldPlayerPosition = arriveBehaviour.getTarget();
 
             //if the sheep sees the shephered, it stops seeking
@@ -126,6 +174,7 @@ public class Sheep_roaming : State {
             {
                 seekBehaviour.setWeight(0f);
             }
+            seekingTime = 0f;
         }
         else
         {
@@ -141,6 +190,15 @@ public class Sheep_roaming : State {
                 seekBehaviour.setWeight(10f);
             }
 
+            if (seekingTime > 7f)
+            {
+                seekBehaviour.setWeight(0f);
+            }
+            else
+            {
+                seekingTime += Time.deltaTime;
+            }
+
             //set minimum weight
             if (arriveBehaviour.getWeight() < 0f)
             {
@@ -154,15 +212,15 @@ public class Sheep_roaming : State {
             }
         }
 
-        // if panic level larger than 7, change to running state.
-        if (controller.memory.GetValue<float>("Panic") >= 7f)
+        // if panic level larger than 5, change to running state.
+        if (controller.memory.GetValue<float>("Panic") >= 2f)
         {
-            Debug.Log("I saw wolf. RUN!");
+            Debug.Log("I saw wolf. RUN!: " + myBrain.getGameObject());
             mainMachine.RequestStateTransition(running.GetTarget());
         }
 
         //if the sheep get caught
-        if (controller.memory.GetValue<float>("Panic") >= 55f)
+        if (controller.memory.GetValue<bool>("BeingEaten") == true)
         {
             mainMachine.RequestStateTransition(eaten.GetTarget());
         }

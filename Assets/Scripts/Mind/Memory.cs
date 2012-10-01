@@ -44,13 +44,22 @@ public class Memory {
 		try{
 			retV = (T)objectRegistry[key];
 		} catch (System.InvalidCastException e) {
-			Debug.LogError (e.StackTrace);
+			Debug.LogError (e.StackTrace + key);
+			Debug.Log(objectRegistry[key].GetType());
 			retV = default(T);
 		}
 		return retV;
 	}
 	
 	public void SetValue(string key, object value) {
+		if(objectRegistry.ContainsKey(key)) {
+			objectRegistry[key] = value;
+		} else {
+			objectRegistry.Add(key, value);
+		}
+	}
+	
+	public void SetValue<T>(string key, T value) {
 		if(objectRegistry.ContainsKey(key)) {
 			objectRegistry[key] = value;
 		} else {

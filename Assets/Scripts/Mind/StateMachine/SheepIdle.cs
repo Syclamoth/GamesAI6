@@ -21,7 +21,7 @@ public class SheepIdle : State {
 		
 		foreach(SensedObject obj in controller.senses.GetSensedObjects()) {
 			if(obj.getAgentType() == AgentClassification.Wolf) {
-				controller.memory.SetValue("Panic", (float)controller.memory.GetValue("Panic") + 10);
+				controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") + 10);
 			}
 		}
 		

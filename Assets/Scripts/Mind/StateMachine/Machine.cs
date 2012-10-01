@@ -78,7 +78,7 @@ public class Machine : State {
 		return retV;
 	}
 	override public string GetNiceName() {
-		return "State Machine";
+		return "State Machine: " + currentState.GetNiceName();
 	}
 	override public void DrawInspector() {
 		

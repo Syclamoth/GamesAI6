@@ -74,18 +74,18 @@ public class Sheep_gonenut : State {
             if (thereIsSheperd)
             {
                 //the less cowardLevel is, the less Panic increases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+                controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
             }
             else
             {
                 //the less cowardLevel is, the less Panic increases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * sensedWolf.Count * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+                controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * sensedWolf.Count * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
             }
 
 
             if (controller.memory.GetValue<float>("Panic") >= 35f)
             {
-                controller.memory.SetValue("Panic", 35f);
+                controller.memory.SetValue<float>("Panic", 35f);
             }
         }
         else
@@ -94,7 +94,7 @@ public class Sheep_gonenut : State {
             if (thereIsSheperd)
             {
                 //the less cowardLevel is, the more Panic decreases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * shepherdInfluence * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+                controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * shepherdInfluence * (1 - controller.memory.GetValue<float>("cowardLevel"))));
                 time = 0f;
             }
             else
@@ -102,7 +102,7 @@ public class Sheep_gonenut : State {
                 if (time > 7f)
                 {
                     //the less cowardLevel is, the more Panic decreases
-                    controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
+                    controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
                 }
                 else
                 {
@@ -113,7 +113,7 @@ public class Sheep_gonenut : State {
             //set the minimum Panic level for sheep
             if (controller.memory.GetValue<float>("Panic") < 0f)
             {
-                controller.memory.SetValue("Panic", 0f);
+                controller.memory.SetValue<float>("Panic", 0f);
             }
         }
 

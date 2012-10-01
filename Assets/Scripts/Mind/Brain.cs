@@ -101,6 +101,8 @@ public class Brain : MonoBehaviour, IHearable {
 				GUILayout.Label("Cowardice: " + cowardice);
 			}
 			legs.InspectSteering();
+			
+			GUILayout.Label("Current State: " + behaviour.GetNiceName());
 		}
 	}
 }

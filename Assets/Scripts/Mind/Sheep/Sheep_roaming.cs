@@ -132,7 +132,7 @@ public class Sheep_roaming : State {
             }
             else
             {
-                if (time > 7f)
+                if (time > 5f)
                 {
                     //the less cowardLevel is, the more Panic decreases
                     controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));

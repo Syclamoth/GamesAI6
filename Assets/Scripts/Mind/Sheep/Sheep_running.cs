@@ -10,7 +10,6 @@ public class Sheep_running : State {
 
     Machine mainMachine;
     Brain myBrain;
-    private PathfindToPoint arriveBehaviour;
 
     private Flee fleeBehaviour;
 
@@ -18,7 +17,7 @@ public class Sheep_running : State {
     private float increaseFollowRate = 3f;
 
     private float decayPanicRate = 1f;
-    private float increasePanicRate = 6f;
+    private float increasePanicRate = 2f;
 
     private float shepherdInfluence = 3f;
     private float time = 0f;
@@ -29,12 +28,9 @@ public class Sheep_running : State {
         myBrain = controller;
         Legs myLeg = myBrain.legs;
         
-        arriveBehaviour = new PathfindToPoint();
         fleeBehaviour = new Flee();
 
-        arriveBehaviour.Init(myLeg, myBrain.levelGrid);
         fleeBehaviour.Init(myLeg);
-        myLeg.addSteeringBehaviour(arriveBehaviour);
         myLeg.addSteeringBehaviour(fleeBehaviour);
 
         //inscrease speed
@@ -45,10 +41,36 @@ public class Sheep_running : State {
     }
     public override IEnumerator Exit()
     {
-        myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
         myBrain.legs.removeSteeringBehaviour(fleeBehaviour);
         yield return null;
     }
+	
+	int Scariest(SensedObject wolf1, SensedObject wolf2) {
+		Legs wolfLeg1 = wolf1.getObject().GetComponent<Brain>().legs;
+        Vector2 sheepPos = myBrain.legs.getPosition();
+        Vector2 wolfPos1 = wolfLeg1.getPosition();
+		float distance1 = Vector2.Distance(sheepPos, wolfPos1);
+		Vector2 wolfFacing1 = new Vector2(wolfLeg1.transform.forward.x, wolfLeg1.transform.forward.z);
+        float relativeVelocity1 = Vector2.Dot(wolfFacing1, sheepPos - wolfPos1);
+		
+		float scariness1 = (1 / distance1) * (relativeVelocity1 + 1);
+		
+		Legs wolfLeg2 = wolf2.getObject().GetComponent<Brain>().legs;
+        Vector2 wolfPos2 = wolfLeg2.getPosition();
+		float distance2 = Vector2.Distance(sheepPos, wolfPos2);
+		Vector2 wolfFacing2 = new Vector2(wolfLeg2.transform.forward.x, wolfLeg2.transform.forward.z);
+        float relativeVelocity2 = Vector2.Dot(wolfFacing2, sheepPos - wolfPos2);
+		
+		float scariness2 = (1 / distance2) * (relativeVelocity2 + 1);
+		
+		if(scariness1 > scariness2) {
+			return 1;
+		}
+		if(scariness1 < scariness2) {
+			return -1;
+		}
+		return 0;
+	}
     public override IEnumerator Run(Brain controller)
     {
         List<SensedObject> sensedWolf = new List<SensedObject>();
@@ -59,27 +81,7 @@ public class Sheep_running : State {
         {
             if (obj.getAgentType().Equals(AgentClassification.Wolf))
             {
-                Legs wolfLeg = (Legs)obj.getObject().GetComponent<Legs>();
-                Vector2 wolfFacing = new Vector2(wolfLeg.transform.forward.x, wolfLeg.transform.forward.z);
-                Vector2 sheepPos = myBrain.legs.getPosition();
-                Vector2 wolfPos = wolfLeg.getPosition();
-
-                float dot = Vector2.Dot(wolfFacing, sheepPos - wolfPos);
-
-                if (dot > 0)
-                {
-                    sensedWolf.Add(obj);
-                }
-                if (controller.memory.GetValue<List<Brain>>("chasedBy") != null)
-                {
-                    List<Brain> chaseByList = (List<Brain>)controller.memory.GetValue<List<Brain>>("chasedBy");
-                    Brain objBrain = (Brain)obj.getObject().GetComponent<Brain>();
-
-                    if (chaseByList.Contains(objBrain))
-                    {
-                        sensedWolf.Add(obj);
-                    }
-                }
+                sensedWolf.Add (obj);
             }
 
             if (obj.getAgentType().Equals(AgentClassification.Shepherd))
@@ -87,47 +89,32 @@ public class Sheep_running : State {
                 thereIsSheperd = true;
             }
         }
-
-        if (thereIsSheperd)
-        {
-            //set the target
-            arriveBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
-
-            //set the weight, this is top priority
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
-            //set maximum weight
-            if (arriveBehaviour.getWeight() > 15f)
-            {
-                arriveBehaviour.setWeight(15f);
-            }
-        }
-        else
-        {
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime * decayFollowRate));
-            //set minimum weight
-            if (arriveBehaviour.getWeight() < 0f)
-            {
-                arriveBehaviour.setWeight(0f);
-            }
-        }
-
+		SensedObject scariestWolf = myBrain.memory.GetValue<SensedObject>("Scariest");
+		if(scariestWolf != null) {
+			sensedWolf.Add(scariestWolf);
+		}
+		
+		sensedWolf.Sort(Scariest);
+		
         if (sensedWolf.Count > 0)
         {
+			scariestWolf = sensedWolf[0];
+			myBrain.memory.SetValue("Scariest", scariestWolf);
             if (thereIsSheperd)
             {
                 //the less cowardLevel is, the less Panic increases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * sensedWolf.Count + increasePanicRate / shepherdInfluence * controller.memory.GetValue<float>("cowardLevel")));
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + ((Time.deltaTime * (sensedWolf.Count - 1.5) * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")) / shepherdInfluence));
             }
             else
             {
+				Vector2 sheepPos = myBrain.legs.getPosition();
+       		 	Vector2 wolfPos = scariestWolf.getObject().GetComponent<Brain>().legs.getPosition();
+				float wolfDistance = Vector2.Distance(sheepPos, wolfPos);
                 //the less cowardLevel is, the less Panic increases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * sensedWolf.Count + increasePanicRate * controller.memory.GetValue<float>("cowardLevel")));
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * sensedWolf.Count * increasePanicRate * controller.memory.GetValue<float>("cowardLevel") * (2 / wolfDistance)));
             }
-            foreach(SensedObject obj in sensedWolf)
-            {
-                fleeBehaviour.setTarget(obj.getObject());
-                fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic") * 1.5f);
-            }
+            fleeBehaviour.setTarget(scariestWolf.getObject());
+            fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic") * 1.5f);
         }
         else
         {

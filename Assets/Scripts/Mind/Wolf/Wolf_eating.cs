@@ -63,6 +63,7 @@ public class Wolf_eating : State
                 wolvesChasing.Remove(this.myBrain);
                 sheepMemory.SetValue("chasedBy", wolvesChasing);
             }
+			sheepMemory.SetValue("BeingEaten", false);
         }
 
         //delete its target
@@ -124,7 +125,7 @@ public class Wolf_eating : State
                 distance = distance * (-1); //distance can't be negative
             }
 
-            if (distance <= 2f)
+            if (distance <= 1f)
             {
                 myBrain.legs.maxSpeed = 0f;
                 sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage")));
@@ -143,7 +144,7 @@ public class Wolf_eating : State
         
         float dist = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
         
-        if (dist >= 8f)
+        if (dist >= 2f)
         {
             Debug.Log("I can't eat the sheep");
             mainMachine.RequestStateTransition(roam.GetTarget());

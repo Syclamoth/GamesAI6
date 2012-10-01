@@ -35,6 +35,7 @@ public class WolfHide : State {
     public override IEnumerator Exit()
     {
         myBrain.legs.removeSteeringBehaviour(runTo);
+		myBrain.memory.SetValue ("watched", 0f);
         yield return null;
     }
 	
@@ -44,7 +45,7 @@ public class WolfHide : State {
 		Vector2 playerFacing = new Vector2(player.forward.x, player.forward.z);
 		Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
 		
-		if(Vector2.Dot(playerFacing, positionOffset) > 0.74f) {
+		if(Vector2.Dot(playerFacing, positionOffset) > 0.71f) {
 			// Get out of the player's vision
 			EscapeFromView();
 		} else {

@@ -33,6 +33,8 @@ public class Wolf_roaming : State {
             myBrain.memory.SetValue("hasCommand", null);
             myBrain.memory.SetValue("hungryLevel", 60f);
             myBrain.memory.SetValue("damage", 20f);
+			myBrain.memory.SetValue("caution", 10f);
+			myBrain.memory.SetValue ("watched", 0f);
 
             myBrain.memory.SetValue("ferocity", Random.value * 5);
 
@@ -228,6 +230,19 @@ public class Wolf_roaming : State {
 
         yield return null;
     }
+	
+	void UpdateCaution() {
+		/*
+		Transform player = 
+		Vector2 playerPos = new Vector2(player.position.x, player.position.z);
+		Vector2 playerFacing = new Vector2(player.forward.x, player.forward.z);
+		Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
+		
+		if(Vector2.Dot(playerFacing, positionOffset) > 0.71f) {
+		}
+		*/
+	}
+	
     public override ObservedVariable[] GetExposedVariables()
     {
         return new ObservedVariable[] {

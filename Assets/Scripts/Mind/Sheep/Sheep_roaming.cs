@@ -159,9 +159,9 @@ public class Sheep_roaming : State {
             arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * increaseFollowRate);
 
             //set maximum weight
-            if (arriveBehaviour.getWeight() > 30f)
+            if (arriveBehaviour.getWeight() > 20f)
             {
-                arriveBehaviour.setWeight(30f);
+                arriveBehaviour.setWeight(20f);
             }
 
             oldPlayerPosition = arriveBehaviour.getTarget();

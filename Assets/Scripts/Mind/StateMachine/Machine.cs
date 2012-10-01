@@ -52,6 +52,7 @@ public class Machine : State {
 		foreach(TriggerManager manager in currentState.GetTriggers()) {
 			if(manager.ShouldTrigger()) {
 				nextState = manager.target;
+				Debug.Log("Triggered Transition: " + nextState.GetType().Name);
 			}
 		}
 		if(nextState != null) {

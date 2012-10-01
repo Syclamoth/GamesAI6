@@ -11,8 +11,14 @@ public class Wolf_roaming : State {
 
     private float decayLeaderLevel = 0.2f;
     private float decayHungryLevel = 0.1f;
+	
+	private float watchedLevelDecay = 1;
+	private float cautionLevelDecay = 0.1f;
+	
     private float increaseLeaderLevel = 15f;
     private float decreaseLeaderLevel = 3f;
+	
+	private float fleeThreshold = 3;
 	
 	private bool firstActivation = true;
 	
@@ -68,7 +74,7 @@ public class Wolf_roaming : State {
         float highestLeaderLevel = 0f;
         List<SensedObject> seenSheep = new List<SensedObject>();
         List<SensedObject> seenWolf = new List<SensedObject>();
-
+		Transform playerTrans = null;
         foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
             if (obj.getAgentType().Equals(AgentClassification.Sheep))
@@ -87,92 +93,97 @@ public class Wolf_roaming : State {
             }
             else if(obj.getAgentType().Equals(AgentClassification.Shepherd))
             {
-                PlayerLegs playerLeg = (PlayerLegs)obj.getObject().GetComponent<PlayerLegs>();
-                Vector2 playerPos = playerLeg.getPosition();
-                Vector2 wolfPos = myBrain.legs.getPosition();
-                Vector2 playerFacing = new Vector2(playerLeg.transform.forward.x, playerLeg.transform.forward.z);
-
-                float dot = Vector2.Dot(playerFacing, wolfPos - playerPos);
-
-                if (dot > 0)
-                {
-                    thereIsShepherd = true;
-                }
+				playerTrans = obj.getObject().transform;
+            	thereIsShepherd = true;
             }
         }
-            //check if this wolf has been given command to attack or not
-            if (controller.memory.GetValue<SensedObject>("hasCommand") != null)
+		
+		myBrain.memory.SetValue("caution", myBrain.memory.GetValue<float>("caution") - cautionLevelDecay * Time.deltaTime);
+		if(thereIsShepherd) {
+			UpdateCaution(playerTrans);
+		} else {
+			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
+		}
+		
+		myBrain.memory.SetValue("watched", Mathf.Clamp(myBrain.memory.GetValue<float>("watched"), 0, Mathf.Infinity));
+		if(myBrain.memory.GetValue<float>("watched") > 0)
+		{
+			Debug.Log (myBrain.memory.GetValue<float>("watched"));
+		}
+		
+        //check if this wolf has been given command to attack or not
+        if (controller.memory.GetValue<SensedObject>("hasCommand") != null)
+        {
+            //decrease leaderLevel because it has been given command by others
+            controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") - (decreaseLeaderLevel * Time.deltaTime));
+
+            //set the minimum leaderLevel for wolf
+            if (controller.memory.GetValue<float>("leaderLevel") < 10f)
             {
-                //decrease leaderLevel because it has been given command by others
-                controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") - decreaseLeaderLevel);
-
-                //set the minimum leaderLevel for wolf
-                if (controller.memory.GetValue<float>("leaderLevel") < 10f)
-                {
-                    controller.memory.SetValue("leaderLevel", 10f);
-                }
-
-                //Change to hunting phase
-                Debug.Log("I've received command. I'm hunting! Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+                controller.memory.SetValue("leaderLevel", 10f);
             }
-            else
-            {
-                if (seenSheep.Count > 0)
-                {
-                    //choose the target
-                    //if the wolf hasn't have his target, pick it
-                    target = seenSheep[(int)Random.Range(0, seenSheep.Count)];
 
-                    //target is alive
-				    if(target.getObject().GetComponent<Brain>().memory.GetValue<float>("HP") > 0)
-				    {
-					//set the target for this wolf
-		            	controller.memory.SetValue("hasCommand", target);			
-		
-		            	//calling sheep that it is being targeted
-		            	Memory sheepMemory = target.getMemory();
-		
-		            	//get a list of wolves that are chasing this sheep
-		            	List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
-		
-		            	//add itself in
-		            	if (wolvesChasing != null)
-		            	{
-		                	wolvesChasing.Add(this.myBrain);
-		                	sheepMemory.SetValue("chasedBy", wolvesChasing);
-		            	}
-		
-		            	//send signal to other wolf in its sensing radius, tell them to change to hunting phase
-		            	if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)
-		            	{
-		                	//increase its leaderLevel whenever it issue a decision to hunt
-		                	if (controller.memory.GetValue<float>("leaderLevel") < 100f)
-		                	{
-		                    	controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") + increaseLeaderLevel);
-		                	}
-		
-		                	//set the maximum leaderLevel for wolf
-		                	if (controller.memory.GetValue<float>("leaderLevel") > 100f)
-		                	{
-		                    	controller.memory.SetValue("leaderLevel", 100f);
-		                	}
-		
-		                	//call other to change to hunting phase
-		                	foreach (SensedObject objWolf in seenWolf)
-		                	{
-		                    	//give out command to attack the same target
-		                    	Memory wolfMemory = objWolf.getMemory();
-		
-		                    	wolfMemory.SetValue("hasCommand", target);
-		                    	Debug.Log("I'm the leader! I sent command!");
-		                	}
-		            	}
-		
-		            	//Change to hunting phase
-		            	Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
-		    		}
-		        }
-		    }
+            //Change to hunting phase
+            Debug.Log("I've received command. I'm hunting! Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+        }
+        else
+        {
+            if (seenSheep.Count > 0)
+            {
+                //choose the target
+                //if the wolf hasn't have his target, pick it
+                target = seenSheep[(int)Random.Range(0, seenSheep.Count)];
+
+                //target is alive
+			    if(target.getObject().GetComponent<Brain>().memory.GetValue<float>("HP") > 0)
+			    {
+				//set the target for this wolf
+	            	controller.memory.SetValue("hasCommand", target);			
+	
+	            	//calling sheep that it is being targeted
+	            	Memory sheepMemory = target.getMemory();
+	
+	            	//get a list of wolves that are chasing this sheep
+	            	List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+	
+	            	//add itself in
+	            	if (wolvesChasing != null)
+	            	{
+	                	wolvesChasing.Add(this.myBrain);
+	                	sheepMemory.SetValue("chasedBy", wolvesChasing);
+	            	}
+	
+	            	//send signal to other wolf in its sensing radius, tell them to change to hunting phase
+	            	if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)
+	            	{
+	                	//increase its leaderLevel whenever it issue a decision to hunt
+	                	if (controller.memory.GetValue<float>("leaderLevel") < 100f)
+	                	{
+	                    	controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") + increaseLeaderLevel);
+	                	}
+	
+	                	//set the maximum leaderLevel for wolf
+	                	if (controller.memory.GetValue<float>("leaderLevel") > 100f)
+	                	{
+	                    	controller.memory.SetValue("leaderLevel", 100f);
+	                	}
+	
+	                	//call other to change to hunting phase
+	                	foreach (SensedObject objWolf in seenWolf)
+	                	{
+	                    	//give out command to attack the same target
+	                    	Memory wolfMemory = objWolf.getMemory();
+	
+	                    	wolfMemory.SetValue("hasCommand", target);
+	                    	Debug.Log("I'm the leader! I sent command!");
+	                	}
+	            	}
+	
+	            	//Change to hunting phasemyBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
+	            	Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+	    		}
+	        }
+	    }
 
         if (controller.memory.GetValue<SensedObject>("hasCommand") != null)
         {
@@ -204,7 +215,7 @@ public class Wolf_roaming : State {
 
                 if (controller.memory.GetValue<float>("hungryLevel") > 0f)
                 {
-                    myBrain.memory.SetValue("hungryLevel", controller.memory.GetValue<float>("hungryLevel") - (decayHungryLevel / myBrain.memory.GetValue<float>("ferocity")));
+                    myBrain.memory.SetValue("hungryLevel", controller.memory.GetValue<float>("hungryLevel") - (decayHungryLevel * (myBrain.memory.GetValue<float>("ferocity") / 5)));
                 }
 
                 //set the minimum leaderLevel for wolf
@@ -231,16 +242,25 @@ public class Wolf_roaming : State {
         yield return null;
     }
 	
-	void UpdateCaution() {
-		/*
-		Transform player = 
+	void UpdateCaution(Transform player) {
 		Vector2 playerPos = new Vector2(player.position.x, player.position.z);
 		Vector2 playerFacing = new Vector2(player.forward.x, player.forward.z);
 		Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
 		
+		Debug.Log (myBrain.legs.getPosition());
+		Debug.Log(playerPos);
+		
+		Debug.DrawLine(playerPos.ToWorldCoords(), playerPos.ToWorldCoords() + positionOffset.ToWorldCoords());
+		Debug.Log (Vector2.Dot(playerFacing, positionOffset));
+		
 		if(Vector2.Dot(playerFacing, positionOffset) > 0.71f) {
+			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") + (Time.deltaTime * (1 / positionOffset.magnitude)));
+		} else {
+			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
 		}
-		*/
+		if(myBrain.memory.GetValue<float>("watched") > (1 / myBrain.memory.GetValue<float>("caution")) * fleeThreshold) {
+			myBrain.memory.SetValue ("shouldHide", 2f);
+		}
 	}
 	
     public override ObservedVariable[] GetExposedVariables()

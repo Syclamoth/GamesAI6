@@ -104,7 +104,7 @@ public class Legs : MonoBehaviour {
 	}
 	
 	public Vector2 getPosition() {
-		return new Vector2(myTrans.position.x, myTrans.position.y);
+		return new Vector2(myTrans.position.x, myTrans.position.z);
 	}
 	
 	void OnGUI() {

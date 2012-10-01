@@ -29,6 +29,8 @@ public class WolfHide : State {
 		
 		hiddenTime = 0;
 		
+		myBrain.memory.SetValue ("shouldHide", 0f);
+		
         myLeg.addSteeringBehaviour(runTo);
         yield return null;
     }

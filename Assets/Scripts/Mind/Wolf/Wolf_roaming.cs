@@ -143,50 +143,54 @@ public class Wolf_roaming : State {
                     //if the wolf hasn't have his target, pick it
                     target = seenSheep[(int)Random.Range(0, seenSheep.Count)];
 
-                    //set the target for this wolf
-                    controller.memory.SetValue("hasCommand", target);
+                    //target is alive
+		    if(target.getObject().GetComponent<Brain>().memory.GetValue<float>("HP") > 0)
+		    {
+			//set the target for this wolf
+                    	controller.memory.SetValue("hasCommand", target);			
 
-                    //calling sheep that it is being targeted
-                    Memory sheepMemory = target.getMemory();
+                    	//calling sheep that it is being targeted
+                    	Memory sheepMemory = target.getMemory();
 
-                    //get a list of wolves that are chasing this sheep
-                    List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+                    	//get a list of wolves that are chasing this sheep
+                    	List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
 
-                    //add itself in
-                    if (wolvesChasing != null)
-                    {
-                        wolvesChasing.Add(this.myBrain);
-                        sheepMemory.SetValue("chasedBy", wolvesChasing);
-                    }
+                    	//add itself in
+                    	if (wolvesChasing != null)
+                    	{
+                        	wolvesChasing.Add(this.myBrain);
+                        	sheepMemory.SetValue("chasedBy", wolvesChasing);
+                    	}
 
-                    //send signal to other wolf in its sensing radius, tell them to change to hunting phase
-                    if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)
-                    {
-                        //increase its leaderLevel whenever it issue a decision to hunt
-                        if (controller.memory.GetValue<float>("leaderLevel") < 100f)
-                        {
-                            controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") + increaseLeaderLevel);
-                        }
+                    	//send signal to other wolf in its sensing radius, tell them to change to hunting phase
+                    	if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)
+                    	{
+                        	//increase its leaderLevel whenever it issue a decision to hunt
+                        	if (controller.memory.GetValue<float>("leaderLevel") < 100f)
+                        	{
+                            	controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") + increaseLeaderLevel);
+                        	}
 
-                        //set the maximum leaderLevel for wolf
-                        if (controller.memory.GetValue<float>("leaderLevel") > 100f)
-                        {
-                            controller.memory.SetValue("leaderLevel", 100f);
-                        }
+                        	//set the maximum leaderLevel for wolf
+                        	if (controller.memory.GetValue<float>("leaderLevel") > 100f)
+                        	{
+                            	controller.memory.SetValue("leaderLevel", 100f);
+                        	}
 
-                        //call other to change to hunting phase
-                        foreach (SensedObject objWolf in seenWolf)
-                        {
-                            //give out command to attack the same target
-                            Memory wolfMemory = objWolf.getMemory();
+                        	//call other to change to hunting phase
+                        	foreach (SensedObject objWolf in seenWolf)
+                        	{
+                            	//give out command to attack the same target
+                            	Memory wolfMemory = objWolf.getMemory();
 
-                            wolfMemory.SetValue("hasCommand", target);
-                            Debug.Log("I'm the leader! I sent command!");
-                        }
-                    }
+                            	wolfMemory.SetValue("hasCommand", target);
+                            	Debug.Log("I'm the leader! I sent command!");
+                        	}
+                    	}
 
                     //Change to hunting phase
                     Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+		    }
                 }
             }
         }
@@ -210,7 +214,7 @@ public class Wolf_roaming : State {
 
         else
         {
-            if (time >= 30f) //wait for 60 sec
+            if (time >= 30f) //wait for 30 sec
             {
                 //decrease its leaderLevel if it can't find any sheep or cant issue and command
                 if (controller.memory.GetValue<float>("leaderLevel") > 10f)

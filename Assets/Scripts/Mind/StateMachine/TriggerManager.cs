@@ -15,7 +15,7 @@ public class TriggerManager {
 	public float floatTarget;
 	public bool boolTarget;
 	
-	public string memoryKey;
+	public string memoryKey = "";
 	
 	public TriggerMode mode;
 	
@@ -25,10 +25,10 @@ public class TriggerManager {
 	
 	public ObservedType obsType {
 		get {
+			if(watched == null || watched.GetExposedVariables().Length <= observedIndex) {
+				return ObservedType.other;
+			}
 			if(observed == null) {
-				if(watched == null || watched.GetExposedVariables().Length <= observedIndex) {
-					return ObservedType.other;
-				}
 				observed = watched.GetExposedVariables()[observedIndex];
 			}
 			if(observed().GetType() == typeof(int)) {
@@ -65,7 +65,7 @@ public class TriggerManager {
 		} catch (System.InvalidCastException e) {
 			Debug.LogWarning("The data stored in " + memoryKey + " is not compatible with triggers! Make sure you are using the correct key.");
 			Debug.LogError (e);
-			retV = 0;
+			retV = 0f;
 		}
 		return retV;
 	}
@@ -88,15 +88,15 @@ public class TriggerManager {
 		}
 		switch (mode) {
 		case TriggerMode.Equal:
-			return targetValue.Equals(observed());
+			return observed().Equals(targetValue);
 		case TriggerMode.GEqual:
-			return targetValue.CompareTo(observed()) >= 0;
+			return observed().CompareTo(targetValue) >= 0;
 		case TriggerMode.LEqual:
-			return targetValue.CompareTo(observed()) <= 0;
+			return observed().CompareTo(targetValue) <= 0;
 		case TriggerMode.Greater:
-			return targetValue.CompareTo(observed()) > 0;
+			return observed().CompareTo(targetValue) > 0;
 		case TriggerMode.Lesser:
-			return targetValue.CompareTo(observed()) < 0;
+			return observed().CompareTo(targetValue) < 0;
 		}
 		return false;
 	}

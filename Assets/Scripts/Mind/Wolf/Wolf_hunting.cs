@@ -20,7 +20,6 @@ public class Wolf_hunting : State
 
     private PathfindToPoint arriveBehaviour;
     private Seek seekBehaviour;
-    private Flee fleeBehaviour;
 
     private float ferocityRate;
     private Vector2 oldTargetPosition;
@@ -39,15 +38,12 @@ public class Wolf_hunting : State
 		Legs myLeg = myBrain.legs;
         arriveBehaviour = new PathfindToPoint();
         seekBehaviour = new Seek();
-        fleeBehaviour = new Flee();
 
 		arriveBehaviour.Init(myLeg, myBrain.levelGrid);
         seekBehaviour.Init(myLeg);
-        fleeBehaviour.Init(myLeg);
 
 		myLeg.addSteeringBehaviour(arriveBehaviour);
         myLeg.addSteeringBehaviour(seekBehaviour);
-        myLeg.addSteeringBehaviour(fleeBehaviour);
 
         myLeg.maxSpeed = 11f;
         time = 0f;
@@ -57,7 +53,6 @@ public class Wolf_hunting : State
         sheepMemory = sheepTarget.getMemory();
         sheepBrain = (Brain)sheepTarget.getObject().GetComponent("Brain");
 
-        fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
         arriveBehaviour.setTarget(sheepTarget.getObject());
 
         distanceWithMe = Vector2.Distance(sheepBrain.legs.getPosition(), myBrain.legs.getPosition());
@@ -72,7 +67,6 @@ public class Wolf_hunting : State
     {
 		myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
         myBrain.legs.removeSteeringBehaviour(seekBehaviour);
-        myBrain.legs.removeSteeringBehaviour(fleeBehaviour);
 
         createARFF(sheepBrain, hungry, distanceWithMe, distanceWithSheperd, sheepHP, result);
         if (result == "SUCCESS")
@@ -125,104 +119,90 @@ public class Wolf_hunting : State
         {
             stillSeeTarget = false;
         }
-
-        if (thereIsShepherd)
+        if (stillSeeTarget)
         {
-            fleeBehaviour.setWeight(fleeBehaviour.getWeight() + (Time.deltaTime / myBrain.memory.GetValue<float>("ferocity")));
-            if (fleeBehaviour.getWeight() > 15f)
+            //increase weight based on ferocityRate and rateShepherd. If the wolf see the Sheperd, the thought to chase the sheep will be suppressed
+            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + (Time.deltaTime * ferocityRate));
+            seekBehaviour.setWeight(0f);
+
+            if (arriveBehaviour.getWeight() > 30f)
             {
-                fleeBehaviour.setWeight(15f);
+                arriveBehaviour.setWeight(30f);
+            }
+            oldTargetPosition = arriveBehaviour.getTarget();
+            time = 0f;
+        }
+        else
+        {
+            time += Time.deltaTime;
+            if (time > 3f)
+            {
+                //keep chasing
+                seekBehaviour.setTarget(oldTargetPosition);
+                seekBehaviour.setWeight(seekBehaviour.getWeight() + (Time.deltaTime * ferocityRate));
+
+                //arrive's weight decreases
+                arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime / ferocityRate));
+
+                if (seekBehaviour.getWeight() > 15f)
+                {
+                    seekBehaviour.setWeight(15f);
+                }
+                if (arriveBehaviour.getWeight() < 0f)
+                {
+                    arriveBehaviour.setWeight(0f);
+                }
+            }
+
+            if (arriveBehaviour.getWeight() == 0f)
+            {
+                //change to roaming state
+                UnityEngine.Debug.Log("Give up finding");
+
+                //delete itself in sheepTarget memory
+                List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+
+                if (wolvesChasing.Count > 0)
+                {
+                    wolvesChasing.Remove(this.myBrain);
+                    sheepMemory.SetValue("chasedBy", wolvesChasing);
+                }
+                result = "FAIL";
+                mainMachine.RequestStateTransition(roam.GetTarget());
+            }
+        }
+
+        //if the wolf catches the sheep
+        float distance = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
+
+        if (distance < 0f)
+        {
+            distance = distance * (-1); //distance can't be negative
+        }
+
+        if (distance <= 2f)
+        {
+            if (sheepBrain.memory.GetValue<float>("HP") >= 60f)
+            {
+
+                UnityEngine.Debug.Log("Distance of " + myBrain.getGameObject() + " and " + sheepBrain.getGameObject() + " is: " + distance);
+                sheepMemory.SetValue("BeingEaten", true);
+
+                result = "SUCCESS";
+                mainMachine.RequestStateTransition(eating.GetTarget());
+            }
+            else
+            {
+                result = "FAIL";
+                mainMachine.RequestStateTransition(roam.GetTarget());
             }
         }
         else
         {
-            fleeBehaviour.setWeight(0f);
-
-            if (stillSeeTarget)
+            if (sheepBrain.memory.GetValue<float>("HP") < 60f)
             {
-                //increase weight based on ferocityRate and rateShepherd. If the wolf see the Sheperd, the thought to chase the sheep will be suppressed
-                arriveBehaviour.setWeight(arriveBehaviour.getWeight() + (Time.deltaTime * ferocityRate));
-                seekBehaviour.setWeight(0f);
-
-                if (arriveBehaviour.getWeight() > 30f)
-                {
-                    arriveBehaviour.setWeight(30f);
-                }
-                oldTargetPosition = arriveBehaviour.getTarget();
-                time = 0f;
-            }
-            else
-            {
-                time += Time.deltaTime;
-                if (time > 3f)
-                {
-                    //keep chasing
-                    seekBehaviour.setTarget(oldTargetPosition);
-                    seekBehaviour.setWeight(seekBehaviour.getWeight() + (Time.deltaTime * ferocityRate));
-
-                    //arrive's weight decreases
-                    arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime / ferocityRate));
-
-                    if (seekBehaviour.getWeight() > 15f)
-                    {
-                        seekBehaviour.setWeight(15f);
-                    }
-                    if (arriveBehaviour.getWeight() < 0f)
-                    {
-                        arriveBehaviour.setWeight(0f);
-                    }
-                }
-
-                if (arriveBehaviour.getWeight() == 0f)
-                {
-                    //change to roaming state
-                    UnityEngine.Debug.Log("Give up finding");
-
-                    //delete itself in sheepTarget memory
-                    List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
-
-                    if (wolvesChasing.Count > 0)
-                    {
-                        wolvesChasing.Remove(this.myBrain);
-                        sheepMemory.SetValue("chasedBy", wolvesChasing);
-                    }
-                    result = "FAIL";
-                    mainMachine.RequestStateTransition(roam.GetTarget());
-                }
-            }
-
-            //if the wolf catches the sheep
-            float distance = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
-
-            if (distance < 0f)
-            {
-                distance = distance * (-1); //distance can't be negative
-            }
-
-            if (distance <= 2f)
-            {
-                if (sheepBrain.memory.GetValue<float>("HP") >= 60f)
-                {
-
-                    UnityEngine.Debug.Log("Distance of " + myBrain.getGameObject() + " and " + sheepBrain.getGameObject() + " is: " + distance);
-                    sheepMemory.SetValue("BeingEaten", true);
-
-                    result = "SUCCESS";
-                    mainMachine.RequestStateTransition(eating.GetTarget());
-                }
-                else
-                {
-                    result = "FAIL";
-                    mainMachine.RequestStateTransition(roam.GetTarget());
-                }
-            }
-            else
-            {
-                if (sheepBrain.memory.GetValue<float>("HP") < 60f)
-                {
-                    result = "FAIL";
-                    mainMachine.RequestStateTransition(roam.GetTarget());
-                }
+                result = "FAIL";
+                mainMachine.RequestStateTransition(roam.GetTarget());
             }
         }
         yield return null;

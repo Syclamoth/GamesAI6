@@ -13,6 +13,7 @@ GameObject:
   - 114: {fileID: 11400012}
   - 114: {fileID: 11400010}
   - 114: {fileID: 11400016}
+  - 114: {fileID: 11400020}
   m_Layer: 0
   m_Name: WolfFSM
   m_TagString: Untagged
@@ -52,6 +53,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400002}
 --- !u!4 &400002
@@ -63,6 +65,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: .32648468, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400000}
   m_Father: {fileID: 0}
@@ -108,7 +111,38 @@ MonoBehaviour:
   - {fileID: 11400012}
   - {fileID: 11400010}
   - {fileID: 11400016}
-  controlledTriggers: []
+  - {fileID: 11400020}
+  controlledTriggers:
+  - observedIndex: 0
+    owner: {fileID: 11400012}
+    watched: {fileID: 0}
+    target: {fileID: 11400020}
+    inspectorCorner: {x: 121, y: 372}
+    intTarget: 0
+    floatTarget: 1
+    boolTarget: 0
+    memoryKey: shouldHide
+    mode: 3
+  - observedIndex: 0
+    owner: {fileID: 11400014}
+    watched: {fileID: 0}
+    target: {fileID: 11400020}
+    inspectorCorner: {x: 312, y: 316}
+    intTarget: 0
+    floatTarget: 1
+    boolTarget: 0
+    memoryKey: shouldHide
+    mode: 3
+  - observedIndex: 0
+    owner: {fileID: 11400010}
+    watched: {fileID: 0}
+    target: {fileID: 11400020}
+    inspectorCorner: {x: 469, y: 399}
+    intTarget: 0
+    floatTarget: 1
+    boolTarget: 0
+    memoryKey: shouldHide
+    mode: 3
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -188,7 +222,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a90fc94fe8a7da64b98b79baa2947eef, type: 1}
   m_Name: 
-  inspectorCorner: {x: 438, y: 190}
+  inspectorCorner: {x: 445, y: 207}
   roam:
     target: {fileID: 11400014}
 --- !u!114 &11400012
@@ -201,7 +235,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c26cf6b6b8c7e2046aeab2cc98a47039, type: 1}
   m_Name: 
-  inspectorCorner: {x: 290, y: 249}
+  inspectorCorner: {x: 178, y: 276}
   roam:
     target: {fileID: 11400014}
   eating:
@@ -216,7 +250,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8b4fce0ab93f8f4fb393a8f09f31451, type: 1}
   m_Name: 
-  inspectorCorner: {x: 298, y: 116}
+  inspectorCorner: {x: 308, y: 155}
   hunting:
     target: {fileID: 11400012}
 --- !u!114 &11400016
@@ -243,6 +277,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c78d54d0fa44befad2e96e946e3666, type: 1}
   m_Name: 
   hearingThreshold: 7
+--- !u!114 &11400020
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 557b594e7e67143c087812a04856ae23, type: 1}
+  m_Name: 
+  inspectorCorner: {x: 344, y: 502}
+  roaming:
+    target: {fileID: 11400014}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

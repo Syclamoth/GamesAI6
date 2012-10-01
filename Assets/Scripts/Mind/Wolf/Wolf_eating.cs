@@ -9,7 +9,6 @@ public class Wolf_eating : State
 
     Machine mainMachine;
     Brain myBrain;
-    Flee fleeBehaviour;
     Arrive arriveBehaviour;
 
     private SensedObject sheepTarget;
@@ -30,14 +29,10 @@ public class Wolf_eating : State
         sheepMemory = sheepBrain.memory;
         sheepMemory.SetValue("BeingEaten", true);
 
-        fleeBehaviour = new Flee();
         arriveBehaviour = new Arrive();
 
-        fleeBehaviour.Init(myLeg);
         arriveBehaviour.Init(myLeg);
 
-        myLeg.addSteeringBehaviour(fleeBehaviour);
-        fleeBehaviour.setTarget(GameObject.FindGameObjectWithTag("Player"));
         arriveBehaviour.setTarget(sheepTarget.getObject());
 
         //speed is zero
@@ -50,7 +45,6 @@ public class Wolf_eating : State
     public override IEnumerator Exit()
     {
         myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
-        myBrain.legs.removeSteeringBehaviour(fleeBehaviour);
         
         //check if the sheep is still alive or not
         if (sheepTarget.getObject().active)
@@ -92,45 +86,27 @@ public class Wolf_eating : State
                 }
             }
         }
+		
+        arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * myBrain.memory.GetValue<float>("ferocity"));
 
-        if (thereIsShepherd)
+        if (arriveBehaviour.getWeight() > 20f)
         {
-            fleeBehaviour.setWeight(fleeBehaviour.getWeight() + Time.deltaTime / myBrain.memory.GetValue<float>("ferocity"));
-            myBrain.legs.maxSpeed = 8f;
-            if (fleeBehaviour.getWeight() > 15f)
-            {
-                fleeBehaviour.setWeight(15f);
-            }
-            else
-            {
-                sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage") / 4));
-            }
-            Debug.Log("Flee away from Sheperd: " + fleeBehaviour.getWeight());
+            arriveBehaviour.setWeight(20f);
         }
-        else
+
+        //if the wolf catches the sheep again
+        float distance = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
+
+        if (distance < 0f)
         {
-            fleeBehaviour.setWeight(0f);
-            arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * myBrain.memory.GetValue<float>("ferocity"));
+            distance = distance * (-1); //distance can't be negative
+        }
 
-            if (arriveBehaviour.getWeight() > 20f)
-            {
-                arriveBehaviour.setWeight(20f);
-            }
-
-            //if the wolf catches the sheep again
-            float distance = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
-
-            if (distance < 0f)
-            {
-                distance = distance * (-1); //distance can't be negative
-            }
-
-            if (distance <= 1f)
-            {
-                myBrain.legs.maxSpeed = 0f;
-                sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage")));
-                //Debug.Log("Sheep's HP is: " +  sheepMemory.GetValue<float>("HP"));
-            }
+        if (distance <= 1f)
+        {
+            myBrain.legs.maxSpeed = 0f;
+            sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage")));
+            //Debug.Log("Sheep's HP is: " +  sheepMemory.GetValue<float>("HP"));
         }
 
         if (sheepMemory.GetValue<float>("HP") <= 0f)

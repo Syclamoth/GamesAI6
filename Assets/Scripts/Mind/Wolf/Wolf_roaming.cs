@@ -14,11 +14,12 @@ public class Wolf_roaming : State {
 	
 	private float watchedLevelDecay = 1;
 	private float cautionLevelDecay = 0.1f;
+	private float fleeThreshold = 3;
 	
     private float increaseLeaderLevel = 15f;
     private float decreaseLeaderLevel = 3f;
 	
-	private float fleeThreshold = 3;
+
 	
 	private bool firstActivation = true;
 	

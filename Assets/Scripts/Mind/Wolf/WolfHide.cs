@@ -30,7 +30,7 @@ public class WolfHide : State {
 		hiddenTime = 0;
 		
 		myBrain.memory.SetValue ("shouldHide", 0f);
-		
+		myBrain.legs.maxSpeed = 11f;
         myLeg.addSteeringBehaviour(runTo);
         yield return null;
     }

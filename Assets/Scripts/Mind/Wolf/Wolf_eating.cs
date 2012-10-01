@@ -14,7 +14,11 @@ public class Wolf_eating : State
     private SensedObject sheepTarget;
     private Memory sheepMemory;
     private Brain sheepBrain;
-
+	
+	private float watchedLevelDecay = 1;
+	private float cautionLevelDecay = 0.1f;
+	private float fleeThreshold = 3;
+	
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -68,25 +72,23 @@ public class Wolf_eating : State
     public override IEnumerator Run(Brain controller)
     {
         bool thereIsShepherd = false;
-
+		Transform playerTrans = null;
         foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
             if (obj.getAgentType().Equals(AgentClassification.Shepherd))
             {
-                PlayerLegs playerLeg = (PlayerLegs)obj.getObject().GetComponent<PlayerLegs>();
-                Vector2 playerPos = playerLeg.getPosition();
-                Vector2 wolfPos = myBrain.legs.getPosition();
-                Vector2 playerFacing = new Vector2(playerLeg.transform.forward.x, playerLeg.transform.forward.z);
-
-                float dot = Vector2.Dot(playerFacing, wolfPos - playerPos);
-
-                if (dot > 0)
-                {
-                    thereIsShepherd = true;
-                }
+				playerTrans = obj.getObject().transform;
+                thereIsShepherd = true;
             }
         }
+		myBrain.memory.SetValue("caution", myBrain.memory.GetValue<float>("caution") - cautionLevelDecay * Time.deltaTime);
+		if(thereIsShepherd) {
+			UpdateCaution(playerTrans);
+		} else {
+			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
+		}
 		
+		myBrain.memory.SetValue("watched", Mathf.Clamp(myBrain.memory.GetValue<float>("watched"), 0, Mathf.Infinity));
         arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * myBrain.memory.GetValue<float>("ferocity"));
 
         if (arriveBehaviour.getWeight() > 20f)
@@ -96,7 +98,7 @@ public class Wolf_eating : State
 
         myBrain.legs.maxSpeed = 0f;
         sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage")));
-        Debug.Log("Sheep's HP is: " +  sheepMemory.GetValue<float>("HP"));
+        //Debug.Log("Sheep's HP is: " +  sheepMemory.GetValue<float>("HP"));
 
         if (sheepMemory.GetValue<float>("HP") <= 0f)
         {
@@ -116,6 +118,28 @@ public class Wolf_eating : State
         }
         yield return null;
     }
+	
+	void UpdateCaution(Transform player) {
+		Vector2 playerPos = new Vector2(player.position.x, player.position.z);
+		Vector2 playerFacing = new Vector2(player.forward.x, player.forward.z);
+		Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
+		
+		//Debug.Log (myBrain.legs.getPosition());
+		//Debug.Log(playerPos);
+		
+		//Debug.DrawLine(playerPos.ToWorldCoords(), playerPos.ToWorldCoords() + positionOffset.ToWorldCoords());
+		//Debug.Log (Vector2.Dot(playerFacing.normalized, positionOffset.normalized));
+		
+		if(Vector2.Dot(playerFacing.normalized, positionOffset.normalized) > 0.71f) {
+			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") + (Time.deltaTime * (1 / positionOffset.magnitude)));
+		} else {
+			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
+		}
+		if(myBrain.memory.GetValue<float>("watched") > (1 / myBrain.memory.GetValue<float>("caution")) * fleeThreshold) {
+			myBrain.memory.SetValue ("shouldHide", 2f);
+		}
+	}
+	
     public override ObservedVariable[] GetExposedVariables()
     {
         return new ObservedVariable[] {

@@ -197,6 +197,7 @@ public class Wolf_roaming : State {
 
         if (controller.memory.GetValue<SensedObject>("hasCommand") != null)
         {
+            time = 0f;
             if (controller.memory.GetValue<float>("hungryLevel") <= 4f)
             {
                 //it doesn't have enough hungryLevel to operate. Die!

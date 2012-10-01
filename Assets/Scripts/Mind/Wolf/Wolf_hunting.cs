@@ -154,7 +154,7 @@ public class Wolf_hunting : State
             else
             {
                 time += Time.deltaTime;
-                if (time > 5f)
+                if (time > 3f)
                 {
                     //keep chasing
                     seekBehaviour.setTarget(oldTargetPosition);

@@ -108,7 +108,7 @@ public class Wolf_roaming : State {
 		myBrain.memory.SetValue("watched", Mathf.Clamp(myBrain.memory.GetValue<float>("watched"), 0, Mathf.Infinity));
 		if(myBrain.memory.GetValue<float>("watched") > 0)
 		{
-			Debug.Log (myBrain.memory.GetValue<float>("watched"));
+			//Debug.Log (myBrain.memory.GetValue<float>("watched"));
 		}
 		
         //check if this wolf has been given command to attack or not
@@ -247,13 +247,13 @@ public class Wolf_roaming : State {
 		Vector2 playerFacing = new Vector2(player.forward.x, player.forward.z);
 		Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
 		
-		Debug.Log (myBrain.legs.getPosition());
-		Debug.Log(playerPos);
+		//Debug.Log (myBrain.legs.getPosition());
+		//Debug.Log(playerPos);
 		
-		Debug.DrawLine(playerPos.ToWorldCoords(), playerPos.ToWorldCoords() + positionOffset.ToWorldCoords());
-		Debug.Log (Vector2.Dot(playerFacing, positionOffset));
+		//Debug.DrawLine(playerPos.ToWorldCoords(), playerPos.ToWorldCoords() + positionOffset.ToWorldCoords());
+		//Debug.Log (Vector2.Dot(playerFacing.normalized, positionOffset.normalized));
 		
-		if(Vector2.Dot(playerFacing, positionOffset) > 0.71f) {
+		if(Vector2.Dot(playerFacing.normalized, positionOffset.normalized) > 0.71f) {
 			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") + (Time.deltaTime * (1 / positionOffset.magnitude)));
 		} else {
 			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);

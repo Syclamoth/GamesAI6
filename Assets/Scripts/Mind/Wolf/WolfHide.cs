@@ -47,7 +47,7 @@ public class WolfHide : State {
 		Vector2 playerFacing = new Vector2(player.forward.x, player.forward.z);
 		Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
 		
-		if(Vector2.Dot(playerFacing, positionOffset) > 0.71f) {
+		if(Vector2.Dot(playerFacing.normalized, positionOffset.normalized) > 0.71f) {
 			// Get out of the player's vision
 			EscapeFromView();
 		} else {
@@ -91,12 +91,14 @@ public class WolfHide : State {
 			hiddenTime -= Time.deltaTime * 2;
 		}
 		if(rightDistance < leftDistance) {
-			Vector2 runToPoint = playerPos + rightPoint;
+			Vector2 runVector = rightPoint - positionOffset;
+			Vector2 runToPoint = playerPos + (runVector * 2);
 			runTo.setTarget(runToPoint);
 			runTo.setWeight(15f);
 			return;
 		} else {
-			Vector2 runToPoint = playerPos + leftPoint;
+			Vector2 runVector = leftPoint - positionOffset;
+			Vector2 runToPoint = playerPos + (runVector * 2);
 			runTo.setTarget(runToPoint);
 			runTo.setWeight(15f);
 			return;

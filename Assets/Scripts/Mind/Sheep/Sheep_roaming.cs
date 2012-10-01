@@ -16,10 +16,10 @@ public class Sheep_roaming : State {
 
 	private bool firstActivation = true;
 
-    private float decayFollowRate = 0.5f;
+    private float decayFollowRate = 1f;
     private float increaseFollowRate = 3f;
     
-    private float decayPanicRate = 0.75f;
+    private float decayPanicRate = 1f;
     private float increasePanicRate = 6f;
 
     private float shepherdInfluence = 3f;

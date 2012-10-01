@@ -70,6 +70,7 @@ public class Machine : State {
 	// Schedules a state transition at the next available time
 	public void RequestStateTransition(State goToThis) {
 		nextState = goToThis;
+		Debug.Log("State Transition: " + nextState.GetType().Name);
 	}
 	
 	override public List<LinkedStateReference> GetStateTransitions() {

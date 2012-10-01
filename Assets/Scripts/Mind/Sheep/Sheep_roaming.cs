@@ -76,7 +76,9 @@ public class Sheep_roaming : State {
     {
         bool thereIsSheperd = false;
         List<SensedObject> seenWolf = new List<SensedObject>();
-
+		
+		float averagePanicLevel = controller.memory.GetValue<float>("Panic");
+		int totalSheep = 1;
         foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
             if (obj.getAgentType().Equals(AgentClassification.Wolf))
@@ -107,14 +109,25 @@ public class Sheep_roaming : State {
             {
                 thereIsSheperd = true;
             }
+			
+			// Let the the crowd influence the mood of individual sheep. This will make single scared sheep less panicky, but allow mass confusion to ensue given enough panic.
+			if (obj.getAgentType() == AgentClassification.Sheep) {
+				averagePanicLevel += obj.getObject().GetComponent<Brain>().memory.GetValue<float>("Panic");
+				totalSheep++;
+			}
+			
         }
+		
+		averagePanicLevel /= totalSheep;
+		
+		controller.memory.SetValue("Panic", Mathf.Lerp(controller.memory.GetValue<float>("Panic"), averagePanicLevel, Time.deltaTime * 0.3f));
 
         if (seenWolf.Count > 0)
         {
             if (thereIsSheperd)
             {
                 //the less cowardLevel is, the less Panic increases
-                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * seenWolf.Count * increasePanicRate / shepherdInfluence * controller.memory.GetValue<float>("cowardLevel")));
+                controller.memory.SetValue("Panic", controller.memory.GetValue<float>("Panic") + ((Time.deltaTime * seenWolf.Count * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")) / shepherdInfluence));
             }
             else
             {

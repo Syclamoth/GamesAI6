@@ -92,6 +92,14 @@ public class Brain : MonoBehaviour, IHearable {
 	void OnGUI() {
 		if(drawGUI) {
 			GUILayout.Label("Name: " + gameObject.name);
+			float panicLevel = memory.GetValue<float>("Panic");
+			if(panicLevel > 0) {
+				GUILayout.Label("Panic Level: " + panicLevel);
+			}
+			float cowardice = memory.GetValue<float>("cowardLevel");
+			if(cowardice > 0) {
+				GUILayout.Label("Cowardice: " + cowardice);
+			}
 			legs.InspectSteering();
 		}
 	}

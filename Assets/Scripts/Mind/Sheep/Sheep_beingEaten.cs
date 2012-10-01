@@ -17,7 +17,7 @@ public class Sheep_beingEaten : State
 
         //speed is zero
         myBrain.legs.maxSpeed = 0f;
-
+		Debug.Log("I'm being eaten! Oh no!");
         yield return null;
     }
     public override IEnumerator Exit()

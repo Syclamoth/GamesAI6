@@ -94,20 +94,9 @@ public class Wolf_eating : State
             arriveBehaviour.setWeight(20f);
         }
 
-        //if the wolf catches the sheep again
-        float distance = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
-
-        if (distance < 0f)
-        {
-            distance = distance * (-1); //distance can't be negative
-        }
-
-        if (distance <= 1f)
-        {
-            myBrain.legs.maxSpeed = 0f;
-            sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage")));
-            //Debug.Log("Sheep's HP is: " +  sheepMemory.GetValue<float>("HP"));
-        }
+        myBrain.legs.maxSpeed = 0f;
+        sheepMemory.SetValue("HP", sheepMemory.GetValue<float>("HP") - (Time.deltaTime * myBrain.memory.GetValue<float>("damage")));
+        Debug.Log("Sheep's HP is: " +  sheepMemory.GetValue<float>("HP"));
 
         if (sheepMemory.GetValue<float>("HP") <= 0f)
         {

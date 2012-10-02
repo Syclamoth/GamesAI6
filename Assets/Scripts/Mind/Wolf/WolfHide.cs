@@ -92,13 +92,13 @@ public class WolfHide : State {
 		}
 		if(rightDistance < leftDistance) {
 			Vector2 runVector = rightPoint - positionOffset;
-			Vector2 runToPoint = playerPos + (runVector * 2);
+			Vector2 runToPoint = playerPos + positionOffset + (runVector * 2);
 			runTo.setTarget(runToPoint);
 			runTo.setWeight(15f);
 			return;
 		} else {
 			Vector2 runVector = leftPoint - positionOffset;
-			Vector2 runToPoint = playerPos + (runVector * 2);
+			Vector2 runToPoint = playerPos + positionOffset + (runVector * 2);
 			runTo.setTarget(runToPoint);
 			runTo.setWeight(15f);
 			return;

@@ -17,6 +17,7 @@ public class Sheep_gonenut : State {
     private float time = 0f;
 
     private BeaconInfo curBeacon;
+    private float StopCurBeacon = 0f;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -88,7 +89,12 @@ public class Sheep_gonenut : State {
 
         if (curBeacon != null)
         {
-            controller.memory.SetValue<float>("Panic", 0f);
+            StopCurBeacon++;
+            if (StopCurBeacon == 1)
+            {
+                controller.memory.SetValue<float>("Panic", 0f);
+                curBeacon = null;
+            }
         }
 
         if (sensedWolf.Count > 0)

@@ -24,6 +24,8 @@ public class Sheep_running : State {
 
     private float fleeThreshold = 5f;
     private BeaconInfo curBeacon = null;
+    private float beaconHelper = 0f;
+    private float StopCurBeacon = 0f;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -123,22 +125,20 @@ public class Sheep_running : State {
 
         if (curBeacon != null)
         {
-            controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - 0.3f);
-            if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+            StopCurBeacon++;
+            beaconHelper = 0.3f;
+            if (StopCurBeacon == 1)
             {
-                controller.memory.SetValue("cowardLevel", 0.01f);
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - beaconHelper);
+                controller.memory.SetValue<float>("Panic", 0f);
+                //Debug.Log(controller.getGameObject() + ": " + (controller.memory.GetValue<float>("cowardLevel")) + "time: " + test);            
+
+                if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+                {
+                    controller.memory.SetValue("cowardLevel", 0.01f);
+                }
+                curBeacon = null;
             }
-            controller.memory.SetValue<float>("Panic", 0f);
-        }
-
-
-        if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
-        {
-            controller.memory.SetValue("cowardLevel", 0.01f);
-        }
-        else if (controller.memory.GetValue<float>("cowardLevel") >= 1f)
-        {
-            controller.memory.SetValue("cowardLevel", 0.99f);
         }
 
         if (thereIsSheperd)

@@ -1,0 +1,62 @@
+=== Run information ===
+
+Scheme:weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     RATE
+Instances:    152
+Attributes:   8
+              PANIC
+              COURAGE
+              CHASEDBY
+              distanceWithMe
+              distanceWithSheperd
+              myHungryLevel
+              sheepHP
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+sheepHP <= 73.1193: FAIL (48.0)
+sheepHP > 73.1193
+|   distanceWithSheperd <= 15.61399
+|   |   CHASEDBY <= 5: FAIL (78.0/14.0)
+|   |   CHASEDBY > 5
+|   |   |   COURAGE <= 0.494561: SUCCESS (8.0/2.0)
+|   |   |   COURAGE > 0.494561: FAIL (3.0)
+|   distanceWithSheperd > 15.61399: SUCCESS (15.0/1.0)
+
+Number of Leaves  : 	5
+
+Size of the tree : 	9
+
+
+Time taken to build model: 0 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         119               78.2895 %
+Incorrectly Classified Instances        33               21.7105 %
+Kappa statistic                          0.3099
+Mean absolute error                      0.2583
+Root mean squared error                  0.4276
+Relative absolute error                 73.8674 %
+Root relative squared error            102.5581 %
+Total Number of Instances              152     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.382     0.102      0.52      0.382     0.441      0.724    SUCCESS
+                 0.898     0.618      0.835     0.898     0.865      0.724    FAIL
+Weighted Avg.    0.783     0.502      0.764     0.783     0.77       0.724
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+  13  21 |   a = SUCCESS
+  12 106 |   b = FAIL
+

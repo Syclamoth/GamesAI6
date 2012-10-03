@@ -124,7 +124,21 @@ public class Sheep_running : State {
         if (curBeacon != null)
         {
             controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - 0.3f);
+            if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+            {
+                controller.memory.SetValue("cowardLevel", 0.01f);
+            }
             controller.memory.SetValue<float>("Panic", 0f);
+        }
+
+
+        if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+        {
+            controller.memory.SetValue("cowardLevel", 0.01f);
+        }
+        else if (controller.memory.GetValue<float>("cowardLevel") >= 1f)
+        {
+            controller.memory.SetValue("cowardLevel", 0.99f);
         }
 
         if (thereIsSheperd)
@@ -146,7 +160,7 @@ public class Sheep_running : State {
             //normalise cowardLevel back to normal if Sheperd isn't looking
             else
             {
-                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") + (Time.deltaTime * 0.02f));
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") + (Time.deltaTime * 0.01f));
 
                 if (controller.memory.GetValue<float>("cowardLevel") >= 0.5f)
                 {
@@ -159,7 +173,7 @@ public class Sheep_running : State {
             //decrease cowardLevel when there are more than 4 sheep around it.
             if (totalSheep >= 4)
             {
-                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.01f));
 
                 if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
                 {
@@ -173,7 +187,7 @@ public class Sheep_running : State {
                 {
                     if (controller.memory.GetValue<float>("cowardLevel") > 0.5f)
                     {
-                        controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+                        controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.01f));
 
                         if (controller.memory.GetValue<float>("cowardLevel") <= 0.5f)
                         {

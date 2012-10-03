@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class Wolf_roaming : State {
 
@@ -25,6 +26,14 @@ public class Wolf_roaming : State {
 	
     Machine mainMachine;
     Brain myBrain;
+
+    //check target
+    private float sheepHPLimit = 0f;
+    private float sheepDistanceSheperdLimit = 0f;
+    private float sheepChasedByLimit = 0f;
+    //private float wolfHungerLimit = 0f;
+    //private float sheepPanicLimit = 0f;
+    private float sheepCourageLimit = 0f;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -64,6 +73,8 @@ public class Wolf_roaming : State {
         }
 
         myLeg.maxSpeed = 8.0f;
+
+        generatedModel();
         yield return null;
     }
     public override IEnumerator Exit()
@@ -156,56 +167,59 @@ public class Wolf_roaming : State {
             {
                 //choose the target
                 //if the wolf hasn't have his target, pick it
-                target = seenSheep[(int)Random.Range(0, seenSheep.Count)];
+                target = chooseTarget(seenSheep);
 
-                //target is alive
-			    if(target.getObject().GetComponent<Brain>().memory.GetValue<float>("HP") > 0)
-			    {
-				//set the target for this wolf
-	            	controller.memory.SetValue("hasCommand", target);			
-	
-	            	//calling sheep that it is being targeted
-	            	Memory sheepMemory = target.getMemory();
-	
-	            	//get a list of wolves that are chasing this sheep
-	            	List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
-	
-	            	//add itself in
-	            	if (wolvesChasing != null)
-	            	{
-	                	wolvesChasing.Add(this.myBrain);
-	                	sheepMemory.SetValue("chasedBy", wolvesChasing);
-	            	}
-	
-	            	//send signal to other wolf in its sensing radius, tell them to change to hunting phase
-	            	if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)
-	            	{
-	                	//increase its leaderLevel whenever it issue a decision to hunt
-	                	if (controller.memory.GetValue<float>("leaderLevel") < 100f)
-	                	{
-	                    	controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") + increaseLeaderLevel);
-	                	}
-	
-	                	//set the maximum leaderLevel for wolf
-	                	if (controller.memory.GetValue<float>("leaderLevel") > 100f)
-	                	{
-	                    	controller.memory.SetValue("leaderLevel", 100f);
-	                	}
-	
-	                	//call other to change to hunting phase
-	                	foreach (SensedObject objWolf in seenWolf)
-	                	{
-	                    	//give out command to attack the same target
-	                    	Memory wolfMemory = objWolf.getMemory();
-	
-	                    	wolfMemory.SetValue("hasCommand", target);
-	                    	Debug.Log("I'm the leader! I sent command!");
-	                	}
-	            	}
-	
-	            	//Change to hunting phasemyBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
-	            	Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
-	    		}
+                if (target != null)
+                {
+                    //target is alive
+                    if (target.getObject().GetComponent<Brain>().memory.GetValue<float>("HP") > 0)
+                    {
+                        //set the target for this wolf
+                        controller.memory.SetValue("hasCommand", target);
+
+                        //calling sheep that it is being targeted
+                        Memory sheepMemory = target.getMemory();
+
+                        //get a list of wolves that are chasing this sheep
+                        List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+
+                        //add itself in
+                        if (wolvesChasing != null)
+                        {
+                            wolvesChasing.Add(this.myBrain);
+                            sheepMemory.SetValue("chasedBy", wolvesChasing);
+                        }
+
+                        //send signal to other wolf in its sensing radius, tell them to change to hunting phase
+                        if (controller.memory.GetValue<float>("leaderLevel") >= highestLeaderLevel)
+                        {
+                            //increase its leaderLevel whenever it issue a decision to hunt
+                            if (controller.memory.GetValue<float>("leaderLevel") < 100f)
+                            {
+                                controller.memory.SetValue("leaderLevel", controller.memory.GetValue<float>("leaderLevel") + increaseLeaderLevel);
+                            }
+
+                            //set the maximum leaderLevel for wolf
+                            if (controller.memory.GetValue<float>("leaderLevel") > 100f)
+                            {
+                                controller.memory.SetValue("leaderLevel", 100f);
+                            }
+
+                            //call other to change to hunting phase
+                            foreach (SensedObject objWolf in seenWolf)
+                            {
+                                //give out command to attack the same target
+                                Memory wolfMemory = objWolf.getMemory();
+
+                                wolfMemory.SetValue("hasCommand", target);
+                                Debug.Log("I'm the leader! I sent command!");
+                            }
+                        }
+
+                        //Change to hunting phasemyBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
+                        Debug.Log("I'm hunting. Target: " + controller.memory.GetValue<SensedObject>("hasCommand").getObject());
+                    }
+                }
 	        }
 	    }
 
@@ -308,5 +322,96 @@ public class Wolf_roaming : State {
         string[] gridLabels = new string[] {
 		};
         return GUILayout.SelectionGrid(currentlySelected, gridLabels, 1);
+    }
+
+    //J48 decision tree based on WEKA model
+    public void generatedModel()
+    {
+        string curFile = @"./trainedData.arff";
+        StreamReader fileReader;
+        List<string> lines = new List<string>();
+        List<string> success = new List<string>();
+        List<string> fail = new List<string>();
+
+        float totalSheepHPFail = 0f;
+        float totalDistanceWithSheperdFail = 0f;
+        float totalChasedBy = 0f;
+        float totalHungryLevel = 0f;
+        float totalCourageLevel = 0f;
+        float totalPanicLevel = 0f;
+
+        if (File.Exists(curFile))
+        {
+            fileReader = new StreamReader(curFile);
+            string line = "";
+            while ((line = fileReader.ReadLine()) != null)
+            {
+                if (!line.Contains("@") || !line.Contains(""))
+                {
+                    lines.Add(line);
+                    string[] atts = line.Split(',');
+                    if (line.Contains("SUCCESS"))
+                    {
+                        success.Add(line);
+                    }
+                    else if (line.Contains("FAIL"))
+                    {
+                        fail.Add(line);
+                        totalSheepHPFail += float.Parse(atts[6].ToString());
+                        totalDistanceWithSheperdFail += float.Parse(atts[4].ToString());
+                        totalChasedBy += float.Parse(atts[2].ToString());
+                        totalHungryLevel += float.Parse(atts[5].ToString());
+                        totalCourageLevel += float.Parse(atts[1].ToString());
+                        totalPanicLevel += float.Parse(atts[0].ToString());
+                    }
+                }
+            }
+
+            sheepHPLimit = ((totalSheepHPFail / fail.Count) + 73.1193f) / 2f; //lesser means fail
+            sheepDistanceSheperdLimit = (((totalDistanceWithSheperdFail / fail.Count) + 15.61399f) / 2f); //larger means success
+            sheepChasedByLimit = (((totalChasedBy / fail.Count) + 5f) / 3f);
+            sheepCourageLimit = (((totalCourageLevel / fail.Count) + 0.494561f) / 2f); //lesser means success
+
+            //wolfHungerLimit = (((totalHungryLevel / fail.Count) + 60.79216f) / 2f); //lesser means fail
+            //sheepPanicLimit = (((totalPanicLevel / fail.Count) + 6.863676f) / 2f); //lesser means success
+        }
+    }
+
+    public SensedObject chooseTarget(List<SensedObject> seenSheep)
+    {
+        SensedObject target = null;
+
+        foreach (SensedObject sheep in seenSheep)
+        {
+            Brain sheepBrain = sheep.getObject().GetComponent<Brain>();
+            Memory sheepMem = sheepBrain.memory;
+
+            float sheepHP = sheepMem.GetValue<float>("HP");
+            float sheepDistanceWithSheperd = Vector2.Distance(sheepBrain.legs.getPosition(), ((Legs)GameObject.FindGameObjectWithTag("Player").GetComponent<Legs>()).getPosition());
+            float sheepChasedBy = sheepBrain.memory.GetValue<List<Brain>>("chasedBy").Count;
+            float sheepCourage = sheepMem.GetValue<float>("cowardLevel");
+
+            if (sheepHP > sheepHPLimit)
+            {
+                if (sheepDistanceWithSheperd > sheepDistanceSheperdLimit)
+                {
+                    target = sheep;
+                    break;
+                }
+                else
+                {
+                    if (sheepChasedBy > sheepChasedByLimit)
+                    {
+                        if (sheepCourage <= sheepCourageLimit)
+                        {
+                            target = sheep;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return target;
     }
 }

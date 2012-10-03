@@ -79,7 +79,7 @@ public class SensableObjects : MonoBehaviour {
 	}
 	public void RegisterObject(SensableObject obj, IHearable hearable) {
 		RegisterObject(obj);
-		soundManager.registerHearable(hearable);
+        soundManager.registerHearable(hearable);
 	}
 	public void RegisterObject(SensableObject obj)
 	{

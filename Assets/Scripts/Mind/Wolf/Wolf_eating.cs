@@ -206,7 +206,6 @@ public class Wolf_eating : State
         {
             fileWriter = new StreamWriter(curFile);
             fileWriter.WriteLine("@relation RATE");
-            fileWriter.WriteLine("");
             fileWriter.WriteLine("@attribute PANIC numeric");
             fileWriter.WriteLine("@attribute COURAGE numeric");
             fileWriter.WriteLine("@attribute CHASEDBY numeric");
@@ -215,7 +214,6 @@ public class Wolf_eating : State
             fileWriter.WriteLine("@attribute myHungryLevel numeric");
             fileWriter.WriteLine("@attribute sheepHP numeric");
             fileWriter.WriteLine("@attribute class {SUCCESS,FAIL}");
-            fileWriter.WriteLine("");
             fileWriter.WriteLine("@data");
         }
 

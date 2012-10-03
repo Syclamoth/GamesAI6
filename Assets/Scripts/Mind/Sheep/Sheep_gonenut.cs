@@ -88,7 +88,6 @@ public class Sheep_gonenut : State {
 
         if (curBeacon != null)
         {
-            controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - 0.3f);
             controller.memory.SetValue<float>("Panic", 0f);
         }
 

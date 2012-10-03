@@ -16,17 +16,18 @@ public class Sheep_roaming : State {
 
 	private bool firstActivation = true;
 
-    private float decayFollowRate = 1f;
+    private float decayFollowRate = 0.8f;
     private float increaseFollowRate = 3f;
     
-    private float decayPanicRate = 1f;
+    private float decayPanicRate = 1.5f;
     private float increasePanicRate = 6f;
 
     private float shepherdInfluence = 3f;
     private float time = 0f;
     private float seekingTime = 0f;
 	
-	private float fleeThreshold = 2;
+	private float fleeThreshold = 5f;
+    private BeaconInfo curBeacon = null;
 	
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -49,14 +50,9 @@ public class Sheep_roaming : State {
 		if(firstActivation)
 		{
             //set cowardLevel for sheep. Random.value returns a random number between 0.0 [inclusive] and 1.0 [inclusive]. 
-            float coward = Random.value;
+            float coward = 0.5f;
 
-            if (coward < 0.2f)
-            {
-                coward = 0.2f;
-            }
-
-        	myBrain.memory.SetValue("cowardLevel", coward);
+            myBrain.memory.SetValue("cowardLevel", coward);
             myBrain.memory.SetValue("chasedBy", new List<Brain>());
             myBrain.memory.SetValue("BeingEaten", false);
             myBrain.memory.SetValue("HP", 100f);
@@ -78,6 +74,7 @@ public class Sheep_roaming : State {
     {
         bool thereIsSheperd = false;
         List<SensedObject> seenWolf = new List<SensedObject>();
+        Transform playerTrans = null;
 		
 		float averagePanicLevel = controller.memory.GetValue<float>("Panic");
 		int totalSheep = 1;
@@ -91,6 +88,7 @@ public class Sheep_roaming : State {
 
             if (obj.getAgentType().Equals(AgentClassification.Shepherd))
             {
+                playerTrans = obj.getObject().transform;
                 thereIsSheperd = true;
             }
 			
@@ -101,7 +99,92 @@ public class Sheep_roaming : State {
 			}
 			
         }
-		
+
+        //get current BeaconInfo
+        if (controller.memory.GetValue<BeaconInfo>("LastBeacon") != null)
+        {
+            if (curBeacon != null)
+            {
+                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                {
+                    curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+                }
+            }
+            else
+            {
+                curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+            }
+        }
+
+        if (curBeacon != null)
+        {
+            controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - 0.3f);
+            controller.memory.SetValue<float>("Panic", 0f);
+        }
+
+        if (thereIsSheperd)
+        {
+            Vector2 playerPos = new Vector2(playerTrans.position.x, playerTrans.position.z);
+            Vector2 playerFacing = new Vector2(playerTrans.forward.x, playerTrans.forward.z);
+            Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
+
+            //decrease cowardLevel when there is sheperd looking at it
+            if (Vector2.Dot(playerFacing.normalized, positionOffset.normalized) > 0.71f)
+            {
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+
+                if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+                {
+                    controller.memory.SetValue("cowardLevel", 0.01f);
+                }
+            }
+            //normalise cowardLevel back to normal if Sheperd isn't looking
+            else
+            {
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") + (Time.deltaTime * 0.02f));
+
+                if (controller.memory.GetValue<float>("cowardLevel") >= 0.5f)
+                {
+                    controller.memory.SetValue("cowardLevel", 0.5f);
+                }
+            }
+        }
+        else
+        {
+            //decrease cowardLevel when there are more than 4 sheep around it.
+            if (totalSheep >= 4)
+            {
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+
+                if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+                {
+                    controller.memory.SetValue("cowardLevel", 0.01f);
+                }
+            }
+            //normalise cowardLevel to its default value
+            else
+            {
+                if (controller.memory.GetValue<float>("cowardLevel") > 0.5f)
+                {
+                    controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+
+                    if (controller.memory.GetValue<float>("cowardLevel") <= 0.5f)
+                    {
+                        controller.memory.SetValue("cowardLevel", 0.5f);
+                    }
+                }
+                else
+                {
+                    controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") + (Time.deltaTime * 0.02f));
+
+                    if (controller.memory.GetValue<float>("cowardLevel") >= 0.5f)
+                    {
+                        controller.memory.SetValue("cowardLevel", 0.5f);
+                    }
+                }
+            }
+        }
+
 		averagePanicLevel /= totalSheep;
 		
 		controller.memory.SetValue<float>("Panic", Mathf.Lerp(controller.memory.GetValue<float>("Panic"), averagePanicLevel, Time.deltaTime * 0.3f));
@@ -155,7 +238,7 @@ public class Sheep_roaming : State {
 			
 			
             //set maximum weight- the sheep stop following if they are afraid (the player must catch them)
-			float maxWeight = fleeThreshold - controller.memory.GetValue<float>("Panic");
+			float maxWeight = (fleeThreshold - controller.memory.GetValue<float>("Panic")) + 5; //plus 5 to make the sheep more responsible to follow the Sheperd
             if (arriveBehaviour.getWeight() > maxWeight)
             {
                 arriveBehaviour.setWeight(maxWeight);
@@ -221,6 +304,10 @@ public class Sheep_roaming : State {
         {
             mainMachine.RequestStateTransition(eaten.GetTarget());
         }
+
+        //    Debug.Log("Hey" +controller.memory.GetValue<BeaconInfo>("LastBeacon").ToString());
+        //deleat BeaconInfo after using
+        curBeacon = null;
 
         yield return null;
     }

@@ -13,14 +13,17 @@ public class Sheep_running : State {
 
     private Flee fleeBehaviour;
 
-    private float decayFollowRate = 1f;
+    private float decayFollowRate = 0.8f;
     private float increaseFollowRate = 3f;
 
-    private float decayPanicRate = 1f;
+    private float decayPanicRate = 1.5f;
     private float increasePanicRate = 2f;
 
     private float shepherdInfluence = 3f;
     private float time = 0f;
+
+    private float fleeThreshold = 5f;
+    private BeaconInfo curBeacon = null;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -76,6 +79,8 @@ public class Sheep_running : State {
         List<SensedObject> sensedWolf = new List<SensedObject>();
 
         bool thereIsSheperd = false;
+        int totalSheep = 1;
+        Transform playerTrans = null;
 
         foreach (SensedObject obj in controller.senses.GetSensedObjects())
         {
@@ -86,14 +91,117 @@ public class Sheep_running : State {
 
             if (obj.getAgentType().Equals(AgentClassification.Shepherd))
             {
+                playerTrans = obj.getObject().transform;
                 thereIsSheperd = true;
+            }
+            // Let the the crowd influence the mood of individual sheep. This will make single scared sheep less panicky, but allow mass confusion to ensue given enough panic.
+            if (obj.getAgentType() == AgentClassification.Sheep)
+            {
+                totalSheep++;
             }
         }
 		SensedObject scariestWolf = myBrain.memory.GetValue<SensedObject>("Scariest");
 		if(scariestWolf != null) {
 			sensedWolf.Add(scariestWolf);
 		}
-		
+
+        //get current BeaconInfo
+        if (controller.memory.GetValue<BeaconInfo>("LastBeacon") != null)
+        {
+            if (curBeacon != null)
+            {
+                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                {
+                    curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+                }
+            }
+            else
+            {
+                curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+            }
+        }
+
+        if (curBeacon != null)
+        {
+            controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - 0.3f);
+            controller.memory.SetValue<float>("Panic", 0f);
+        }
+
+        if (thereIsSheperd)
+        {
+            Vector2 playerPos = new Vector2(playerTrans.position.x, playerTrans.position.z);
+            Vector2 playerFacing = new Vector2(playerTrans.forward.x, playerTrans.forward.z);
+            Vector2 positionOffset = myBrain.legs.getPosition() - playerPos;
+
+            //decrease cowardLevel when there is sheperd looking at it
+            if (Vector2.Dot(playerFacing.normalized, positionOffset.normalized) > 0.71f)
+            {
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+
+                if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+                {
+                    controller.memory.SetValue("cowardLevel", 0.001f);
+                }
+            }
+            //normalise cowardLevel back to normal if Sheperd isn't looking
+            else
+            {
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") + (Time.deltaTime * 0.02f));
+
+                if (controller.memory.GetValue<float>("cowardLevel") >= 0.5f)
+                {
+                    controller.memory.SetValue("cowardLevel", 0.5f);
+                }
+            }
+        }
+        else
+        {
+            //decrease cowardLevel when there are more than 4 sheep around it.
+            if (totalSheep >= 4)
+            {
+                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+
+                if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+                {
+                    controller.memory.SetValue("cowardLevel", 0.01f);
+                }
+            }
+            //normalise cowardLevel to its default value
+            else
+            {
+                if (sensedWolf.Count == 0)
+                {
+                    if (controller.memory.GetValue<float>("cowardLevel") > 0.5f)
+                    {
+                        controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - (Time.deltaTime * 0.02f));
+
+                        if (controller.memory.GetValue<float>("cowardLevel") <= 0.5f)
+                        {
+                            controller.memory.SetValue("cowardLevel", 0.5f);
+                        }
+                    }
+                    else
+                    {
+                        controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") + (Time.deltaTime * 0.02f));
+
+                        if (controller.memory.GetValue<float>("cowardLevel") >= 0.5f)
+                        {
+                            controller.memory.SetValue("cowardLevel", 0.5f);
+                        }
+                    }
+                }
+                else
+                {
+                    controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") + (Time.deltaTime * 0.01f * sensedWolf.Count));
+
+                    if (controller.memory.GetValue<float>("cowardLevel") >= 1f)
+                    {
+                        controller.memory.SetValue("cowardLevel", 0.99f);
+                    }
+                }
+            }
+        }
+
 		sensedWolf.Sort(Scariest);
 		
         if (sensedWolf.Count > 0)
@@ -103,7 +211,7 @@ public class Sheep_running : State {
             if (thereIsSheperd)
             {
                 //the less cowardLevel is, the less Panic increases
-                controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") + ((Time.deltaTime * (sensedWolf.Count - 1.5f) * increasePanicRate * controller.memory.GetValue<float>("cowardLevel")) / shepherdInfluence));
+                controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") - ((Time.deltaTime * (sensedWolf.Count * 0.5f) * decayPanicRate * controller.memory.GetValue<float>("cowardLevel")) / shepherdInfluence));
             }
             else
             {
@@ -114,7 +222,7 @@ public class Sheep_running : State {
                 controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") + (Time.deltaTime * sensedWolf.Count * increasePanicRate * controller.memory.GetValue<float>("cowardLevel") * (2 / wolfDistance)));
             }
             fleeBehaviour.setTarget(scariestWolf.getObject());
-            fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic") * 1.5f);
+            fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic"));// * 1.25f);
         }
         else
         {
@@ -126,7 +234,7 @@ public class Sheep_running : State {
             }
             else
             {
-                if (time > 7f)
+                if (time > 3f)
                 {
                     //the less cowardLevel is, the more Panic decreases
                     controller.memory.SetValue<float>("Panic", controller.memory.GetValue<float>("Panic") - (Time.deltaTime * decayPanicRate * (1 - controller.memory.GetValue<float>("cowardLevel"))));
@@ -144,7 +252,7 @@ public class Sheep_running : State {
                 fleeBehaviour.setTarget(null);
             }
 
-            //decrease flee weight
+            //fleeBehaviour weight
             fleeBehaviour.setWeight(controller.memory.GetValue<float>("Panic"));
         }        
 
@@ -155,17 +263,20 @@ public class Sheep_running : State {
         }
         
         // if panic level larger than 30, change to gonenuts state.
-        if (controller.memory.GetValue<float>("Panic") >= 25f)
+        if (controller.memory.GetValue<float>("Panic") >= 20f)
         {
             Debug.Log("I'm so scared!");
             mainMachine.RequestStateTransition(nuts.GetTarget());
         }
         // if can't see wolf and panic level has decreased, change to roaming state
-        else if (controller.memory.GetValue<float>("Panic") < 2f)
+        else if (controller.memory.GetValue<float>("Panic") < fleeThreshold)
         {
             Debug.Log("Wolf's gone!");
             mainMachine.RequestStateTransition(calmed.GetTarget());
         }
+
+        //deleat BeaconInfo after using
+        curBeacon = null;
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()

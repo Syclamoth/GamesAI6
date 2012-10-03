@@ -10,7 +10,7 @@ public class Wolf_roaming : State {
     private SensedObject target;
 
     private float decayLeaderLevel = 0.2f;
-    private float decayHungryLevel = 0.1f;
+    private float decayHungryLevel = 0.05f;
 	
 	private float watchedLevelDecay = 1;
 	private float cautionLevelDecay = 0.1f;
@@ -18,8 +18,8 @@ public class Wolf_roaming : State {
 	
     private float increaseLeaderLevel = 15f;
     private float decreaseLeaderLevel = 3f;
-	
 
+    private BeaconInfo curBeacon = null;
 	
 	private bool firstActivation = true;
 	
@@ -43,11 +43,11 @@ public class Wolf_roaming : State {
 			myBrain.memory.SetValue("caution", 10f);
 			myBrain.memory.SetValue ("watched", 0f);
 
-            myBrain.memory.SetValue("ferocity", Random.value * 5);
+            myBrain.memory.SetValue("ferocity", Random.value * 3);
 
-            if (myBrain.memory.GetValue<float>("ferocity") < 1f)
+            if (myBrain.memory.GetValue<float>("ferocity") < 0.8f)
             {
-                myBrain.memory.SetValue("ferocity", 1f);
+                myBrain.memory.SetValue("ferocity", 0.8f);
             }
 			
 			myBrain.memory.SetValue ("shouldHide", 0f);
@@ -60,6 +60,7 @@ public class Wolf_roaming : State {
 
             //delete its target
             myBrain.memory.SetValue("hasCommand", null);
+            myBrain.memory.SetValue("targeting", null);
         }
 
         myLeg.maxSpeed = 8.0f;
@@ -98,6 +99,28 @@ public class Wolf_roaming : State {
             	thereIsShepherd = true;
             }
         }
+
+        //get current BeaconInfo
+        if (controller.memory.GetValue<BeaconInfo>("LastBeacon") != null)
+        {
+            if (curBeacon != null)
+            {
+                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                {
+                    curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+                }
+            }
+            else
+            {
+                curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+            }
+        }
+
+        if (curBeacon != null)
+        {
+            controller.memory.SetValue("shouldHide", 3f);
+        }
+
 		
 		myBrain.memory.SetValue("caution", myBrain.memory.GetValue<float>("caution") - cautionLevelDecay * Time.deltaTime);
 		if(thereIsShepherd) {
@@ -189,24 +212,14 @@ public class Wolf_roaming : State {
         if (controller.memory.GetValue<SensedObject>("hasCommand") != null)
         {
             time = 0f;
-            if (controller.memory.GetValue<float>("hungryLevel") <= 4f)
-            {
-                //it doesn't have enough hungryLevel to operate. Die!
-                controller.memory.SetValue("hungryLevel", 0f);
-                Debug.Log("I died because don't have enough hungryLevel");
-                myBrain.getGameObject().SetActiveRecursively(false);
-            }
-            else
-            {
-                //decrease its hungryLevel when it change to hunting state
-                controller.memory.SetValue("hungryLevel", controller.memory.GetValue<float>("hungryLevel") - 4f); 
-                mainMachine.RequestStateTransition(hunting.GetTarget());
-            }
+            //decrease its hungryLevel when it change to hunting state
+            //controller.memory.SetValue("hungryLevel", controller.memory.GetValue<float>("hungryLevel") - 4f); 
+            mainMachine.RequestStateTransition(hunting.GetTarget());
         }
 
         else
         {
-            if (time >= 30f) //wait for 30 sec
+            if (time >= 20f) //wait for 20 sec
             {
                 //decrease its leaderLevel if it can't find any sheep or cant issue and command
                 if (controller.memory.GetValue<float>("leaderLevel") > 10f)
@@ -236,11 +249,13 @@ public class Wolf_roaming : State {
             else
             {
                 time += Time.deltaTime;
-            }
-            
+            }   
         }
 
-        yield return null;
+        //deleat BeaconInfo after using
+        curBeacon = null;
+
+       yield return null;
     }
 	
 	void UpdateCaution(Transform player) {

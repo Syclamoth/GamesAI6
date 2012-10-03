@@ -16,6 +16,7 @@ public class WolfHide : State {
 	float playerViewDistance = 2.7f;
 	
 	float hiddenTime;
+    private float decayHungryLevel = 0.05f;
 	
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -38,6 +39,7 @@ public class WolfHide : State {
     {
         myBrain.legs.removeSteeringBehaviour(runTo);
 		myBrain.memory.SetValue ("watched", 0f);
+
         yield return null;
     }
 	
@@ -54,8 +56,20 @@ public class WolfHide : State {
 			// Stay out of the player's vision (get behind them if possible)
 			StayOutOfView ();
 		}
+
+        //increase its decayHungryLevel when hunting
+        if (controller.memory.GetValue<float>("hungryLevel") > 0f)
+        {
+            controller.memory.SetValue("hungryLevel", controller.memory.GetValue<float>("hungryLevel") - (decayHungryLevel * (myBrain.memory.GetValue<float>("ferocity") / 5)));
+        }
+        else
+        {
+            controller.memory.SetValue("hungryLevel", 0f);
+            Debug.Log("I died because I used up my energy");
+            myBrain.getGameObject().SetActiveRecursively(false);
+        }
 		
-		if(hiddenTime > 2) {
+		if(hiddenTime > 3f) {
 			mainMachine.RequestStateTransition(roaming.GetTarget());
 		}
         yield return null;
@@ -92,13 +106,13 @@ public class WolfHide : State {
 		}
 		if(rightDistance < leftDistance) {
 			Vector2 runVector = rightPoint - positionOffset;
-			Vector2 runToPoint = playerPos + positionOffset + (runVector * 2);
+			Vector2 runToPoint = playerPos + positionOffset + (runVector * 2.5f);
 			runTo.setTarget(runToPoint);
 			runTo.setWeight(15f);
 			return;
 		} else {
 			Vector2 runVector = leftPoint - positionOffset;
-			Vector2 runToPoint = playerPos + positionOffset + (runVector * 2);
+            Vector2 runToPoint = playerPos + positionOffset + (runVector * 2.5f);
 			runTo.setTarget(runToPoint);
 			runTo.setWeight(15f);
 			return;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class Wolf_eating : State
 {
@@ -17,8 +18,11 @@ public class Wolf_eating : State
 	
 	private float watchedLevelDecay = 1;
 	private float cautionLevelDecay = 0.1f;
-	private float fleeThreshold = 3;
-	
+	private float fleeThreshold = 3f;
+
+    private BeaconInfo curBeacon = null;
+
+    private string result = "FAIL";
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -64,8 +68,7 @@ public class Wolf_eating : State
 			sheepMemory.SetValue("BeingEaten", false);
         }
 
-        //delete its target
-        myBrain.memory.SetValue("hasCommand", null);
+        createARFF(myBrain.memory.GetValue<string>("targeting"), result);
 
         yield return null;
     }
@@ -81,6 +84,28 @@ public class Wolf_eating : State
                 thereIsShepherd = true;
             }
         }
+
+        //get current BeaconInfo
+        if (controller.memory.GetValue<BeaconInfo>("LastBeacon") != null)
+        {
+            if (curBeacon != null)
+            {
+                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                {
+                    curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+                }
+            }
+            else
+            {
+                curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+            }
+        }
+
+        if (curBeacon != null)
+        {
+            controller.memory.SetValue("shouldHide", 3f);
+        }
+
 		myBrain.memory.SetValue("caution", myBrain.memory.GetValue<float>("caution") - cautionLevelDecay * Time.deltaTime);
 		if(thereIsShepherd) {
 			UpdateCaution(playerTrans);
@@ -91,9 +116,9 @@ public class Wolf_eating : State
 		myBrain.memory.SetValue("watched", Mathf.Clamp(myBrain.memory.GetValue<float>("watched"), 0, Mathf.Infinity));
         arriveBehaviour.setWeight(arriveBehaviour.getWeight() + Time.deltaTime * myBrain.memory.GetValue<float>("ferocity"));
 
-        if (arriveBehaviour.getWeight() > 20f)
+        if (arriveBehaviour.getWeight() > 10f)
         {
-            arriveBehaviour.setWeight(20f);
+            arriveBehaviour.setWeight(10f);
         }
 
         myBrain.legs.maxSpeed = 0f;
@@ -105,17 +130,14 @@ public class Wolf_eating : State
             sheepTarget.getObject().SetActiveRecursively(false);
 
 	        Debug.Log("I ate the sheep");
-            myBrain.memory.SetValue("hungryLevel", myBrain.memory.GetValue<float>("hungryLevel") + 10f);
+            controller.memory.SetValue("hungryLevel", myBrain.memory.GetValue<float>("hungryLevel") + 10f);
+            result = "SUCCESS";
+
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
-        
-        float dist = Vector2.Distance(myBrain.legs.getPosition(), sheepBrain.legs.getPosition());
-        
-        if (dist >= 2f)
-        {
-            Debug.Log("I can't eat the sheep");
-            mainMachine.RequestStateTransition(roam.GetTarget());
-        }
+
+        //delete curBeacon
+        curBeacon = null;
         yield return null;
     }
 	
@@ -169,5 +191,37 @@ public class Wolf_eating : State
         string[] gridLabels = new string[] {
 		};
         return GUILayout.SelectionGrid(currentlySelected, gridLabels, 1);
+    }
+
+    public void createARFF(string sheep, string result)
+    {
+        string curFile = @"./trainedData.arff";
+        StreamWriter fileWriter;
+
+        if (File.Exists(curFile))
+        {
+            fileWriter = new StreamWriter(curFile, true);
+        }
+        else
+        {
+            fileWriter = new StreamWriter(curFile);
+            fileWriter.WriteLine("@relation RATE");
+            fileWriter.WriteLine("");
+            fileWriter.WriteLine("@attribute PANIC numeric");
+            fileWriter.WriteLine("@attribute COURAGE numeric");
+            fileWriter.WriteLine("@attribute CHASEDBY numeric");
+            fileWriter.WriteLine("@attribute distanceWithMe numeric");
+            fileWriter.WriteLine("@attribute distanceWithSheperd numeric");
+            fileWriter.WriteLine("@attribute myHungryLevel numeric");
+            fileWriter.WriteLine("@attribute sheepHP numeric");
+            fileWriter.WriteLine("@attribute class {SUCCESS,FAIL}");
+            fileWriter.WriteLine("");
+            fileWriter.WriteLine("@data");
+        }
+
+        sheep = sheep + "," + result;
+
+        fileWriter.WriteLine(sheep);
+        fileWriter.Close();
     }
 }

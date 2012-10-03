@@ -27,14 +27,12 @@ public class Wolf_hunting : State
 	private float watchedLevelDecay = 1;
 	private float cautionLevelDecay = 0.1f;
 	private float fleeThreshold = 3;
-	
+
+    private BeaconInfo curBeacon = null;
 	
     bool stillSeeTarget;
-    private float distanceWithMe;
-    private float distanceWithSheperd;
-    private float hungry;
-    private float sheepHP;
-    private string result;
+    private string result = "FAIL";
+    private float decayHungryLevel = 0.05f;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -60,11 +58,18 @@ public class Wolf_hunting : State
 
         arriveBehaviour.setTarget(sheepTarget.getObject());
 
-        distanceWithMe = Vector2.Distance(sheepBrain.legs.getPosition(), myBrain.legs.getPosition());
-        distanceWithSheperd = Vector2.Distance(sheepBrain.legs.getPosition(), ((Legs)GameObject.FindGameObjectWithTag("Player").GetComponent<Legs>()).getPosition());
-        
-        hungry = myBrain.memory.GetValue<float>("hungryLevel");
-        sheepHP = sheepBrain.memory.GetValue<float>("HP");
+        //for machine learning
+        float panic = sheepBrain.memory.GetValue<float>("Panic");
+        float courage = sheepBrain.memory.GetValue<float>("cowardLevel");
+        float chasedBy = sheepBrain.memory.GetValue<List<Brain>>("chasedBy").Count;
+        float distanceWithMe = Vector2.Distance(sheepBrain.legs.getPosition(), myBrain.legs.getPosition());
+        float distanceWithSheperd = Vector2.Distance(sheepBrain.legs.getPosition(), ((Legs)GameObject.FindGameObjectWithTag("Player").GetComponent<Legs>()).getPosition());
+        float hungry = myBrain.memory.GetValue<float>("hungryLevel");
+        float sheepHP = sheepBrain.memory.GetValue<float>("HP");
+
+        string sheep = panic + "," + courage + "," + chasedBy + "," + distanceWithMe + "," + distanceWithSheperd + "," + hungry + "," + sheepHP;
+
+        myBrain.memory.SetValue("targeting", sheep);
 
         yield return null;
     }
@@ -73,10 +78,9 @@ public class Wolf_hunting : State
 		myBrain.legs.removeSteeringBehaviour(arriveBehaviour);
         myBrain.legs.removeSteeringBehaviour(seekBehaviour);
 
-        createARFF(sheepBrain, hungry, distanceWithMe, distanceWithSheperd, sheepHP, result);
-        if (result == "SUCCESS")
+        if (result == "FAIL")
         {
-            myBrain.memory.SetValue("hungryLevel", myBrain.memory.GetValue<float>("hungryLevel") + 4f);
+            createARFF(myBrain.memory.GetValue<string>("targeting"), result);
         }
 
         yield return null;
@@ -99,6 +103,50 @@ public class Wolf_hunting : State
 				playerTrans = obj.getObject().transform;
             	thereIsShepherd = true;
             }
+        }
+
+        //get current BeaconInfo
+        if (controller.memory.GetValue<BeaconInfo>("LastBeacon") != null)
+        {
+            if (curBeacon != null)
+            {
+                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                {
+                    curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+                }
+            }
+            else
+            {
+                curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+            }
+        }
+
+        if (curBeacon != null)
+        {
+            controller.memory.SetValue("shouldHide", 3f);
+        }
+
+        //increase its decayHungryLevel when hunting
+        if (controller.memory.GetValue<float>("hungryLevel") > 0f)
+        {
+            controller.memory.SetValue("hungryLevel", controller.memory.GetValue<float>("hungryLevel") - (decayHungryLevel * 2 * (myBrain.memory.GetValue<float>("ferocity") / 5)));
+        }
+        else
+        {
+            controller.memory.SetValue("hungryLevel", 0f);
+            Debug.Log("I died because I used up my energy");
+            createARFF(myBrain.memory.GetValue<string>("targeting"), "FAIL");
+
+            //delete itself in sheepTarget memory
+            List<Brain> wolvesChasing = sheepMemory.GetValue<List<Brain>>("chasedBy");
+
+            if (wolvesChasing.Count > 0)
+            {
+                wolvesChasing.Remove(this.myBrain);
+                sheepMemory.SetValue("chasedBy", wolvesChasing);
+            }
+
+            myBrain.getGameObject().SetActiveRecursively(false);
         }
 		
 		myBrain.memory.SetValue("caution", myBrain.memory.GetValue<float>("caution") - cautionLevelDecay * Time.deltaTime);
@@ -131,9 +179,9 @@ public class Wolf_hunting : State
             arriveBehaviour.setWeight(arriveBehaviour.getWeight() + (Time.deltaTime * ferocityRate));
             seekBehaviour.setWeight(0f);
 
-            if (arriveBehaviour.getWeight() > 30f)
+            if (arriveBehaviour.getWeight() > 10f)
             {
-                arriveBehaviour.setWeight(30f);
+                arriveBehaviour.setWeight(10f);
             }
             oldTargetPosition = arriveBehaviour.getTarget();
             time = 0f;
@@ -141,7 +189,7 @@ public class Wolf_hunting : State
         else
         {
             time += Time.deltaTime;
-            if (time > 3f)
+            if (time > 1.5f)
             {
                 //keep chasing
                 seekBehaviour.setTarget(oldTargetPosition);
@@ -150,9 +198,9 @@ public class Wolf_hunting : State
                 //arrive's weight decreases
                 arriveBehaviour.setWeight(arriveBehaviour.getWeight() - (Time.deltaTime / ferocityRate));
 
-                if (seekBehaviour.getWeight() > 15f)
+                if (seekBehaviour.getWeight() > 5f)
                 {
-                    seekBehaviour.setWeight(15f);
+                    seekBehaviour.setWeight(5f);
                 }
                 if (arriveBehaviour.getWeight() < 0f)
                 {
@@ -174,6 +222,7 @@ public class Wolf_hunting : State
                     sheepMemory.SetValue("chasedBy", wolvesChasing);
                 }
                 result = "FAIL";
+
                 mainMachine.RequestStateTransition(roam.GetTarget());
             }
         }
@@ -186,7 +235,7 @@ public class Wolf_hunting : State
             distance = distance * (-1); //distance can't be negative
         }
 
-        if (distance <= 2f)
+        if (distance <= 1f)
         {
             if (sheepBrain.memory.GetValue<float>("HP") >= 60f)
             {
@@ -194,7 +243,7 @@ public class Wolf_hunting : State
                 UnityEngine.Debug.Log("Distance of " + myBrain.getGameObject() + " and " + sheepBrain.getGameObject() + " is: " + distance);
                 sheepMemory.SetValue("BeingEaten", true);
 
-                result = "SUCCESS";
+                result = "EATING";
                 mainMachine.RequestStateTransition(eating.GetTarget());
             }
             else
@@ -211,6 +260,10 @@ public class Wolf_hunting : State
                 mainMachine.RequestStateTransition(roam.GetTarget());
             }
         }
+
+        //delete Beaconinfo after using
+        curBeacon = null;
+
         yield return null;
     }
 	
@@ -225,7 +278,7 @@ public class Wolf_hunting : State
 		//Debug.DrawLine(playerPos.ToWorldCoords(), playerPos.ToWorldCoords() + positionOffset.ToWorldCoords());
 		//Debug.Log (Vector2.Dot(playerFacing.normalized, positionOffset.normalized));
 		
-		if(Vector2.Dot(playerFacing.normalized, positionOffset.normalized) > 0.71f) {
+		if(Vector2.Dot(playerFacing.normalized, positionOffset.normalized) >= 0.71f) {
 			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") + (Time.deltaTime * (1 / positionOffset.magnitude)));
 		} else {
 			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
@@ -266,14 +319,10 @@ public class Wolf_hunting : State
         return GUILayout.SelectionGrid(currentlySelected, gridLabels, 1);
     }
 
-    public void createARFF(Brain sheepBrain, float hungry, float distanceWithMe, float distanceWithSheperd, float sheepHP, string result)
+    public void createARFF(string sheep, string result)
     {
         string curFile = @"./trainedData.arff";
         StreamWriter fileWriter;
-        float panic = 0f;
-        float courage = 0f;
-        float chasedBy = 0f;
-        string sheep = "";
 
         if (File.Exists(curFile))
         {
@@ -296,11 +345,7 @@ public class Wolf_hunting : State
             fileWriter.WriteLine("@data");
         }
 
-        panic = sheepBrain.memory.GetValue<float>("Panic");
-        courage = sheepBrain.memory.GetValue<float>("cowardLevel");
-        chasedBy = sheepBrain.memory.GetValue<List<Brain>>("chasedBy").Count;
-
-        sheep = panic + "," + courage + "," + chasedBy + "," + distanceWithMe + "," + distanceWithSheperd + "," + hungry + "," + sheepHP + "," + result;
+        sheep = sheep + "," + result;
 
         fileWriter.WriteLine(sheep);
         fileWriter.Close();

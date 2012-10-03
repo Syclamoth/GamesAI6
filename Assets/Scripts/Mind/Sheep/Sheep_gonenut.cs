@@ -10,11 +10,13 @@ public class Sheep_gonenut : State {
     Machine mainMachine;
     Brain myBrain;
 
-    private float decayPanicRate = 0.75f;
+    private float decayPanicRate = 1.25f;
     private float increasePanicRate = 6f;
-
+    
     private float shepherdInfluence = 3f;
     private float time = 0f;
+
+    private BeaconInfo curBeacon;
 
     public override IEnumerator Enter(Machine owner, Brain controller)
     {
@@ -68,6 +70,28 @@ public class Sheep_gonenut : State {
             }
         }
 
+        //get current BeaconInfo
+        if (controller.memory.GetValue<BeaconInfo>("LastBeacon") != null)
+        {
+            if (curBeacon != null)
+            {
+                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                {
+                    curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+                }
+            }
+            else
+            {
+                curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
+            }
+        }
+
+        if (curBeacon != null)
+        {
+            controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - 0.3f);
+            controller.memory.SetValue<float>("Panic", 0f);
+        }
+
         if (sensedWolf.Count > 0)
         {
             //if there is wolf around and it can see the Sheperd, the recover rate from Panic is similar to w.o wolf.
@@ -83,9 +107,9 @@ public class Sheep_gonenut : State {
             }
 
 
-            if (controller.memory.GetValue<float>("Panic") >= 35f)
+            if (controller.memory.GetValue<float>("Panic") >= 30f)
             {
-                controller.memory.SetValue<float>("Panic", 35f);
+                controller.memory.SetValue<float>("Panic", 30f);
             }
         }
         else
@@ -130,6 +154,8 @@ public class Sheep_gonenut : State {
             mainMachine.RequestStateTransition(eaten.GetTarget());
         }
 
+        //detete beacon info
+        curBeacon = null;
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()

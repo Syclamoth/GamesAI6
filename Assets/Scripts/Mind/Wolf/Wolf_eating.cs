@@ -90,7 +90,7 @@ public class Wolf_eating : State
         {
             if (curBeacon != null)
             {
-                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                if (curBeacon.GetTime() < controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
                 {
                     curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
                 }
@@ -103,6 +103,10 @@ public class Wolf_eating : State
 
         if (curBeacon != null)
         {
+            //delete curBeacon
+            curBeacon = null;
+            controller.memory.SetValue("LastBeacon", null);
+
             controller.memory.SetValue("shouldHide", 3f);
         }
 
@@ -135,9 +139,6 @@ public class Wolf_eating : State
 
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
-
-        //delete curBeacon
-        curBeacon = null;
         yield return null;
     }
 	

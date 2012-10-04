@@ -116,7 +116,7 @@ public class Wolf_roaming : State {
         {
             if (curBeacon != null)
             {
-                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                if (curBeacon.GetTime() < controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
                 {
                     curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
                 }
@@ -129,6 +129,10 @@ public class Wolf_roaming : State {
 
         if (curBeacon != null)
         {
+            //delete curBeacon
+            curBeacon = null;
+            controller.memory.SetValue("LastBeacon", null);
+
             controller.memory.SetValue("shouldHide", 3f);
         }
 
@@ -265,9 +269,6 @@ public class Wolf_roaming : State {
                 time += Time.deltaTime;
             }   
         }
-
-        //deleat BeaconInfo after using
-        curBeacon = null;
 
        yield return null;
     }

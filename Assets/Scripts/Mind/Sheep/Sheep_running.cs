@@ -112,7 +112,7 @@ public class Sheep_running : State {
         {
             if (curBeacon != null)
             {
-                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                if (curBeacon.GetTime() < controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
                 {
                     curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
                 }
@@ -125,20 +125,25 @@ public class Sheep_running : State {
 
         if (curBeacon != null)
         {
-            StopCurBeacon++;
-            beaconHelper = 0.3f;
-            if (StopCurBeacon == 1)
-            {
-                controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - beaconHelper);
-                controller.memory.SetValue<float>("Panic", 0f);
-                //Debug.Log(controller.getGameObject() + ": " + (controller.memory.GetValue<float>("cowardLevel")) + "time: " + test);            
+            //StopCurBeacon++;
+            //beaconHelper = 0.2f;
+            //if (StopCurBeacon==1)
+            //{
+            //if(Time.time - curBeacon.GetTime() <= Time.deltaTime)
+            //{
+            controller.memory.SetValue("cowardLevel", controller.memory.GetValue<float>("cowardLevel") - beaconHelper);
+            controller.memory.SetValue<float>("Panic", 0f);
+            //Debug.Log(controller.getGameObject() + ": " + (controller.memory.GetValue<float>("cowardLevel")));
 
-                if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
-                {
-                    controller.memory.SetValue("cowardLevel", 0.01f);
-                }
-                curBeacon = null;
+            if (controller.memory.GetValue<float>("cowardLevel") <= 0f)
+            {
+                controller.memory.SetValue("cowardLevel", 0.01f);
             }
+            //}
+            //}
+            //delete curBeacon
+            curBeacon = null;
+            controller.memory.SetValue("LastBeacon", null);
         }
 
         if (thereIsSheperd)
@@ -289,8 +294,6 @@ public class Sheep_running : State {
             mainMachine.RequestStateTransition(calmed.GetTarget());
         }
 
-        //deleat BeaconInfo after using
-        curBeacon = null;
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()

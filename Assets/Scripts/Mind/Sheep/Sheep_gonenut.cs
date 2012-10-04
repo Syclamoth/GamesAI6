@@ -76,7 +76,7 @@ public class Sheep_gonenut : State {
         {
             if (curBeacon != null)
             {
-                if (curBeacon.GetTime() <= controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
+                if (curBeacon.GetTime() < controller.memory.GetValue<BeaconInfo>("LastBeacon").GetTime())
                 {
                     curBeacon = controller.memory.GetValue<BeaconInfo>("LastBeacon");
                 }
@@ -89,12 +89,20 @@ public class Sheep_gonenut : State {
 
         if (curBeacon != null)
         {
-            StopCurBeacon++;
-            if (StopCurBeacon == 1)
-            {
-                controller.memory.SetValue<float>("Panic", 0f);
-                curBeacon = null;
-            }
+            //StopCurBeacon++;
+            //beaconHelper = 0.2f;
+            //if (StopCurBeacon==1)
+            //{
+            //if(Time.time - curBeacon.GetTime() <= Time.deltaTime)
+            //{
+            controller.memory.SetValue<float>("Panic", 0f);
+            //Debug.Log(controller.getGameObject() + ": " + (controller.memory.GetValue<float>("cowardLevel")));
+
+            //}
+            //}
+            //delete curBeacon
+            curBeacon = null;
+            controller.memory.SetValue("LastBeacon", null);
         }
 
         if (sensedWolf.Count > 0)
@@ -159,8 +167,6 @@ public class Sheep_gonenut : State {
             mainMachine.RequestStateTransition(eaten.GetTarget());
         }
 
-        //detete beacon info
-        curBeacon = null;
         yield return null;
     }
     public override ObservedVariable[] GetExposedVariables()

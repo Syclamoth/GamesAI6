@@ -52,12 +52,13 @@ public class Wolf_roaming : State {
 			myBrain.memory.SetValue("caution", 10f);
 			myBrain.memory.SetValue ("watched", 0f);
 
-            myBrain.memory.SetValue("ferocity", Random.value * 3);
-
+            myBrain.memory.SetValue("ferocity", myBrain.memory.GetValue<Genome>("Genome").getGene("Ferocity"));
+			
+			/* Removed ferocity override limit
             if (myBrain.memory.GetValue<float>("ferocity") < 0.8f)
             {
                 myBrain.memory.SetValue("ferocity", 0.8f);
-            }
+            }*/
 			
 			myBrain.memory.SetValue ("shouldHide", 0f);
 			
@@ -290,7 +291,7 @@ public class Wolf_roaming : State {
 		} else {
 			myBrain.memory.SetValue ("watched", myBrain.memory.GetValue<float>("watched") - watchedLevelDecay * Time.deltaTime);
 		}
-		if(myBrain.memory.GetValue<float>("watched") > (1 / myBrain.memory.GetValue<float>("caution")) * fleeThreshold) {
+		if(myBrain.memory.GetValue<float>("watched") > (1 / (myBrain.memory.GetValue<float>("caution") + myBrain.memory.GetValue<Genome>("Genome").getGene("Cunning"))) * fleeThreshold) {
 			myBrain.memory.SetValue ("shouldHide", 2f);
 		}
 	}

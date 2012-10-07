@@ -34,7 +34,12 @@ public class WolfController : MonoBehaviour {
 	
 	void Awake() {
 		// Add deserialsiation here!
-		loadedGenome = generateDefaultGenome();
+		FileLoader<Genome> genomeFile = new FileLoader<Genome>();
+		loadedGenome = genomeFile.LoadFromFile("SavedBest.gtac");
+		if(loadedGenome == null)
+		{
+			loadedGenome = generateDefaultGenome();
+		}
 	}
 	
 	// RIGHT HERE IS WHERE YOU SHOULD ADD NEW GENES!
@@ -59,5 +64,10 @@ public class WolfController : MonoBehaviour {
 		wolfBrain.memory.SetValue(new MemoryEntry("Genome", newGenome));
 		wolfBrain.memory.SetValue(new MemoryEntry("StartPoint", spawnPoint));
 		wolfBrain.Init(boxes, allObjects);
+	}
+	
+	void OnApplicationQuit() {
+		FileLoader<Genome> genomeFile = new FileLoader<Genome>();
+		genomeFile.WriteToFile(bestGenome, "SavedBest.gtac");
 	}
 }

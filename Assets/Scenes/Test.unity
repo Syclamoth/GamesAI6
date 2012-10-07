@@ -364,7 +364,7 @@ MonoBehaviour:
   streetlampPrefab: {fileID: 100004, guid: a7d9fd474dbe24f1085b58bd4ad23726, type: 2}
   playerObject: {fileID: 1873256981}
   sheepSpawner: {fileID: 904708951}
-  wolves: {fileID: 0}
+  wolves: {fileID: 97879320}
   boxManager: {fileID: 349345288}
 --- !u!1 &373261110
 GameObject:

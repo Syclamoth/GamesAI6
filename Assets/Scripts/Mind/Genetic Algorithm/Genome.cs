@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class Genome {
 	private Dictionary<string,Chromosome> chromosomes;
 	private int fitness;
+	[System.NonSerialized]
 	public WolfController manager;
 	
 	// Generates a blank genome

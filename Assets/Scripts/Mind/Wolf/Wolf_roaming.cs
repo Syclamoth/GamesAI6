@@ -52,7 +52,7 @@ public class Wolf_roaming : State {
 			myBrain.memory.SetValue("caution", 10f);
 			myBrain.memory.SetValue ("watched", 0f);
 
-            myBrain.memory.SetValue("ferocity", myBrain.memory.GetValue<Genome>("Genome").getGene("Ferocity"));
+            myBrain.memory.SetValue<float>("ferocity", (float)myBrain.memory.GetValue<Genome>("Genome").getGene("Ferocity"));
 			
 			/* Removed ferocity override limit
             if (myBrain.memory.GetValue<float>("ferocity") < 0.8f)

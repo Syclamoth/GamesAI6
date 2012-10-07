@@ -136,7 +136,7 @@ public class Wolf_eating : State
 	        Debug.Log("I ate the sheep");
             controller.memory.SetValue("hungryLevel", myBrain.memory.GetValue<float>("hungryLevel") + 10f);
             result = "SUCCESS";
-
+			controller.memory.GetValue<Genome>("Genome").incrementFitness(1);
             mainMachine.RequestStateTransition(roam.GetTarget());
         }
         yield return null;

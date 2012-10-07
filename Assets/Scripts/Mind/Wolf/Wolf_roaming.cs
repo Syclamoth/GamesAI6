@@ -262,6 +262,7 @@ public class Wolf_roaming : State {
                     controller.memory.SetValue("hungryLevel", 0f);
                     Debug.Log("I died because I'm too hungry");
                     myBrain.getGameObject().SetActiveRecursively(false);
+					controller.memory.GetValue<Genome>("Genome").manager.SpawnWolf(controller.memory.GetValue<Vector2>("StartPoint"));
                 }
             }
             else

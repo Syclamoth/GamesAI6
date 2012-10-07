@@ -81,7 +81,7 @@ public class Brain : MonoBehaviour, IHearable {
 		return classification;
 	}
 	
-	void ImplantMemory(MemoryEntry input) {
+	public void ImplantMemory(MemoryEntry input) {
 		memory.SetValue(input);
 	}
 	

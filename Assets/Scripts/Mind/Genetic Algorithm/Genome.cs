@@ -4,32 +4,34 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class Genome {
-	private float mutationRate;
 	private Dictionary<string,Chromosome> chromosomes;
 	private int fitness;
-	private string name;
+	public WolfController manager;
 	
-	public Genome(string name, float mutationRate)
+	// Generates a blank genome
+	public Genome(WolfController manager)
 	{
 		//Fitness always begins at 0
 		fitness = 0;
+		this.manager = manager;
 		chromosomes = new Dictionary<string, Chromosome>();
-		this.mutationRate = mutationRate;
-		this.name = name;
 	}
 	
-	public Genome(Genome genome,float mutationRate)
+	// Generates a mutated genome from an existing one
+	public Genome(Genome genome, float mutationRate, WolfController manager)
 	{
+		this.manager = manager;
 		fitness = 0;
 		chromosomes = genome.copyChromosomes();
-		this.mutationRate = mutationRate;
-		this.name = genome.getName ();
+		foreach(Chromosome gene in chromosomes.Values) {
+			gene.mutate(mutationRate);
+		}
 	}
 	
 	public void incrementFitness(int amount)
 	{
 		fitness += amount;
-		GenePool.instance.setBestGenome(this.name,this);
+		//GenePool.instance.setBestGenome(this.name,this);
 	}
 	
 	public int Fitness()
@@ -49,23 +51,25 @@ public class Genome {
 		return d;
 	}
 	
-	public void mutate()
+	public void mutate(float mutationRate)
 	{
 		foreach (Chromosome c in chromosomes.Values)
 		{
-			c.mutate(this.mutationRate);
+			c.mutate(mutationRate);
 		}
 	}
 	
 	public double getGene(string name)
 	{
-		if (chromosomes.ContainsKey(name))
-			chromosomes[name] = new Chromosome(name,1,this.mutationRate);
+		if (!chromosomes.ContainsKey(name))
+		{
+			Debug.LogError("Genome does not contain gene: " + name);
+			return 0;
+		}
 		return chromosomes[name].getValue ();
 	}
 	
-	public string getName()
-	{
-		return this.name;
+	public void addGene(string name, Chromosome value) {
+		chromosomes.Add(name, value);
 	}
 }

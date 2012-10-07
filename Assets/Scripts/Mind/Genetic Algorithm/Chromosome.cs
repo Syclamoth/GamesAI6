@@ -3,13 +3,11 @@ using System.Collections;
 
 [System.Serializable]
 public class Chromosome {
-	private string key;
 	private double value;
 	private float mutationRate;
 	
-	public Chromosome (string key, double value, float mutationRate)
+	public Chromosome (double value, float mutationRate)
 	{
-		this.key = key;
 		this.value = value;
 		this.mutationRate = mutationRate;
 	}
@@ -26,6 +24,6 @@ public class Chromosome {
 	
 	public Chromosome Clone()
 	{
-		return new Chromosome(key,value,mutationRate);
+		return new Chromosome(value,mutationRate);
 	}
 }

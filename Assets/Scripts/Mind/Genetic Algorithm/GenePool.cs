@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+// Not going to use this. Replaced by less generic, but more easily implemented WolfController.
+/*
 public class GenePool {
 	//Singleton
 	public static GenePool instance = new GenePool();
@@ -32,4 +34,4 @@ public class GenePool {
 			genomes[genomeName] = genome;
 		}
 	}
-}
+}*/

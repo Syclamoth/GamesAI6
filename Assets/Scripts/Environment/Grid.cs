@@ -11,10 +11,11 @@ public class Grid : MonoBehaviour {
 	public GameObject cubePrefab;
 	public GameObject debrisPrefab;
 	public GameObject streetlampPrefab;
-	public GameObject wolfPrefab;
 	
 	public GameObject playerObject;
 	public GameObject sheepSpawner;
+	
+	public WolfController wolves;
 	
 	public BoxManager boxManager;
 	
@@ -560,14 +561,7 @@ public class Grid : MonoBehaviour {
 					newBranch.AddLast (new LinkedListNode<GridSquare>(current));
 				}
 				
-				instance = (GameObject) Instantiate(wolfPrefab);
-				
-				wolfPos = current.toVector3();
-				wolfPos.y += 0.5f;
-				instance.transform.position = wolfPos;
-				instance.transform.parent = this.transform;
-				Brain wolfBrain = instance.GetComponent<Brain>();
-				wolfBrain.Init(boxManager, sheepSpawner.GetComponent<SheepSpawn>().allObjects);
+				wolves.SpawnWolf(new Vector2(current.toVector3().x, current.toVector3().z));
 				
 				mazeBranches.AddLast (new LinkedListNode<LinkedList<GridSquare>>(newBranch));
 			}

@@ -69,7 +69,7 @@ public class WolfHide : State {
             myBrain.getGameObject().SetActiveRecursively(false);
         }
 		
-		if(hiddenTime > 3f) {
+		if(hiddenTime > 5f * controller.memory.GetValue<Genome>("Genome").getGene("Cunning")) {
 			mainMachine.RequestStateTransition(roaming.GetTarget());
 		}
         yield return null;
@@ -103,6 +103,7 @@ public class WolfHide : State {
 			hiddenTime += Time.deltaTime;
 		} else {
 			hiddenTime -= Time.deltaTime * 2;
+			hiddenTime = Mathf.Clamp(hiddenTime, 0, hiddenTime);
 		}
 		if(rightDistance < leftDistance) {
 			Vector2 runVector = rightPoint - positionOffset;
